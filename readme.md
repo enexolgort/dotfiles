@@ -2,6 +2,8 @@
 
 Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale SSH), Docker, chrooted SFTP, CouchDB-backed Obsidian sync, a self-hosted git server, local AI models (Ollama + Open WebUI), n8n, Prometheus/Grafana monitoring, a Hyprland desktop, Samba, and Doom Emacs — all locked down to your tailnet, deployable to real machines or NixOS-WSL, choosing which services each machine runs.
 
+![Homelab architecture](./homelab-architecture.svg)
+
 Currently five hosts: `dusty` (Jellyfin, SFTP), `headless` (Obsidian + git server + n8n, WSL), `scrapy` (local AI, WSL), `shadow` (monitoring hub), `headfull` (Hyprland desktop).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
