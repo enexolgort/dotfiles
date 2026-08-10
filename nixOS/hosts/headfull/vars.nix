@@ -16,6 +16,7 @@
   # server like the other three hosts. See common/desktop.nix and
   # home-desktop.nix.
   desktopEnable = true;
+  cdEnable = false;
 
   backupEnable = false;
 

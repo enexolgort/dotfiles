@@ -38,6 +38,8 @@
   # aiEnable          = true | false;   # Ollama + Open WebUI, see common/ai.nix
   # n8nEnable         = true | false;   # workflow automation, see common/n8n.nix
   # monitoringHubEnable = true | false; # Prometheus+Grafana+restic REST server, see common/monitoring-hub.nix
+  # desktopEnable      = true | false;  # Hyprland desktop, see common/desktop.nix + home-desktop.nix
+  # cdEnable           = true | false;  # pull-based auto-deploy, see common/cd.nix — see security note in that file before enabling
   # sftpEnable        = true | false;   # chrooted upload account, see common/sftp.nix
   # projectRepos      = [ "https://..." ... ];  # cloned into projectsDir by install.sh
   #
