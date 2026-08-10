@@ -55,4 +55,4 @@ No modifier — the actual hardware keys.
 | Play/Pause, Next, Previous | Media control (via `playerctl`) |
 
 ## Known mismatch
-`Super + B` launches `brave` literally in the dotfiles' config — but `headfull` installs **Opera**, not Brave, so this shortcut won't work until `$browser` in `hypr/hyprland.conf` (or a home-manager override) is updated to point at `opera` instead.
+`Super + B` launches `brave` literally in the dotfiles' config — but `headfull` installs **Firefox**, not Brave, so this shortcut won't work until `$browser` in `hypr/hyprland.conf` (or a home-manager override) is updated to point at `firefox` instead.

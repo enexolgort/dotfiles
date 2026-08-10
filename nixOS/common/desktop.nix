@@ -70,7 +70,7 @@ lib.mkIf vars.desktopEnable {
     nerd-fonts.jetbrains-mono  # icon glyphs for waybar/rofi to render correctly
 
     # Requested apps
-    opera
+    firefox
     obsidian
     spotify
     neovim
