@@ -14,7 +14,13 @@ lib.mkIf vars.desktopEnable {
   # references a custom SDDM theme (samaritan-sddm-theme) as an optional
   # add-on. Plain SDDM here; the themed version is a manual follow-up if
   # wanted later, not something auto-applied.
+  #
+  # wayland.enable is required explicitly — SDDM's NixOS module asserts
+  # that either services.xserver.enable or this must be true. Since
+  # Hyprland is pure Wayland (no X server at all), this is the one that
+  # applies.
   services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
 
   # Hint Electron apps (Obsidian, Spotify's Electron-based client) to
   # use Wayland natively rather than falling back to XWayland.
