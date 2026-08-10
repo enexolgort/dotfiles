@@ -1,0 +1,125 @@
+<svg width="860" height="1060" viewBox="0 0 860 1060" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#89dceb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#9399b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<rect x="20" y="20" width="820" height="1020" rx="20" fill="#11111b" fill-opacity="0.88" stroke="#585b70" stroke-width="1.4"/>
+<text x="40" y="48" font-size="14" font-weight="700" fill="#f5e0dc">Tailscale mesh network</text>
+<text x="40" y="64" font-size="12" fill="#bac2de">encrypted private network connecting all hosts</text>
+
+<rect x="40" y="90" width="600" height="124" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#94e2d5" stroke-width="2"/>
+<text x="60" y="112" font-size="14" font-weight="700" fill="#94e2d5">dusty — Mnemosyne</text>
+<text x="60" y="128" font-size="12" fill="#bac2de">real machine — media &amp; web UI</text>
+
+<rect x="60" y="142" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="218" cy="154" r="4.5" fill="#a6e3a1"/>
+<text x="145" y="164" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Jellyfin</text>
+<text x="145" y="184" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">serves media :8096</text>
+
+<rect x="250" y="142" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="404" y="150" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="335" y="164" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Web UI</text>
+<text x="335" y="184" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">torrent UI :4173</text>
+
+<rect x="440" y="142" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="598" cy="154" r="4.5" fill="#a6e3a1"/>
+<text x="525" y="164" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">SFTP upload</text>
+<text x="525" y="184" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">writes to media dir</text>
+
+<line x1="230" y1="214" x2="230" y2="300" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="245" y="252" font-size="12" font-weight="600" fill="#89dceb">REST API calls</text>
+<line x1="470" y1="300" x2="470" y2="214" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="485" y="252" font-size="12" font-weight="600" fill="#89dceb">SFTP push</text>
+
+<rect x="40" y="300" width="600" height="268" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#cba6f7" stroke-width="2"/>
+<text x="60" y="322" font-size="14" font-weight="700" fill="#cba6f7">headless — Hermes</text>
+<text x="60" y="338" font-size="12" fill="#bac2de">WSL — torrent pipeline + other services</text>
+
+<rect x="130" y="352" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="304" y="360" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="225" y="374" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">transmission-API</text>
+<text x="225" y="394" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">API + SFTP push :3001</text>
+
+<rect x="360" y="352" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="534" y="360" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="455" y="374" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Transmission</text>
+<text x="455" y="394" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">daemon, RPC :9091</text>
+
+<line x1="320" y1="380" x2="358" y2="380" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="322" y="372" font-size="12" font-weight="600" fill="#89dceb">RPC</text>
+
+<rect x="130" y="424" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="308" cy="432" r="4.5" fill="#a6e3a1"/>
+<text x="225" y="446" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">CouchDB</text>
+<text x="225" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">Obsidian sync :5984</text>
+
+<rect x="360" y="424" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="538" cy="432" r="4.5" fill="#a6e3a1"/>
+<text x="455" y="446" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Forgejo</text>
+<text x="455" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git server :3000</text>
+
+<rect x="245" y="496" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="423" cy="504" r="4.5" fill="#a6e3a1"/>
+<text x="340" y="518" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">n8n</text>
+<text x="340" y="538" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">automation :5678</text>
+
+<line x1="340" y1="568" x2="340" y2="600" stroke="#89dceb" stroke-width="2"/>
+<line x1="340" y1="600" x2="235" y2="600" stroke="#89dceb" stroke-width="2"/>
+<line x1="235" y1="600" x2="235" y2="638" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="248" y="618" font-size="12" font-weight="600" fill="#89dceb">n8n → Ollama API</text>
+
+<rect x="40" y="638" width="600" height="124" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#fab387" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="60" y="660" font-size="14" font-weight="700" fill="#fab387">scrapy — Athena</text>
+<text x="60" y="676" font-size="12" fill="#bac2de">local AI</text>
+
+<rect x="150" y="690" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="308" cy="702" r="4.5" fill="#a6e3a1"/>
+<text x="235" y="712" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Ollama</text>
+<text x="235" y="732" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">model runner :11434</text>
+
+<rect x="360" y="690" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="518" cy="702" r="4.5" fill="#a6e3a1"/>
+<text x="445" y="712" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Open WebUI</text>
+<text x="445" y="732" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">chat frontend :8080</text>
+
+<line x1="40" y1="150" x2="30" y2="150" stroke="#9399b2" stroke-width="2"/>
+<line x1="40" y1="430" x2="30" y2="430" stroke="#9399b2" stroke-width="2"/>
+<line x1="40" y1="700" x2="30" y2="700" stroke="#9399b2" stroke-width="2"/>
+<line x1="30" y1="150" x2="30" y2="792" stroke="#9399b2" stroke-width="2"/>
+<line x1="30" y1="792" x2="40" y2="792" stroke="#9399b2" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+<rect x="40" y="792" width="600" height="196" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#f38ba8" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="60" y="814" font-size="14" font-weight="700" fill="#f38ba8">shadow — Argus</text>
+<text x="60" y="830" font-size="12" fill="#eba0ac">monitoring — health checks, metrics &amp; backups</text>
+
+<rect x="130" y="844" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="308" cy="852" r="4.5" fill="#a6e3a1"/>
+<text x="225" y="866" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Prometheus</text>
+<text x="225" y="886" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">scrapes metrics :9090</text>
+
+<rect x="360" y="844" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="538" cy="852" r="4.5" fill="#a6e3a1"/>
+<text x="455" y="866" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Grafana</text>
+<text x="455" y="886" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">dashboards :3000</text>
+
+<rect x="130" y="916" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="304" y="924" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="225" y="938" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Webhook receiver</text>
+<text x="225" y="958" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">collects health alerts</text>
+
+<rect x="360" y="916" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="534" y="924" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="455" y="938" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Restic REST server</text>
+<text x="455" y="958" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">offsite backups :8000</text>
+
+<rect x="40" y="1008" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="56" y="1016" font-size="12" fill="#bac2de">Docker container</text>
+<circle cx="188" cy="1012" r="4.5" fill="#a6e3a1"/>
+<text x="200" y="1016" font-size="12" fill="#bac2de">Native NixOS service</text>
+
+<rect x="660" y="489" width="160" height="100" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#89b4fa" stroke-width="2"/>
+<text x="680" y="515" font-size="14" font-weight="700" fill="#89b4fa">janus</text>
+<text x="680" y="535" font-size="12" fill="#bac2de">browser + SSH</text>
+<text x="680" y="551" font-size="12" fill="#bac2de">client, all hosts</text>
+</svg>
