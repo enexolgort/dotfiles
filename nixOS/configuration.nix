@@ -22,14 +22,22 @@
   # this release — see doc/deploy-real-machine.md if troubleshooting
   # against older guides/examples that still show the old paths).
   # ======================================================================
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
+  # ======================================================================
+  # GNOME (dormant by default) — real-machine only, and only for hosts
+  # that don't already have their own desktop via desktopEnable
+  # (currently just headfull, which uses Hyprland/SDDM via
+  # common/desktop.nix instead — enabling both here would hard-conflict,
+  # since two display managers can't both claim the boot slot at once).
+  services.displayManager.gdm.enable = lib.mkIf (!vars.desktopEnable) true;
+  services.desktopManager.gnome.enable = lib.mkIf (!vars.desktopEnable) true;
 
   # NixOS normally makes graphical.target (which pulls in the display
   # manager/GNOME) the default boot target once a display manager is
   # enabled. Force it back to multi-user.target (text console) instead —
   # this is the actual mechanism that keeps GNOME from starting at boot.
-  systemd.defaultUnit = lib.mkForce "multi-user.target";
+  # Only for the dormant-GNOME hosts — desktopEnable hosts (headfull)
+  # should boot straight to their own display manager normally.
+  systemd.defaultUnit = lib.mkIf (!vars.desktopEnable) (lib.mkForce "multi-user.target");
 
   # On-demand start/stop — see also the 'gui-start'/'gui-stop' shell
   # aliases in home.nix, which just wrap these same commands.
