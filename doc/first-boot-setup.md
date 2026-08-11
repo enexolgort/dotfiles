@@ -83,6 +83,13 @@ git clone http://<tailscale-ip>:3000/<gitAdminUser>/<repo-name>.git
 ```
 Your actual git repos live at `/var/lib/forgejo` on the server — already included in the restic backups if you've enabled those.
 
+### GNOME (on-demand, doesn't run at boot)
+```bash
+gui-start   # start GNOME right now
+gui-stop    # stop it entirely, back to text console
+```
+The system boots straight to a TTY console as usual — GNOME only runs (and only uses resources) while you've explicitly started it. Real-machine only, not applicable on WSL. If a bare-metal display is attached, `gui-start` should get you straight to the GDM login screen on it.
+
 ## Checking everything's actually reachable
 `check-remote.sh` (in `scripts/`) is a client-side health check — run it from **any device on your tailnet**, not the server itself, to verify SSH, SFTP, Jellyfin, and CouchDB are all actually reachable in one shot instead of manually `curl`/`ping`-ing each one:
 

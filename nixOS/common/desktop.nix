@@ -14,25 +14,11 @@ lib.mkIf vars.desktopEnable {
   # references a custom SDDM theme (samaritan-sddm-theme) as an optional
   # add-on. Plain SDDM here; the themed version is a manual follow-up if
   # wanted later, not something auto-applied.
-  #
-  # wayland.enable is required explicitly — SDDM's NixOS module asserts
-  # that either services.xserver.enable or this must be true. Since
-  # Hyprland is pure Wayland (no X server at all), this is the one that
-  # applies.
   services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
 
   # Hint Electron apps (Obsidian, Spotify's Electron-based client) to
   # use Wayland natively rather than falling back to XWayland.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
-  # Thunar via its dedicated module (handles D-Bus/systemd registration
-  # properly) rather than as a bare package — and note the actual
-  # correct package path on nixos-25.11 (what we're pinned to) is
-  # pkgs.xfce.thunar, not a bare pkgs.thunar — that only moved to
-  # top-level starting in nixpkgs 26.05. programs.thunar.enable handles
-  # this internally either way, so no direct package reference needed.
-  programs.thunar.enable = true;
 
   environment.systemPackages = with pkgs; [
     # Core rice components from 43PR/dotfiles
@@ -64,13 +50,13 @@ lib.mkIf vars.desktopEnable {
     cliphist        # clipboard history manager
     pavucontrol     # audio mixer GUI
     brightnessctl   # brightness control
-    # thunar is installed via programs.thunar.enable above, not here —
-    # lightweight file manager, commonly paired with minimal-WM rices
-    # rather than pulling in GNOME's full nautilus dependency chain
+    thunar          # file manager — lightweight, commonly paired with
+                     # minimal-WM rices rather than pulling in GNOME's
+                     # full nautilus dependency chain
     nerd-fonts.jetbrains-mono  # icon glyphs for waybar/rofi to render correctly
 
     # Requested apps
-    firefox
+    opera
     obsidian
     spotify
     neovim

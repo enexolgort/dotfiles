@@ -11,8 +11,6 @@
   sftpEnable = true;
   n8nEnable = false;
   monitoringHubEnable = false;
-  desktopEnable = false;
-  cdEnable = false;
 
   # sftpEnable = true, so these need to actually be here.
   sftpDir = "/data/sftp";

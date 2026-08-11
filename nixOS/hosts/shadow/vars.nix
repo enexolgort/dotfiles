@@ -15,8 +15,6 @@
   # REST server) that don't exist as their own options yet. See
   # common/monitoring-hub.nix.
   monitoringHubEnable = true;
-  desktopEnable = false;
-  cdEnable = false;
 
   # shadow is a backup *target* for dusty/headless/scrapy (via
   # common/monitoring-hub.nix's restic REST server), not a client
