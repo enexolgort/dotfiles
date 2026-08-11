@@ -17,7 +17,7 @@ They all share everything that matters (`common/`: Tailscale, Docker, SFTP, back
 dotFiles/
 ├── nixOS/
 │   ├── flake.nix                  # dynamically builds a nixosConfiguration per hosts/* directory
-│   ├── configuration.nix          # real-machine base (bootloader, Samba, extraMounts)
+│   ├── configuration.nix          # real-machine base (bootloader, Samba, GNOME, extraMounts)
 │   ├── wsl-configuration.nix      # WSL base
 │   ├── home.nix                   # user-level config, shared by every host
 │   ├── treefmt.nix
@@ -62,7 +62,7 @@ dotFiles/
 - **flake.nix** — reads every directory under `hosts/`, merges `defaults.nix` with that host's `vars.nix`, and builds a `nixosConfigurations.<name>` for each — no manual registration needed when adding a host.
 - **common/** — every service module, gated behind that host's own toggle (`jellyfinEnable`, `obsidianEnable`, `gitServerEnable`, `aiEnable`) so nothing runs unless a host actually asks for it.
 - **configuration.nix** / **wsl-configuration.nix** — the two possible bases a host can pick via `targetType`. Both import `./common`.
-- **home.nix** — user-level config: Emacs (native-comp, pgtk, daemonized) + auto-bootstraps Doom Emacs, neofetch, shell helpers (`move`/`copy`/`rename`/`doom`/`rebuild`/`update-server`/`backup --nixVars`/`restore --nixVars`). Shared by every host.
+- **home.nix** — user-level config: Emacs (native-comp, pgtk, daemonized) + auto-bootstraps Doom Emacs, neofetch, shell helpers (`move`/`copy`/`rename`/`doom`/`rebuild`/`update-server`/`gui-start`/`gui-stop`/`backup --nixVars`/`restore --nixVars`). Shared by every host.
 - **scripts/install.sh** — `./scripts/install.sh <host>` (or no argument for an interactive menu). Copies the whole `nixOS/` tree into `/etc/nixos` (every host's files need to exist for the flake to evaluate, even though only one gets built), protecting any real `hardware-configuration.nix` already in place, then clones that host's `projectRepos`.
 - **scripts/post-install.sh** — run once after `nixos-rebuild switch` succeeds, on any host. Detects which host it's on via the machine's actual hostname.
 - **scripts/check-remote.sh** — client-side health check (also what the automated monitoring timer runs on the server itself).
