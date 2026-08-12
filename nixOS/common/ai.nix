@@ -1,5 +1,5 @@
 # common/ai.nix — local LLM hosting. Off unless vars.aiEnable = true
-# (currently just scrapy). Both services are confirmed real NixOS
+# Both services are confirmed real NixOS
 # modules (not something built from scratch) — Ollama is the model
 # runner, Open WebUI is the well-established ChatGPT-style frontend for
 # it, specifically built to pair with Ollama.
