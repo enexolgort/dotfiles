@@ -9,12 +9,21 @@
 #   1. Lets you pick which host you're installing/updating right now —
 #      pass it as an argument (`./install.sh dusty`) or get an
 #      interactive menu if you don't.
-#   2. Copies the WHOLE nixOS/ tree into /etc/nixos — every host's files
+#   2. Optionally regenerates hardware-configuration.nix from this
+#      machine's actual current hardware — pass --regen-hardware. Off by
+#      default: this OVERWRITES the repo's copy for that host, so it'll
+#      silently discard any manual edits (custom GPU driver tweaks,
+#      microcode settings, etc.) you might have made — only pass this
+#      when you actually want a fresh capture, e.g. hardware changed, or
+#      you're not sure the current file is even correct.
+#   3. Copies the WHOLE nixOS/ tree into /etc/nixos — every host's files
 #      need to exist for the flake to evaluate at all, even though only
 #      one host actually gets built right now. Each host's
 #      hardware-configuration.nix is protected: never overwritten if a
-#      real one already exists at the destination.
-#   3. Clones the selected host's projectRepos into its projectsDir.
+#      real one already exists at the destination (unless --regen-hardware
+#      updated the repo's own copy first, in which case that's what flows
+#      through here).
+#   4. Clones the selected host's projectRepos into its projectsDir.
 
 set -euo pipefail
 
@@ -34,8 +43,15 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-# --- 0. Pick which host --------------------------------------------------
-HOST="${1:-}"
+# --- 0. Pick which host, and check for --regen-hardware ------------------
+REGEN_HARDWARE=false
+HOST=""
+for arg in "$@"; do
+  case "$arg" in
+    --regen-hardware) REGEN_HARDWARE=true ;;
+    *) HOST="$arg" ;;
+  esac
+done
 
 list_hosts() {
   find "$NIXOS_SRC_DIR/hosts" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
@@ -112,6 +128,16 @@ check_default_passwords() {
 }
 
 check_default_passwords "$NIXOS_SRC_DIR/hosts/defaults.nix"
+
+# --- 0c. Optionally regenerate hardware-configuration.nix -----------------
+if [ "$REGEN_HARDWARE" = true ]; then
+  echo "==> Regenerating hardware-configuration.nix for '$HOST' from this machine's actual hardware..."
+  sudo nixos-generate-config
+  sudo cp /etc/nixos/hardware-configuration.nix "$NIXOS_SRC_DIR/hosts/$HOST/hardware-configuration.nix"
+  sudo chown "$(id -u):$(id -g)" "$NIXOS_SRC_DIR/hosts/$HOST/hardware-configuration.nix"
+  echo "==> Updated $NIXOS_SRC_DIR/hosts/$HOST/hardware-configuration.nix"
+  echo "    Review it, then commit it to git once the rebuild below succeeds."
+fi
 
 # --- 1. Copy the whole nixOS/ tree into /etc/nixos -----------------------
 echo "==> Copying $NIXOS_SRC_DIR into $NIXOS_DIR"
