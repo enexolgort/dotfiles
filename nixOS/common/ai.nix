@@ -1,5 +1,5 @@
 # common/ai.nix — local LLM hosting. Off unless vars.aiEnable = true
-# Both services are confirmed real NixOS
+# (currently just scrapy). Both services are confirmed real NixOS
 # modules (not something built from scratch) — Ollama is the model
 # runner, Open WebUI is the well-established ChatGPT-style frontend for
 # it, specifically built to pair with Ollama.
@@ -12,6 +12,9 @@
 lib.mkIf vars.aiEnable {
   services.ollama = {
     enable = true;
+    # CPU-only by default. If scrapy has a compatible GPU, override this
+    # to "cuda" or "rocm" here for real acceleration — CPU inference
+    # works but is slow for anything beyond small models.
     acceleration = false;
     loadModels = vars.aiModels;
     host = "0.0.0.0";   # was defaulting to 127.0.0.1-only — same bug as CouchDB/Open WebUI
