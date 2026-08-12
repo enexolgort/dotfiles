@@ -18,6 +18,7 @@
     ./ai.nix
     ./n8n.nix
     ./monitoring-hub.nix
+    ./desktop.nix
     ./docker.nix
     ./sftp.nix
     ./backups.nix

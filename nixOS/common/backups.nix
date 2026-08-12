@@ -32,9 +32,9 @@
       Persistent = true;
     };
     pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 4"
-      "--keep-monthly 6"
+      "--keep-daily 7" #Keep every daily snapshot from the last 7 days
+      "--keep-weekly 4" #Beyond that, keep just one snapshot per week, for the next 4 weeks
+      "--keep-monthly 6" #Beyond that, keep just one snapshot per month, for the next 6 months
     ];
   };
 

@@ -14,11 +14,45 @@ lib.mkIf vars.desktopEnable {
   # references a custom SDDM theme (samaritan-sddm-theme) as an optional
   # add-on. Plain SDDM here; the themed version is a manual follow-up if
   # wanted later, not something auto-applied.
+  #
+  # wayland.enable is required explicitly — SDDM's NixOS module asserts
+  # that either services.xserver.enable or this must be true. Since
+  # Hyprland is pure Wayland (no X server at all), this is the one that
+  # applies.
   services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
 
   # Hint Electron apps (Obsidian, Spotify's Electron-based client) to
   # use Wayland natively rather than falling back to XWayland.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+  # NetworkManager itself is already enabled in configuration.nix — this
+  # is just the graphical tray applet on top of it, for connecting to
+  # WiFi without the command line.
+  #
+  # KNOWN RELIABILITY CAVEAT: a NixOS Discourse thread reports this
+  # module's systemd-user-service autostart specifically not reliably
+  # working under Hyprland+SDDM (this exact combo), despite being
+  # designed to. If the applet doesn't appear after rebooting, the
+  # documented workaround is adding `exec-once = nm-applet --indicator`
+  # directly to hyprland.conf (in the cloned 43PR/dotfiles config) rather
+  # than relying on this module's own autostart.
+  programs.nm-applet.enable = true;
+
+  # Dolphin (KDE's file manager) rather than Thunar, per request.
+  # kdePackages.kio/-fuse/-extras are the wiki-documented required
+  # companions (kio itself became required separately starting in
+  # nixos-25.11, not bundled automatically) — without them Dolphin runs
+  # but loses basic functionality (remote/SFTP browsing, etc.).
+  #
+  # HONEST CAVEAT, confirmed via an open nixpkgs issue (NixOS/nixpkgs
+  # #409986): Dolphin's "open with" file-association suggestions are
+  # known not to work correctly on non-Plasma window managers —
+  # Hyprland included. It'll browse/launch files fine; app suggestions
+  # specifically may not appear. A workaround exists (pointing
+  # environment.etc."xdg/menus/applications.menu" at Plasma's own menu
+  # file) but isn't applied here — flagging rather than silently
+  # papering over a real limitation.
 
   environment.systemPackages = with pkgs; [
     # Core rice components from 43PR/dotfiles
@@ -50,13 +84,14 @@ lib.mkIf vars.desktopEnable {
     cliphist        # clipboard history manager
     pavucontrol     # audio mixer GUI
     brightnessctl   # brightness control
-    thunar          # file manager — lightweight, commonly paired with
-                     # minimal-WM rices rather than pulling in GNOME's
-                     # full nautilus dependency chain
+    kdePackages.dolphin      # file manager
+    kdePackages.kio          # required separately since nixos-25.11
+    kdePackages.kio-fuse     # mount remote filesystems via FUSE
+    kdePackages.kio-extras   # protocol support: sftp, fish, etc.
     nerd-fonts.jetbrains-mono  # icon glyphs for waybar/rofi to render correctly
 
     # Requested apps
-    opera
+    firefox
     obsidian
     spotify
     neovim
