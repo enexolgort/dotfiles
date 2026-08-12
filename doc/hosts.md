@@ -11,7 +11,7 @@ Current hosts:
 | `headless` | `wsl` | Obsidian (CouchDB), Forgejo, n8n | `transmission-API` |
 | `scrapy` | `wsl` | Ollama + Open WebUI (local AI) | — |
 | `shadow` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
-| `headfull` | `real` | Hyprland desktop (Opera, Obsidian client, Spotify, LazyVim, 43PR/dotfiles rice) | — |
+| `headfull` | `real` | Hyprland desktop (Firefox, Obsidian client, Spotify, LazyVim, 43PR/dotfiles rice) | — |
 
 ## Installing/updating a specific host
 ```bash
@@ -88,7 +88,7 @@ Not yet wired up (deliberately, as a separate follow-up): `node_exporter` on `du
 ## Desktop (headfull) specifically
 `common/desktop.nix` enables `programs.hyprland` — which, per the official Hyprland-on-NixOS wiki, already handles polkit, the XDG desktop portal, graphics drivers, fonts, dconf, and XWayland on its own. SDDM is the login screen. The [43PR/dotfiles](https://github.com/43PR/dotfiles) "rice" is applied via `home-desktop.nix`'s activation script — cloned once, then its `.config/*` subdirectories are copied into the real `~/.config/` (not the whole repo, since it also has README screenshots and wallpapers at the root that aren't config). Same pattern already established for the Doom Emacs bootstrap in `home.nix`.
 
-Also included: LazyVim (official starter template, cloned into `~/.config/nvim` the same way), Opera, Obsidian (the desktop client, not the sync backend — that's CouchDB on `headless`), Spotify, plus the standard companions any real Hyprland setup needs that weren't in the dotfiles repo itself (`mako` for notifications, `hyprlock`/`hyprpaper`, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `thunar`).
+Also included: LazyVim (official starter template, cloned into `~/.config/nvim` the same way), Firefox, Obsidian (the desktop client, not the sync backend — that's CouchDB on `headless`), Spotify, plus the standard companions any real Hyprland setup needs that weren't in the dotfiles repo itself (`mako` for notifications, `hyprlock`/`hyprpaper`, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, Dolphin as the file manager — note: Dolphin's "open with" file-association suggestions are known not to work correctly on non-Plasma window managers per an open nixpkgs issue, Hyprland included; it browses/launches files fine regardless).
 
 **Deliberately not wired up**: `spicetify` (present in the dotfiles' `.config` but not applied here) — it patches the actual Spotify installation's files, which doesn't play well with NixOS's read-only `/nix/store` without the community `spicetify-nix` flake built specifically for that. A real follow-up if wanted, not something to fake.
 
