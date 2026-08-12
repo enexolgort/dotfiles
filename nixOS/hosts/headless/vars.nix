@@ -11,6 +11,7 @@
   sftpEnable = false;
   n8nEnable = true;
   monitoringHubEnable = false;
+  desktopEnable = false;
 
   # obsidianEnable = true, so these need to actually be here.
   couchdbAdminUser = "admin";
