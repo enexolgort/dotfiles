@@ -24,14 +24,14 @@
   # multi-host vars.nix entirely (would've silently left both drives
   # unmounted). Real UUIDs, not placeholders.
   extraMounts = [
-    {
-      device = "/dev/disk/by-uuid/fae138ec-cca2-4d6a-ad07-583494d934a7"; # media drive (sdb)
+   {
+      device = "/dev/disk/by-uuid/354d0fc5-b1fd-482d-bc7b-2261324f590d"; # media drive (dwsdb)
       mountPoint = "/data/media";
       fsType = "ext4";
       options = [ "defaults" "nofail" ];
     }
     {
-      device = "/dev/disk/by-uuid/00208e9d-d9d2-4993-b92c-85b2ff15ed33"; # backup drive (sda)
+      device = "/dev/disk/by-uuid/580634fd-4d57-9b25-77a7965f1b93"; # backup drive (sda)
       mountPoint = "/data/backup";
       fsType = "ext4";
       options = [ "defaults" "nofail" ];
@@ -48,3 +48,4 @@
     "https://github.com/enexolgort/transmission-webUi"
   ];
 }
+
