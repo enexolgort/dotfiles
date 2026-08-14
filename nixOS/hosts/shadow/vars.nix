@@ -3,6 +3,7 @@
   username = "enexolgort";
   gitEmail = "enexolgort@shadow.local";
   targetType = "real";
+  bootloader = "systemd-boot"; # bare-metal, UEFI
 
   jellyfinEnable = false;
   obsidianEnable = false;

@@ -39,6 +39,14 @@
   # n8nEnable         = true | false;   # workflow automation, see common/n8n.nix
   # monitoringHubEnable = true | false; # Prometheus+Grafana+restic REST server, see common/monitoring-hub.nix
   # desktopEnable      = true | false;  # Hyprland desktop, see common/desktop.nix + home-desktop.nix
+  #
+  # --- Real-machine (targetType = "real") hosts only ----------------------
+  # bootloader = "systemd-boot" | "grub";  # systemd-boot is UEFI-only —
+  #   use "grub" if the machine/VM runs legacy BIOS (check with
+  #   `sudo parted /dev/sda -- print`: "Partition Table: msdos" = BIOS,
+  #   "gpt" = UEFI, systemd-boot fine)
+  # grubDevice = "/dev/sda";  # only needed if bootloader = "grub" — the
+  #   whole disk device, not a partition
   # sftpEnable        = true | false;   # chrooted upload account, see common/sftp.nix
   # projectRepos      = [ "https://..." ... ];  # cloned into projectsDir by install.sh
   #
