@@ -32,7 +32,7 @@ DOOM_SRC_DIR="$REPO_ROOT/doom"
 if [ -x "$DOOM_BIN" ]; then
   if [ ! -d "$DOOM_CONF" ]; then
     echo "==> Doom not bootstrapped yet, running 'doom install' first"
-    "$DOOM_BIN" install --no-env --no-fonts -!
+    "$DOOM_BIN" install --no-env -!
   fi
 
   if [ -d "$DOOM_SRC_DIR" ]; then
