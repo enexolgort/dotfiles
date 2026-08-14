@@ -54,7 +54,7 @@
     fi
 
     if [ ! -d "$DOOM_CONF" ]; then
-      $DRY_RUN_CMD "$DOOM_DIR/bin/doom" install --no-env --no-fonts -! \
+      $DRY_RUN_CMD "$DOOM_DIR/bin/doom" install --no-env -! \
         || echo "doom install failed - run 'doom install' manually as the ${vars.username} user"
     fi
   '';
