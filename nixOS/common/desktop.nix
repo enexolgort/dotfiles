@@ -10,9 +10,7 @@
 lib.mkIf vars.desktopEnable {
   programs.hyprland.enable = true;
 
-  # SDDM as the login screen — matches the 43PR/dotfiles rice, which
-  # references a custom SDDM theme (samaritan-sddm-theme) as an optional
-  # add-on. Plain SDDM here; the themed version is a manual follow-up if
+  # SDDM as the login screen. A themed version is a manual follow-up if
   # wanted later, not something auto-applied.
   #
   # wayland.enable is required explicitly — SDDM's NixOS module asserts
@@ -35,8 +33,8 @@ lib.mkIf vars.desktopEnable {
   # working under Hyprland+SDDM (this exact combo), despite being
   # designed to. If the applet doesn't appear after rebooting, the
   # documented workaround is adding `exec-once = nm-applet --indicator`
-  # directly to hyprland.conf (in the cloned 43PR/dotfiles config) rather
-  # than relying on this module's own autostart.
+  # directly to your hyprland.conf rather than relying on this module's
+  # own autostart.
   programs.nm-applet.enable = true;
 
   # Dolphin (KDE's file manager) rather than Thunar, per request.
@@ -55,7 +53,7 @@ lib.mkIf vars.desktopEnable {
   # papering over a real limitation.
 
   environment.systemPackages = with pkgs; [
-    # Core rice components from 43PR/dotfiles
+    # Core Hyprland ecosystem components
     kitty         # terminal — required for Hyprland's own default config
     rofi          # app launcher (plain package; rofi-wayland exists as
                    # an alternative fork if this has Wayland issues —
@@ -65,18 +63,11 @@ lib.mkIf vars.desktopEnable {
     btop          # already used elsewhere in this repo for servers too
     cava          # audio visualizer
     nwg-look      # GTK theme switcher GUI
-    # quickshell  # referenced in the dotfiles' .config, but I couldn't
-                   # confirm this package name/availability with
-                   # confidence — verify with `nix search nixpkgs
-                   # quickshell` on first rebuild before assuming it's
-                   # missing entirely, rather than silently dropping it
 
-    # Genuinely useful additions beyond what's in the dotfiles repo
-    # itself — standard companions for any real Hyprland setup:
+    # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
     hyprlock        # lock screen (Hyprland-native)
-    mako            # notification daemon — nothing in the dotfiles repo
-                     # covers this, but GTK/Electron apps expect
+    mako            # notification daemon — GTK/Electron apps expect
                      # notifications to work
     grim            # screenshot capture
     slurp           # screen region selection (paired with grim)
@@ -96,11 +87,4 @@ lib.mkIf vars.desktopEnable {
     spotify
     neovim
   ];
-
-  # spicetify (Spotify re-theming, present in the dotfiles' .config) is
-  # deliberately NOT wired up here — it patches the actual Spotify
-  # installation's files, which is awkward under NixOS's read-only
-  # /nix/store without the community spicetify-nix flake specifically
-  # built to handle that. Worth adding as a real follow-up if wanted,
-  # not something to fake here.
 }
