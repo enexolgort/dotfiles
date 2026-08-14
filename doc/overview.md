@@ -46,6 +46,7 @@ dotFiles/
 │       ├── monitoring.nix
 │       └── packages.nix
 ├── doom/                          # tracked Doom Emacs config
+├── hypr/                          # tracked Hyprland config (headfull only)
 ├── scripts/
 │   ├── install.sh                 # picks a host, deploys it, clones its project repos
 │   ├── post-install.sh
