@@ -69,7 +69,7 @@ echo
 # already-corrected text just matches nothing the second time).
 DESKTOP_ENABLE="false"
 if [ -f "$VARS_FILE" ]; then
-  DESKTOP_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --raw --file "$VARS_FILE" desktopEnable 2>/dev/null || echo "false")"
+  DESKTOP_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --file "$VARS_FILE" desktopEnable 2>/dev/null || echo "false")"
 fi
 
 if [ "$DESKTOP_ENABLE" = "true" ]; then
