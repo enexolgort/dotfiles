@@ -23,6 +23,13 @@
       $DRY_RUN_CMD mkdir -p "$HOME/.config"
       for dir in "$DOTFILES_CACHE"/.config/*/; do
         name="$(basename "$dir")"
+        # Skip neofetch specifically — it's already managed separately
+        # by home.nix's own xdg.configFile declaration (a home-manager-
+        # managed read-only symlink into the Nix store), which this
+        # blind copy can't write over and would crash on otherwise.
+        if [ "$name" = "neofetch" ]; then
+          continue
+        fi
         $DRY_RUN_CMD cp -rT "$dir" "$HOME/.config/$name"
       done
     fi
