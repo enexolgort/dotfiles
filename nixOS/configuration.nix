@@ -5,9 +5,21 @@
 { config, pkgs, lib, vars, ... }:
 
 {
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10; # cap boot entries — the ESP has limited space
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Bootloader choice is per-host (vars.bootloader = "systemd-boot" or
+  # "grub") — systemd-boot is UEFI-only, full stop, no legacy BIOS
+  # fallback exists. A VM running in legacy BIOS mode (confirmed via
+  # `sudo parted /dev/sda -- print` showing "Partition Table: msdos"
+  # instead of "gpt") categorically cannot use it, regardless of how
+  # correctly the disk is otherwise partitioned — this is what caused a
+  # long recurring saga on headfull before the actual root cause (VM
+  # firmware mode, not partitioning) was identified. GRUB supports both
+  # BIOS and UEFI, so it's the one that actually works here.
+  boot.loader.systemd-boot.enable = lib.mkIf (vars.bootloader == "systemd-boot") true;
+  boot.loader.systemd-boot.configurationLimit = lib.mkIf (vars.bootloader == "systemd-boot") 10; # cap boot entries — the ESP has limited space
+  boot.loader.efi.canTouchEfiVariables = lib.mkIf (vars.bootloader == "systemd-boot") true;
+
+  boot.loader.grub.enable = lib.mkIf (vars.bootloader == "grub") true;
+  boot.loader.grub.device = lib.mkIf (vars.bootloader == "grub") vars.grubDevice; # e.g. "/dev/sda" — the whole disk, not a partition
 
   networking.networkmanager.enable = true;
 
