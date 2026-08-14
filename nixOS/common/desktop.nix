@@ -66,14 +66,10 @@ lib.mkIf vars.desktopEnable {
     wireplumber.enable = true;
   };
 
-  # Wallpaper daemon: hyprpaper, not the actual dotfiles' choice (awww) —
-  # couldn't confirm awww is in mainstream nixpkgs (vs. only the separate
-  # nixpkgs-wayland overlay) with confidence, so this uses the
-  # already-confirmed-available, Hyprland-native alternative instead.
-  # Same end result (wallpaper gets set). Its actual config file
-  # (~/.config/hypr/hyprpaper.conf, referencing a real wallpaper path)
-  # is written by scripts/post-install.sh, not here — it needs the
-  # user's real $HOME, which isn't available at this system-config level.
+  # Wallpaper daemon: hyprpaper (Hyprland-native, already confirmed
+  # available in mainstream nixpkgs). Its actual config
+  # (~/.config/hypr/hyprpaper.conf) is part of your own tracked hypr/
+  # folder, copied in by scripts/post-install.sh — not written here.
 
   environment.systemPackages = with pkgs; [
     # Core Hyprland ecosystem components
@@ -86,7 +82,6 @@ lib.mkIf vars.desktopEnable {
     btop          # already used elsewhere in this repo for servers too
     cava          # audio visualizer
     nwg-look      # GTK theme switcher GUI
-    quickshell    # confirmed actually used (hyprquickpaper wallpaper picker) — was previously an uncertain, commented-out guess
 
     # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
