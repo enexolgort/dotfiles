@@ -58,6 +58,51 @@ fi
 
 echo "==> Done."
 echo
+
+# --- 43PR/dotfiles: only for desktop hosts (desktopEnable = true) --------
+# Manually-triggered here rather than a home.activation script — that
+# approach only re-runs when the system generation actually changes, and
+# a no-op rebuild silently skipped it entirely with zero error shown.
+# Re-running this is always safe: skips the clone if already cached,
+# and the copy is a plain overwrite.
+DESKTOP_ENABLE="false"
+if [ -f "$VARS_FILE" ]; then
+  DESKTOP_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --raw --file "$VARS_FILE" desktopEnable 2>/dev/null || echo "false")"
+fi
+
+if [ "$DESKTOP_ENABLE" = "true" ]; then
+  echo "==> desktopEnable = true for '$CURRENT_HOST' — setting up 43PR/dotfiles"
+  DOTFILES_CACHE="$HOME/.cache/43pr-dotfiles"
+
+  if [ ! -d "$DOTFILES_CACHE" ]; then
+    echo "==> Cloning 43PR/dotfiles..."
+    if ! git clone --depth 1 https://github.com/43PR/dotfiles "$DOTFILES_CACHE"; then
+      echo "!! 43PR/dotfiles clone failed — check network and retry this script"
+      DOTFILES_CACHE=""
+    fi
+  else
+    echo "==> 43PR/dotfiles already cloned, skipping (delete $DOTFILES_CACHE to re-clone fresh)"
+  fi
+
+  if [ -n "$DOTFILES_CACHE" ] && [ -d "$DOTFILES_CACHE/.config" ]; then
+    mkdir -p "$HOME/.config"
+    for dir in "$DOTFILES_CACHE"/.config/*/; do
+      name="$(basename "$dir")"
+      # Skip neofetch specifically — it's already managed separately by
+      # home.nix's own xdg.configFile declaration (a home-manager-managed
+      # read-only symlink into the Nix store), which a plain cp can't
+      # write over and would fail on otherwise.
+      if [ "$name" = "neofetch" ]; then
+        echo "    skipped neofetch (managed separately by home.nix)"
+        continue
+      fi
+      cp -rT "$dir" "$HOME/.config/$name"
+      echo "    copied $name"
+    done
+  fi
+fi
+
+echo
 echo "Still manual (not scriptable, need interactive input):"
 echo "  - sudo tailscale up --ssh        # one-time tailnet login"
 echo "  - passwd                          # replace the initial placeholder password"
