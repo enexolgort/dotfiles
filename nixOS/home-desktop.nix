@@ -2,39 +2,16 @@
 # hosts (currently just headfull). Imported conditionally by flake.nix
 # based on that host's desktopEnable — never applied to the headless
 # server hosts.
+#
+# NOTE: 43PR/dotfiles cloning+copying used to live here as a home.activation
+# script, but moved to scripts/post-install.sh instead — a manually-
+# triggered step is more predictable than relying on home-manager's
+# activation-script timing, which only runs again when the system
+# generation actually changes (a real gap we hit: a no-op rebuild
+# silently skipped re-running it entirely, with zero error shown).
 { config, pkgs, lib, vars, ... }:
 
 {
-  # 43PR/dotfiles — clones fresh if missing, then copies its .config/*
-  # subdirectories into the real ~/.config/. Deliberately NOT copying
-  # the whole repo (it also contains README.md and several large
-  # screenshot PNGs at the root that aren't actual config, just
-  # documentation images).
-  home.activation.install43PRDotfiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    DOTFILES_CACHE="$HOME/.cache/43pr-dotfiles"
-
-    if [ ! -d "$DOTFILES_CACHE" ]; then
-      $DRY_RUN_CMD ${pkgs.git}/bin/git clone --depth 1 \
-        https://github.com/43PR/dotfiles "$DOTFILES_CACHE" \
-        || echo "43PR/dotfiles clone failed — run it manually as the ${vars.username} user"
-    fi
-
-    if [ -d "$DOTFILES_CACHE/.config" ]; then
-      $DRY_RUN_CMD mkdir -p "$HOME/.config"
-      for dir in "$DOTFILES_CACHE"/.config/*/; do
-        name="$(basename "$dir")"
-        # Skip neofetch specifically — it's already managed separately
-        # by home.nix's own xdg.configFile declaration (a home-manager-
-        # managed read-only symlink into the Nix store), which this
-        # blind copy can't write over and would crash on otherwise.
-        if [ "$name" = "neofetch" ]; then
-          continue
-        fi
-        $DRY_RUN_CMD cp -rT "$dir" "$HOME/.config/$name"
-      done
-    fi
-  '';
-
   # LazyVim — official starter template, cloned fresh only if
   # ~/.config/nvim doesn't already exist (never overwrites an existing
   # config, same caution as the Doom Emacs bootstrap above).
