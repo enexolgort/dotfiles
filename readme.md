@@ -2,8 +2,6 @@
 
 Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale SSH), Docker, chrooted SFTP, CouchDB-backed Obsidian sync, a self-hosted git server, local AI models (Ollama + Open WebUI), n8n, Prometheus/Grafana monitoring, a Hyprland desktop, Samba, and Doom Emacs — all locked down to your tailnet, deployable to real machines or NixOS-WSL, choosing which services each machine runs.
 
-( This is a personnal project, not to be used by everyone)
-
 ![Homelab architecture](./homelab-architecture.svg)
 
 Currently five hosts: `dusty` (Jellyfin, SFTP), `headless` (Obsidian + git server + n8n, WSL), `scrapy` (local AI, WSL), `shadow` (monitoring hub), `headfull` (Hyprland desktop).
@@ -17,7 +15,6 @@ Full documentation lives in [`doc/`](./doc/overview.md):
 - **[doc/deploy-wsl.md](./doc/deploy-wsl.md)** — installing a NixOS-WSL host
 - **[doc/boot-and-updates.md](./doc/boot-and-updates.md)** — what auto-starts at boot, and how to apply future changes on each machine
 - **[doc/first-boot-setup.md](./doc/first-boot-setup.md)** — one-time setup: Tailscale, Jellyfin, Obsidian sync, SFTP, Docker, Doom Emacs, shell helpers
-- **[doc/headfull-keybinds.md](./doc/headfull-keybinds.md)** — Hyprland keyboard shortcuts for the headfull desktop
 
 ## Quick start
 ```bash
