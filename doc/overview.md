@@ -86,7 +86,6 @@ CI only **fully builds hosts with `targetType = "wsl"`** (currently just `headle
 - [first-boot-setup.md](./first-boot-setup.md) — Tailscale, Jellyfin, Obsidian sync, SFTP, Docker, Doom Emacs
 - [secrets.md](./secrets.md) — sops-nix one-time setup, what it does and doesn't cover
 - [backups.md](./backups.md) — restic setup, checking it's working, restore instructions
-- [headfull-keybinds.md](./headfull-keybinds.md) — Hyprland keyboard shortcuts for the headfull desktop
 
 ## Common follow-ups
 - **Real HTTPS via Tailscale** for Jellyfin/CouchDB (`tailscale serve`)

@@ -52,6 +52,29 @@ lib.mkIf vars.desktopEnable {
   # file) but isn't applied here — flagging rather than silently
   # papering over a real limitation.
 
+  # Audio — PipeWire is what the actual dotfiles (packages.txt) expect
+  # (pipewire, pipewire-pulse, wireplumber), and this was a genuine gap:
+  # nothing configured audio at all before this. rtkit is required for
+  # PipeWire's realtime scheduling.
+  security.rtkit.enable = true;
+  services.pulseaudio.enable = false; # must be off — conflicts with PipeWire's own pulse emulation
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+
+  # Wallpaper daemon: hyprpaper, not the actual dotfiles' choice (awww) —
+  # couldn't confirm awww is in mainstream nixpkgs (vs. only the separate
+  # nixpkgs-wayland overlay) with confidence, so this uses the
+  # already-confirmed-available, Hyprland-native alternative instead.
+  # Same end result (wallpaper gets set). Its actual config file
+  # (~/.config/hypr/hyprpaper.conf, referencing a real wallpaper path)
+  # is written by scripts/post-install.sh, not here — it needs the
+  # user's real $HOME, which isn't available at this system-config level.
+
   environment.systemPackages = with pkgs; [
     # Core Hyprland ecosystem components
     kitty         # terminal — required for Hyprland's own default config
@@ -63,6 +86,7 @@ lib.mkIf vars.desktopEnable {
     btop          # already used elsewhere in this repo for servers too
     cava          # audio visualizer
     nwg-look      # GTK theme switcher GUI
+    quickshell    # confirmed actually used (hyprquickpaper wallpaper picker) — was previously an uncertain, commented-out guess
 
     # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
@@ -75,11 +99,13 @@ lib.mkIf vars.desktopEnable {
     cliphist        # clipboard history manager
     pavucontrol     # audio mixer GUI
     brightnessctl   # brightness control
+    playerctl       # media key controls (play/pause/next/prev) — used in keybinds.lua
     kdePackages.dolphin      # file manager
     kdePackages.kio          # required separately since nixos-25.11
     kdePackages.kio-fuse     # mount remote filesystems via FUSE
     kdePackages.kio-extras   # protocol support: sftp, fish, etc.
     nerd-fonts.jetbrains-mono  # icon glyphs for waybar/rofi to render correctly
+    font-awesome               # additional icon set the dotfiles' packages.txt expects
 
     # Requested apps
     firefox
