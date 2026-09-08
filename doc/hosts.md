@@ -8,7 +8,7 @@ Current hosts:
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
 | `dusty` | `real` | Jellyfin, SFTP | `transmission-webUi` |
-| `headless` | `wsl` | Obsidian (CouchDB), Forgejo, n8n | `transmission-API` |
+| `headless` | `wsl` | Obsidian (CouchDB), Forgejo | `transmission-API` |
 | `scrapy` | `wsl` | Ollama + Open WebUI (local AI) | — |
 | `shadow` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
 | `headfull` | `real` | Hyprland desktop (Firefox, Obsidian client, Spotify, LazyVim) | — |

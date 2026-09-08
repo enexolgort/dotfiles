@@ -70,11 +70,10 @@ check_http "$DUSTY" 8096 "/" "Jellyfin"
 check_http "$DUSTY" 4173 "/" "transmission-webUi"
 
 echo
-echo "=== headless (Obsidian/CouchDB, Forgejo, n8n, transmission-API) ==="
+echo "=== headless (Obsidian/CouchDB, Forgejo, transmission-API) ==="
 check_tcp "$HEADLESS" 22 "SSH"
 check_http "$HEADLESS" 5984 "/" "CouchDB"
 check_http "$HEADLESS" 3000 "/" "Forgejo"
-check_http "$HEADLESS" 5678 "/" "n8n"
 check_json_field "$HEADLESS" 3001 "/health" "transmission-API health" '"status":"ok"'
 
 echo
