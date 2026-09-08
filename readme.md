@@ -4,7 +4,7 @@ Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale 
 
 ![Homelab architecture](./homelab-architecture.svg)
 
-Currently five hosts: `dusty` (Jellyfin, SFTP), `headless` (Obsidian + git server + n8n, WSL), `scrapy` (local AI, WSL), `shadow` (monitoring hub), `headfull` (Hyprland desktop).
+Currently five hosts: `dusty` (Jellyfin, SFTP), `headless` (Obsidian + git server, WSL), `scrapy` (local AI, WSL), `shadow` (monitoring hub), `headfull` (Hyprland desktop).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
 

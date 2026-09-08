@@ -9,7 +9,7 @@
   gitServerEnable = true;
   aiEnable = false;
   sftpEnable = false;
-  n8nEnable = true;
+  n8nEnable = false;
   monitoringHubEnable = false;
   desktopEnable = false;
 
