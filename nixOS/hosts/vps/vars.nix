@@ -3,9 +3,11 @@
   username = "enexolgort";
   gitEmail = "enexolgort@vps.local";
   targetType = "real";
-  bootloader = "systemd-boot"; # most VPS providers are UEFI now — switch to
-    # "grub" + set grubDevice below if `sudo parted /dev/sda -- print` on
-    # the actual VPS shows an msdos (BIOS) partition table instead of gpt
+  # systemd-boot failed on this VPS ("efiSysMountPoint = '/boot' is not a
+  # mounted partition") because it boots BIOS/legacy, not UEFI — confirmed
+  # via `sudo parted /dev/sda -- print` showing an msdos partition table.
+  bootloader = "grub";
+  grubDevice = "/dev/sda"; # whole disk device, not a partition
 
   jellyfinEnable = false;
   obsidianEnable = false;
