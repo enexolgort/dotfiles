@@ -16,9 +16,10 @@
   monitoringHubEnable = false;
   desktopEnable = false;
 
-  # Smallest usable model — bump this once you know the VPS's actual CPU/RAM
-  # (or GPU) budget. Cloned from scrapy's conservative default.
-  aiModels = [ "qwen2.5:0.5b" ];
+  # 8 cores / 32GB RAM, CPU-only inference — 7B is about the practical
+  # ceiling for tolerable response speed on this hardware; going bigger
+  # (e.g. 14B) would fit in RAM but get noticeably slower per response.
+  aiModels = [ "qwen2.5:7b" ];
 
   backupEnable = false;
 
