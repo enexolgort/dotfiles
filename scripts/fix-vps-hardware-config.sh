@@ -19,17 +19,26 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-# Locate the flake root: could be /etc/nixos, a checked-out dotfiles clone,
-# wherever this script's own repo lives. Walk up from this script looking
-# for flake.nix.
+# Locate the flake root. Two layouts exist in the wild: a flattened
+# checkout (e.g. /etc/nixos, flake.nix directly at the root) and the
+# original dotfiles clone (flake.nix nested one level down, at nixOS/).
+# Walk up from this script and check both possibilities at each level.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$SCRIPT_DIR"
-while [ "$REPO_ROOT" != "/" ] && [ ! -f "$REPO_ROOT/flake.nix" ]; do
-  REPO_ROOT="$(dirname "$REPO_ROOT")"
+DIR="$SCRIPT_DIR"
+REPO_ROOT=""
+while [ "$DIR" != "/" ]; do
+  if [ -f "$DIR/flake.nix" ]; then
+    REPO_ROOT="$DIR"
+    break
+  elif [ -f "$DIR/nixOS/flake.nix" ]; then
+    REPO_ROOT="$DIR/nixOS"
+    break
+  fi
+  DIR="$(dirname "$DIR")"
 done
 
-if [ ! -f "$REPO_ROOT/flake.nix" ]; then
-  echo "!! Could not find flake.nix by walking up from $SCRIPT_DIR — is this script still inside the flake repo?" >&2
+if [ -z "$REPO_ROOT" ]; then
+  echo "!! Could not find flake.nix (directly, or under nixOS/) by walking up from $SCRIPT_DIR — is this script still inside the flake repo?" >&2
   exit 1
 fi
 
