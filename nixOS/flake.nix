@@ -3,6 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # vps only — pinned separately so it can track 26.05 without bumping
+    # every other host. See mkHost's nixpkgsFor below.
+    nixpkgs-2605.url = "github:NixOS/nixpkgs/nixos-26.05";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,7 +21,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, treefmt-nix, ... }:
+  outputs = { self, nixpkgs, nixpkgs-2605, home-manager, nixos-wsl, sops-nix, treefmt-nix, ... }:
     let
       lib = nixpkgs.lib;
       defaults = import ./hosts/defaults.nix;
@@ -30,6 +33,10 @@
       hostNames = builtins.attrNames (
         lib.filterAttrs (name: type: type == "directory") (builtins.readDir hostsDir)
       );
+
+      # vps tracks 26.05 (see nixpkgs-2605 input above); every other host
+      # stays on the fleet-wide 25.11 default.
+      nixpkgsFor = name: if name == "vps" then nixpkgs-2605 else nixpkgs;
 
       mkHomeManagerModule = vars: {
         home-manager.useGlobalPkgs = true;
@@ -46,7 +53,7 @@
           vars = defaults // hostVars;
           hardwareFile = hostsDir + "/${name}/hardware-configuration.nix";
         in
-        nixpkgs.lib.nixosSystem {
+        (nixpkgsFor name).lib.nixosSystem {
           system = vars.system;
           specialArgs =
             { inherit vars; }
