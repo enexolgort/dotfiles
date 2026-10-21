@@ -1,8 +1,8 @@
-# common/ai.nix — local LLM hosting. Off unless vars.aiEnable = true
-# (currently scrapy). Both services are confirmed real NixOS
-# modules (not something built from scratch) — Ollama is the model
-# runner, Open WebUI is the well-established ChatGPT-style frontend for
-# it, specifically built to pair with Ollama.
+# common/ai.nix — local LLM hosting. Off unless a host's vars.nix sets
+# aiEnable = true. Both services are confirmed real NixOS modules (not
+# something built from scratch) — Ollama is the model runner, Open WebUI
+# is the well-established ChatGPT-style frontend for it, specifically
+# built to pair with Ollama.
 #
 # No firewall changes needed: trustedInterfaces (networking.nix) already
 # covers these ports automatically, same as every other service here.
@@ -12,8 +12,8 @@
 lib.mkIf vars.aiEnable {
   services.ollama = {
     enable = true;
-    # CPU-only by default. If scrapy has a compatible GPU, override this
-    # to "cuda" or "rocm" here for real acceleration — CPU inference
+    # CPU-only by default. If the host has a compatible GPU, override
+    # this to "cuda" or "rocm" here for real acceleration — CPU inference
     # works but is slow for anything beyond small models.
     acceleration = false;
     loadModels = vars.aiModels;
