@@ -18,13 +18,14 @@
   monitoringHubEnable = true;
   desktopEnable = false;
 
-  # shadow is a backup *target* for dusty/headless/scrapy (via
+  # shadow is a backup *target* for dusty/headless (via
   # common/monitoring-hub.nix's restic REST server), not a client
   # backing itself up — don't conflate the two.
   backupEnable = false;
 
-  # Physical clone of scrapy's hardware — will need its own data volume
-  # for Prometheus/Grafana/restic-server storage. NOT filling this in
+  # Physical clone of scrapy's hardware (scrapy itself now lives in the
+  # vps-dotfiles repo) — will need its own data volume for
+  # Prometheus/Grafana/restic-server storage. NOT filling this in
   # with invented UUIDs — genuinely don't know them yet. Once shadow is
   # actually installed, run `lsblk -f` on it and add real entries here,
   # same pattern as hosts/dusty/vars.nix's extraMounts.

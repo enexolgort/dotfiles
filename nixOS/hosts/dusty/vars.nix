@@ -31,7 +31,7 @@
       options = [ "defaults" "nofail" ];
     }
     {
-      device = "/dev/disk/by-uuid/580634fd-4d57-9b25-77a7965f1b93"; # backup drive (sda)
+      device = "/dev/disk/by-uuid/580634fd-4d57-4d9e-9b25-77a7965f1b93"; # backup drive (sdb)
       mountPoint = "/data/backup";
       fsType = "ext4";
       options = [ "defaults" "nofail" ];
