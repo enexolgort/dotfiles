@@ -3,16 +3,16 @@
 # Run from your laptop (or any device on your tailnet) — checks every
 # service across every host in one shot. Companion to check-remote.sh,
 # which is scoped to a single host at a time; this one covers the whole
-# fleet. Uses bare hostnames (dusty, headless, scrapy, shadow) assuming
+# fleet. Uses bare hostnames (mnemosyne, hermes, athena, argus) assuming
 # Tailscale MagicDNS resolves them — if that's not working for you, edit
 # the host variables below to use tailscale IPs instead.
 
 set -uo pipefail
 
-DUSTY="dusty"
-HEADLESS="headless"
-SCRAPY="scrapy"
-SHADOW="shadow"
+MNEMOSYNE="mnemosyne"
+HERMES="hermes"
+ATHENA="athena"
+ARGUS="argus"
 
 PASS=0
 FAIL=0
@@ -64,29 +64,29 @@ check_json_field() {
   fi
 }
 
-echo "=== dusty (Jellyfin, SFTP, transmission-webUi) ==="
-check_tcp "$DUSTY" 22 "SSH"
-check_http "$DUSTY" 8096 "/" "Jellyfin"
-check_http "$DUSTY" 4173 "/" "transmission-webUi"
+echo "=== mnemosyne (Jellyfin, SFTP, transmission-webUi) ==="
+check_tcp "$MNEMOSYNE" 22 "SSH"
+check_http "$MNEMOSYNE" 8096 "/" "Jellyfin"
+check_http "$MNEMOSYNE" 4173 "/" "transmission-webUi"
 
 echo
-echo "=== headless (Obsidian/CouchDB, transmission-API) ==="
-check_tcp "$HEADLESS" 22 "SSH"
-check_http "$HEADLESS" 5984 "/" "CouchDB"
-check_json_field "$HEADLESS" 3001 "/health" "transmission-API health" '"status":"ok"'
+echo "=== hermes (Obsidian/CouchDB, transmission-API) ==="
+check_tcp "$HERMES" 22 "SSH"
+check_http "$HERMES" 5984 "/" "CouchDB"
+check_json_field "$HERMES" 3001 "/health" "transmission-API health" '"status":"ok"'
 
 echo
-echo "=== scrapy (local AI) ==="
-check_tcp "$SCRAPY" 22 "SSH"
-check_http "$SCRAPY" 11434 "/" "Ollama API"
-check_http "$SCRAPY" 8080 "/" "Open WebUI"
+echo "=== athena (local AI) ==="
+check_tcp "$ATHENA" 22 "SSH"
+check_http "$ATHENA" 11434 "/" "Ollama API"
+check_http "$ATHENA" 8080 "/" "Open WebUI"
 
 echo
-echo "=== shadow (monitoring hub — skip/ignore if not installed yet) ==="
-check_tcp "$SHADOW" 22 "SSH"
-check_http "$SHADOW" 9090 "/" "Prometheus"
-check_http "$SHADOW" 3000 "/" "Grafana"
-check_http "$SHADOW" 8000 "/" "restic REST server"
+echo "=== argus (monitoring hub — skip/ignore if not installed yet) ==="
+check_tcp "$ARGUS" 22 "SSH"
+check_http "$ARGUS" 9090 "/" "Prometheus"
+check_http "$ARGUS" 3000 "/" "Grafana"
+check_http "$ARGUS" 8000 "/" "restic REST server"
 
 echo
 echo "Summary: $PASS passed, $FAIL failed"

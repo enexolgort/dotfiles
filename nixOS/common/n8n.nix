@@ -5,7 +5,7 @@
 # NOT using the native nixpkgs services.n8n package here — it builds
 # n8n's entire TypeScript monorepo from source via pnpm/turbo, which
 # reliably OOMs during the build on lower-memory machines (confirmed:
-# tripling headless's available WSL2 memory did not help at all, which
+# tripling hermes's available WSL2 memory did not help at all, which
 # means it's Node's own internal V8 heap ceiling being hit, not a real
 # system-memory shortage — more system RAM was never going to fix it).
 #

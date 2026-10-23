@@ -1,7 +1,7 @@
 {
-  hostname = "dusty";
+  hostname = "mnemosyne";
   username = "enexolgort";
-  gitEmail = "enexolgort@dusty.local";
+  gitEmail = "enexolgort@mnemosyne.local";
   targetType = "real";
 
   jellyfinEnable = true;
@@ -17,10 +17,10 @@
   sftpDir = "/data/sftp";
   sftpPublicKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfCPT1zuWITFVKSAOmkLAr4wpXkHLDxzNUVptgI88lf sftp-laptop" # filezila@laptop
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITDNIuGEqX2bs89Tv+BWZcFCI3CLOM9xQCj89G/eumc transmission-api push" # transmission-API@headless
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITDNIuGEqX2bs89Tv+BWZcFCI3CLOM9xQCj89G/eumc transmission-api push" # transmission-API@hermes
   ];
 
-  # dusty's two physical drives — this was missing from the new
+  # mnemosyne's two physical drives — this was missing from the new
   # multi-host vars.nix entirely (would've silently left both drives
   # unmounted). Real UUIDs, not placeholders.
   extraMounts = [
@@ -38,7 +38,7 @@
     }
   ];
 
-  # dusty is the host that actually has the second drive set up for
+  # mnemosyne is the host that actually has the second drive set up for
   # restic — see doc/backups.md.
   backupEnable = true;
   backupRepo = "/data/backup/restic-repo";

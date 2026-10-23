@@ -7,7 +7,7 @@
 # nixOS/hosts/<name>/ (each with its own vars.nix; shared defaults live
 # in hosts/defaults.nix). This script:
 #   1. Lets you pick which host you're installing/updating right now —
-#      pass it as an argument (`./install.sh dusty`) or get an
+#      pass it as an argument (`./install.sh mnemosyne`) or get an
 #      interactive menu if you don't.
 #   2. Optionally regenerates hardware-configuration.nix from this
 #      machine's actual current hardware — pass --regen-hardware. Off by

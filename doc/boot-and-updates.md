@@ -21,8 +21,8 @@ systemctl status jellyfin couchdb docker tailscaled sshd smbd
 # on whichever machine you want to update:
 cd ~/dotFiles
 git pull
-./scripts/install.sh dusty        # or headless, or scrapy — whichever host this machine is
-sudo nixos-rebuild switch --flake /etc/nixos#dusty
+./scripts/install.sh mnemosyne        # or hermes, or athena — whichever host this machine is
+sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
 ```
 
 If you only changed something on one machine and haven't pushed yet, `git pull` obviously won't have anything new — push from wherever you edited first.

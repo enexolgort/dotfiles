@@ -1,7 +1,7 @@
 {
-  hostname = "headless";
+  hostname = "hermes";
   username = "enexolgort";
-  gitEmail = "enexolgort@headless.local";
+  gitEmail = "enexolgort@hermes.local";
   targetType = "wsl";
 
   jellyfinEnable = false;

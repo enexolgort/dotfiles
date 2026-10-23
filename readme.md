@@ -4,7 +4,7 @@ Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale 
 
 ![Homelab architecture](./homelab-architecture.svg)
 
-Currently five hosts: `dusty` (Jellyfin, SFTP), `headless` (Obsidian, WSL), `scrapy` (local AI, WSL), `shadow` (monitoring hub), `headfull` (Hyprland desktop).
+Currently four hosts: `mnemosyne` (Jellyfin, SFTP), `hermes` (Obsidian, WSL), `athena` (local AI: Ollama + Open WebUI), `argus` (monitoring hub).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
 
@@ -20,8 +20,8 @@ Full documentation lives in [`doc/`](./doc/overview.md):
 ```bash
 git clone <your-dotfiles-repo-url> ~/dotFiles
 cd ~/dotFiles
-./scripts/install.sh dusty        # or headless, scrapy, shadow, headfull — pick the host you're deploying
-sudo nixos-rebuild switch --flake /etc/nixos#dusty
+./scripts/install.sh mnemosyne        # or hermes, athena, argus — pick the host you're deploying
+sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
 ./scripts/post-install.sh
 ```
 See [doc/hosts.md](./doc/hosts.md) for the full multi-host reference, and the deploy guides above for first-time setup on a fresh machine.
@@ -29,6 +29,6 @@ See [doc/hosts.md](./doc/hosts.md) for the full multi-host reference, and the de
 ## Checking everything's actually reachable
 `check-remote.sh` runs from **any client device on your tailnet** (your laptop, phone via Termux, etc.) — not the server itself — and tests SSH, SFTP, Jellyfin, CouchDB, and optionally Samba all in one go:
 ```bash
-./scripts/check-remote.sh --host dusty
+./scripts/check-remote.sh --host mnemosyne
 ```
 See [doc/first-boot-setup.md](./doc/first-boot-setup.md) for full usage and flags.

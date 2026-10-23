@@ -9,7 +9,7 @@
 <text x="40" y="64" font-size="12" fill="#bac2de">encrypted private network connecting all hosts</text>
 
 <rect x="40" y="90" width="600" height="124" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#94e2d5" stroke-width="2"/>
-<text x="60" y="112" font-size="14" font-weight="700" fill="#94e2d5">dusty — Mnemosyne</text>
+<text x="60" y="112" font-size="14" font-weight="700" fill="#94e2d5">mnemosyne</text>
 <text x="60" y="128" font-size="12" fill="#bac2de">real machine — media &amp; web UI</text>
 
 <rect x="60" y="142" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
@@ -33,7 +33,7 @@
 <text x="485" y="252" font-size="12" font-weight="600" fill="#89dceb">SFTP push</text>
 
 <rect x="40" y="300" width="600" height="196" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#cba6f7" stroke-width="2"/>
-<text x="60" y="322" font-size="14" font-weight="700" fill="#cba6f7">headless — Hermes</text>
+<text x="60" y="322" font-size="14" font-weight="700" fill="#cba6f7">hermes</text>
 <text x="60" y="338" font-size="12" fill="#bac2de">WSL — torrent pipeline + other services</text>
 
 <rect x="130" y="352" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
@@ -60,7 +60,7 @@
 <text x="455" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git server :3000</text>
 
 <rect x="40" y="566" width="600" height="124" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#fab387" stroke-width="2" stroke-dasharray="6 4"/>
-<text x="60" y="588" font-size="14" font-weight="700" fill="#fab387">scrapy — Athena</text>
+<text x="60" y="588" font-size="14" font-weight="700" fill="#fab387">athena</text>
 <text x="60" y="604" font-size="12" fill="#bac2de">local AI</text>
 
 <rect x="150" y="618" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
@@ -80,7 +80,7 @@
 <line x1="30" y1="720" x2="40" y2="720" stroke="#9399b2" stroke-width="2" marker-end="url(#arrow-gray)"/>
 
 <rect x="40" y="720" width="600" height="196" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#f38ba8" stroke-width="2" stroke-dasharray="6 4"/>
-<text x="60" y="742" font-size="14" font-weight="700" fill="#f38ba8">shadow — Argus</text>
+<text x="60" y="742" font-size="14" font-weight="700" fill="#f38ba8">argus</text>
 <text x="60" y="758" font-size="12" fill="#eba0ac">monitoring — health checks, metrics &amp; backups</text>
 
 <rect x="130" y="772" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>

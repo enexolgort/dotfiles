@@ -1,5 +1,5 @@
 # common/desktop.nix — Hyprland desktop environment. Off unless a host
-# sets desktopEnable = true (currently just headfull).
+# sets desktopEnable = true (currently no host does).
 #
 # programs.hyprland.enable already handles polkit, xdg-desktop-portal-
 # hyprland, graphics drivers, fonts, dconf, and XWayland automatically —

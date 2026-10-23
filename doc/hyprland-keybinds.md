@@ -1,4 +1,4 @@
-# headfull — Hyprland keyboard shortcuts
+# Hyprland keyboard shortcuts
 
 Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr/keybinds.conf`. `Super` is the Windows/Cmd key (`$mod`).
 
@@ -55,4 +55,4 @@ No modifier — the actual hardware keys.
 | Play/Pause, Next, Previous | Media control (via `playerctl`) |
 
 ## Known mismatch
-`Super + B` launches `brave` literally in the dotfiles' config — but `headfull` installs **Firefox**, not Brave, so this shortcut won't work until `$browser` in `hypr/hyprland.conf` (or a home-manager override) is updated to point at `firefox` instead.
+`Super + B` launches `brave` literally in the dotfiles' config — but the desktop config (`desktopEnable = true`) installs **Firefox**, not Brave, so this shortcut won't work until `$browser` in `hypr/hyprland.conf` (or a home-manager override) is updated to point at `firefox` instead.
