@@ -4,7 +4,7 @@ Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale 
 
 ![Homelab architecture](./homelab-architecture.svg)
 
-Currently four hosts: `mnemosyne` (Jellyfin, SFTP), `hermes` (Obsidian, WSL), `athena` (local AI: Ollama + Open WebUI), `argus` (monitoring hub).
+Currently four hosts: `mnemosyne` (Jellyfin, SFTP), `hermes` (Forgejo, Transmission, WSL), `athena` (local AI: Ollama + Open WebUI), `argus` (monitoring hub).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
 
