@@ -8,7 +8,7 @@ Current hosts:
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
 | `mnemosyne` | `real` | Jellyfin, SFTP | `transmission-webUi` |
-| `hermes` | `wsl` | Obsidian (CouchDB) | `transmission-API` |
+| `hermes` | `wsl` | Forgejo | `transmission-API` (runs Transmission + its API) |
 | `athena` | `real` | Ollama + Open WebUI (local AI) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
 
@@ -91,7 +91,7 @@ No current host sets `desktopEnable = true` — this describes what the toggle d
 
 Your Hyprland config lives in `hypr/` at the repo root — your own, not an external clone — and `scripts/post-install.sh` copies it into `~/.config/hypr` the exact same way it already deploys `doom/` into `~/.config/doom`. Only runs for hosts with `desktopEnable = true`. Safe to re-run any time; it's a plain overwrite copy, same as Doom's.
 
-Also configured: PipeWire audio (`security.rtkit.enable`, `services.pipewire` with ALSA/PulseAudio-compat/WirePlumber), the standard Hyprland companions (`waybar`, `rofi`, `kitty`, `wlogout`, `hyprlock`, `hyprpaper`, `mako` for notifications, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `brightnessctl`, `playerctl`, `btop`, `cava`, `nwg-look`), Dolphin as the file manager, LazyVim (official starter template, cloned into `~/.config/nvim` via a home-manager activation script — fine to stay activation-script-based since it doesn't depend on any external repo whose format might change), Firefox, Obsidian (the desktop client, not the sync backend — that's CouchDB on `hermes`), Spotify.
+Also configured: PipeWire audio (`security.rtkit.enable`, `services.pipewire` with ALSA/PulseAudio-compat/WirePlumber), the standard Hyprland companions (`waybar`, `rofi`, `kitty`, `wlogout`, `hyprlock`, `hyprpaper`, `mako` for notifications, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `brightnessctl`, `playerctl`, `btop`, `cava`, `nwg-look`), Dolphin as the file manager, LazyVim (official starter template, cloned into `~/.config/nvim` via a home-manager activation script — fine to stay activation-script-based since it doesn't depend on any external repo whose format might change), Firefox, Obsidian (the desktop client, not the sync backend — no host currently runs the CouchDB sync backend), Spotify.
 
 **Genuine uncertainty flagged in the code itself**: `rofi` is the plain package, not the `rofi-wayland` fork some Hyprland guides recommend — untested here. Dolphin's "open with" file-association suggestions are known not to work correctly on non-Plasma window managers (an open nixpkgs issue), Hyprland included — it browses/launches files fine regardless.
 

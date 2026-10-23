@@ -70,9 +70,9 @@ check_http "$MNEMOSYNE" 8096 "/" "Jellyfin"
 check_http "$MNEMOSYNE" 4173 "/" "transmission-webUi"
 
 echo
-echo "=== hermes (Obsidian/CouchDB, transmission-API) ==="
+echo "=== hermes (Forgejo, transmission-API) ==="
 check_tcp "$HERMES" 22 "SSH"
-check_http "$HERMES" 5984 "/" "CouchDB"
+check_http "$HERMES" 3000 "/" "Forgejo"
 check_json_field "$HERMES" 3001 "/health" "transmission-API health" '"status":"ok"'
 
 echo

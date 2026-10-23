@@ -5,17 +5,18 @@
   targetType = "wsl";
 
   jellyfinEnable = false;
-  obsidianEnable = true;
-  gitServerEnable = false;
+  obsidianEnable = false;
+  gitServerEnable = true; # Forgejo — see common/forgejo.nix
   aiEnable = false;
   sftpEnable = false;
   n8nEnable = false;
   monitoringHubEnable = false;
   desktopEnable = false;
 
-  # obsidianEnable = true, so these need to actually be here.
-  couchdbAdminUser = "admin";
-  couchdbAdminPass = "changeme-couchdb"; # CHANGE THIS
+  # gitServerEnable = true, so these need to actually be here.
+  # NOTE: "admin" itself is a reserved username in Forgejo.
+  gitAdminUser = "gituser";
+  gitAdminPass = "changeme-git"; # CHANGE THIS
 
   backupEnable = false;
 

@@ -51,13 +51,8 @@
 
 <rect x="130" y="424" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
 <circle cx="308" cy="432" r="4.5" fill="#a6e3a1"/>
-<text x="225" y="446" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">CouchDB</text>
-<text x="225" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">Obsidian sync :5984</text>
-
-<rect x="360" y="424" width="190" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
-<circle cx="538" cy="432" r="4.5" fill="#a6e3a1"/>
-<text x="455" y="446" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Forgejo</text>
-<text x="455" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git server :3000</text>
+<text x="225" y="446" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Forgejo</text>
+<text x="225" y="466" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git server :3000</text>
 
 <rect x="40" y="566" width="600" height="124" rx="16" fill="#1e1e2e" fill-opacity="0.92" stroke="#fab387" stroke-width="2" stroke-dasharray="6 4"/>
 <text x="60" y="588" font-size="14" font-weight="700" fill="#fab387">athena</text>
