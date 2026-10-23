@@ -87,11 +87,11 @@ Your actual git repos live at `/var/lib/forgejo` on the server — already inclu
 `check-remote.sh` (in `scripts/`) is a client-side health check — run it from **any device on your tailnet**, not the server itself, to verify SSH, SFTP, Jellyfin, and CouchDB are all actually reachable in one shot instead of manually `curl`/`ping`-ing each one:
 
 ```bash
-./scripts/check-remote.sh --host dusty
+./scripts/check-remote.sh --host mnemosyne
 ```
 
 Options:
-- `--host <name-or-ip>` — target server (e.g. `dusty`, `headless`, `scrapy`)
+- `--host <name-or-ip>` — target server (e.g. `mnemosyne`, `hermes`, `athena`)
 - `--sftp-user <name> --sftp-key <path>` — do an actual SFTP login test, not just a port check
 - `--samba` — also check Samba's port 445 (real-machine target only; skip entirely on WSL)
 

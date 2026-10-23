@@ -8,7 +8,7 @@
 # Usage:
 #   ./check-remote.sh [--host <tailscale-ip-or-name>] [--sftp-user <name>] [--sftp-key <path>] [--samba]
 #
-#   --host        Target server (required — e.g. dusty, headless, scrapy,
+#   --host        Target server (required — e.g. mnemosyne, hermes, athena,
 #                 or a tailscale IP)
 #   --sftp-user   Attempt an actual SFTP login test (default: skip, port-only check)
 #   --sftp-key    Private key to use for the SFTP login test
@@ -56,7 +56,7 @@ section() { echo; echo "${BOLD}$1${RESET}"; }
 # --- --host is required now — with multiple, arbitrarily-named hosts
 # there's no sensible default to guess.
 if [ -z "$HOST" ]; then
-  echo "!! --host is required, e.g.: $0 --host dusty" >&2
+  echo "!! --host is required, e.g.: $0 --host mnemosyne" >&2
   exit 1
 fi
 

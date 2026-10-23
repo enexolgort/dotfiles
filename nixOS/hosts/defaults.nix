@@ -6,7 +6,7 @@
 # Deliberately NOT here: anything specific to one particular service
 # (sftpPublicKeys/sftpDir, couchdbAdminUser/Pass, gitAdminUser/Pass,
 # backupEnable/Repo/Password). Those live in whichever host's vars.nix
-# actually turns that service on — see hosts/dusty, hosts/headless.
+# actually turns that service on — see hosts/mnemosyne, hosts/hermes.
 {
   system = "x86_64-linux"; # aarch64-linux if on ARM
 

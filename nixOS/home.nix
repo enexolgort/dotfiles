@@ -184,8 +184,8 @@
       }
 
       # 'rebuild' — no explicit #attr needed, nixos-rebuild auto-detects
-      # from this machine's own hostname (works for both scrapy and
-      # scrapy-wsl automatically).
+      # from this machine's own hostname (works for both athena and
+      # athena-wsl automatically).
       alias rebuild='sudo nixos-rebuild switch --flake /etc/nixos'
 
       # 'update-server' — the full loop we've run by hand dozens of

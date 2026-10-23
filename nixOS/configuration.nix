@@ -11,7 +11,7 @@
   # `sudo parted /dev/sda -- print` showing "Partition Table: msdos"
   # instead of "gpt") categorically cannot use it, regardless of how
   # correctly the disk is otherwise partitioned — this is what caused a
-  # long recurring saga on headfull before the actual root cause (VM
+  # long recurring saga on a former desktop VM host before the actual root cause (VM
   # firmware mode, not partitioning) was identified. GRUB supports both
   # BIOS and UEFI, so it's the one that actually works here.
   boot.loader.systemd-boot.enable = lib.mkIf (vars.bootloader == "systemd-boot") true;

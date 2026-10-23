@@ -1,12 +1,13 @@
 # Overview
 
 ## Multiple machines, one repo
-This flake builds a **separate NixOS system for every machine profile** under `nixOS/hosts/`. Right now that's three:
-- **`dusty`** — real machine. Jellyfin, clones `transmission-webUi`.
-- **`headless`** — NixOS-WSL. Obsidian sync (CouchDB), self-hosted git server (Forgejo), clones `transmission-API`.
-- **`scrapy`** — real machine. Local AI models (Ollama) + a web UI (Open WebUI).
+This flake builds a **separate NixOS system for every machine profile** under `nixOS/hosts/`. Right now that's four:
+- **`mnemosyne`** — real machine. Jellyfin, clones `transmission-webUi`.
+- **`hermes`** — NixOS-WSL. Obsidian sync (CouchDB), self-hosted git server (Forgejo), clones `transmission-API`.
+- **`athena`** — real machine. Local AI models (Ollama) + a web UI (Open WebUI).
+- **`argus`** — real machine. Monitoring hub (Prometheus, Grafana, restic REST server).
 
-Adding a fourth machine means adding a fourth `hosts/<name>/` directory — nothing else changes. See [hosts.md](./hosts.md) for the full reference.
+Adding another machine means adding another `hosts/<name>/` directory — nothing else changes. See [hosts.md](./hosts.md) for the full reference.
 
 They all share everything that matters (`common/`: Tailscale, Docker, SFTP, backups, monitoring, the user account — plus whichever of Jellyfin/CouchDB/Forgejo/Ollama that specific host turns on) and differ only in which services are enabled and whether they're a real machine or WSL.
 
@@ -23,12 +24,12 @@ dotFiles/
 │   ├── treefmt.nix
 │   ├── hosts/
 │   │   ├── defaults.nix           # shared values every host inherits
-│   │   ├── dusty/
+│   │   ├── mnemosyne/
 │   │   │   ├── vars.nix
 │   │   │   └── hardware-configuration.nix
-│   │   ├── headless/
+│   │   ├── hermes/
 │   │   │   └── vars.nix           # WSL — no hardware-configuration.nix needed
-│   │   └── scrapy/
+│   │   └── athena/
 │   │       ├── vars.nix
 │   │       └── hardware-configuration.nix
 │   └── common/                    # shared service modules, one file per concern
@@ -46,7 +47,7 @@ dotFiles/
 │       ├── monitoring.nix
 │       └── packages.nix
 ├── doom/                          # tracked Doom Emacs config
-├── hypr/                          # tracked Hyprland config (headfull only)
+├── hypr/                          # tracked Hyprland config (only used by hosts with desktopEnable = true)
 ├── scripts/
 │   ├── install.sh                 # picks a host, deploys it, clones its project repos
 │   ├── post-install.sh
@@ -76,7 +77,7 @@ cd nixOS && nix fmt
 ```
 formats all `.nix` files (via `treefmt` + `alejandra`). Runs automatically in CI too, alongside `shellcheck` on everything in `scripts/`.
 
-CI only **fully builds hosts with `targetType = "wsl"`** (currently just `headless`) — not real-machine hosts. That's deliberate: real-machine hosts depend on their own `hardware-configuration.nix`, which is a placeholder in this repo on purpose (generated from actual hardware; a CI runner has no way to genuinely satisfy that). WSL hosts don't depend on it at all, and cover the vast majority of the actual config (everything in `common/`) — so they're what CI can meaningfully validate end-to-end. Real-machine hosts can only be validated by actually rebuilding on the real hardware.
+CI only **fully builds hosts with `targetType = "wsl"`** (currently just `hermes`) — not real-machine hosts. That's deliberate: real-machine hosts depend on their own `hardware-configuration.nix`, which is a placeholder in this repo on purpose (generated from actual hardware; a CI runner has no way to genuinely satisfy that). WSL hosts don't depend on it at all, and cover the vast majority of the actual config (everything in `common/`) — so they're what CI can meaningfully validate end-to-end. Real-machine hosts can only be validated by actually rebuilding on the real hardware.
 
 ## Doc index
 - [hosts.md](./hosts.md) — the multi-host system: adding a machine, choosing services, install-time selection

@@ -1,7 +1,7 @@
 {
-  hostname = "shadow";
+  hostname = "argus";
   username = "enexolgort";
-  gitEmail = "enexolgort@shadow.local";
+  gitEmail = "enexolgort@argus.local";
   targetType = "real";
   bootloader = "systemd-boot"; # bare-metal, UEFI
 
@@ -12,23 +12,23 @@
   sftpEnable = false;
   n8nEnable = false;
 
-  # New toggle — shadow runs services (Prometheus, Grafana, a restic
+  # New toggle — argus runs services (Prometheus, Grafana, a restic
   # REST server) that don't exist as their own options yet. See
   # common/monitoring-hub.nix.
   monitoringHubEnable = true;
   desktopEnable = false;
 
-  # shadow is a backup *target* for dusty/headless (via
+  # argus is a backup *target* for mnemosyne/hermes (via
   # common/monitoring-hub.nix's restic REST server), not a client
   # backing itself up — don't conflate the two.
   backupEnable = false;
 
-  # Physical clone of scrapy's hardware (scrapy itself now lives in the
-  # vps-dotfiles repo) — will need its own data volume for
+  # Physical clone of athena's hardware (see hosts/athena) — will need
+  # its own data volume for
   # Prometheus/Grafana/restic-server storage. NOT filling this in
-  # with invented UUIDs — genuinely don't know them yet. Once shadow is
+  # with invented UUIDs — genuinely don't know them yet. Once argus is
   # actually installed, run `lsblk -f` on it and add real entries here,
-  # same pattern as hosts/dusty/vars.nix's extraMounts.
+  # same pattern as hosts/mnemosyne/vars.nix's extraMounts.
   extraMounts = [ ];
 
   # Nothing to clone here yet — ask before assuming a repo exists for

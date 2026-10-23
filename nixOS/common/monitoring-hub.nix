@@ -1,7 +1,7 @@
 # common/monitoring-hub.nix — Prometheus + Grafana + a restic REST
-# server acting as the offsite backup target for dusty/headless's
+# server acting as the offsite backup target for mnemosyne/hermes's
 # backupRepo values. Off unless a host sets monitoringHubEnable = true
-# (currently just shadow).
+# (currently just argus).
 #
 # NOTE: the webhook receiver (for aggregating the other hosts'
 # notifyWebhook health-check failures) is deliberately NOT in this
@@ -34,9 +34,9 @@ lib.mkIf vars.monitoringHubEnable {
     };
   };
 
-  # Restic REST server — the actual offsite target dusty/headless's
+  # Restic REST server — the actual offsite target mnemosyne/hermes's
   # backupRepo values should point at, e.g.
-  # "rest:http://<shadow-tailscale-ip>:8000/<hostname>"
+  # "rest:http://<argus-tailscale-ip>:8000/<hostname>"
   services.restic.server = {
     enable = true;
     dataDir = "/data/restic-server";
@@ -54,8 +54,8 @@ lib.mkIf vars.monitoringHubEnable {
     listenAddress = "0.0.0.0";
     # Append-only: clients can push new backups but can't delete/modify
     # existing ones. Meaningful defense here specifically because this
-    # is a backup *target* for other machines — if one of them (dusty,
-    # headless) is ever compromised, an attacker with its restic
+    # is a backup *target* for other machines — if one of them (mnemosyne,
+    # hermes) is ever compromised, an attacker with its restic
     # credentials still can't destroy the backups already stored here.
     appendOnly = true;
     # No htpasswd-file configured yet — anyone reachable on the tailnet
