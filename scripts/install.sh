@@ -165,6 +165,12 @@ sudo cp -r "$NIXOS_SRC_DIR"/. "$NIXOS_DIR"/
 for hostNameDir in "$TMP_HW_BACKUP"/*/; do
   [ -d "$hostNameDir" ] || continue
   hostName="$(basename "$hostNameDir")"
+  # Host no longer exists in the repo (renamed/removed) — nothing to
+  # restore into, and cp would fail under `set -e`.
+  if [ ! -d "$NIXOS_DIR/hosts/$hostName" ]; then
+    echo "==> Skipping hardware-configuration.nix for '$hostName' (host no longer in repo)"
+    continue
+  fi
   if [ -f "$hostNameDir/hardware-configuration.nix" ]; then
     sudo cp "$hostNameDir/hardware-configuration.nix" "$NIXOS_DIR/hosts/$hostName/hardware-configuration.nix"
     echo "==> Preserved existing real hardware-configuration.nix for host '$hostName'"

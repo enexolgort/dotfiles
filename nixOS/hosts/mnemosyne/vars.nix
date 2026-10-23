@@ -3,6 +3,7 @@
   username = "enexolgort";
   gitEmail = "enexolgort@mnemosyne.local";
   targetType = "real";
+  bootloader = "systemd-boot"; # bare-metal, UEFI (/boot is a vfat ESP in hardware-configuration.nix)
 
   jellyfinEnable = true;
   obsidianEnable = false;
