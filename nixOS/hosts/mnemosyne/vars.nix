@@ -11,6 +11,7 @@
   aiEnable = false;
   sftpEnable = true;
   n8nEnable = false;
+  homepageEnable = true; # fleet dashboard on :8082 — see common/homepage.nix
   monitoringHubEnable = false;
   desktopEnable = false;
 

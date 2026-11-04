@@ -11,6 +11,7 @@
   aiEnable = false;
   sftpEnable = false;
   n8nEnable = false;
+  homepageEnable = false;
 
   # New toggle — argus runs services (Prometheus, Grafana, a restic
   # REST server) that don't exist as their own options yet. See

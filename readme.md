@@ -4,7 +4,7 @@ Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale 
 
 ![Homelab architecture](./homelab-architecture.svg)
 
-Currently five hosts: `mnemosyne` (Jellyfin, SFTP), `hermes` (Forgejo, Transmission, WSL), `athena` (local AI: Ollama + Open WebUI, n8n), `argus` (monitoring hub), `janus` (Hyprland desktop client — browser + SSH into the rest).
+Currently five hosts: `mnemosyne` (Jellyfin, SFTP, Homepage dashboard), `hermes` (Forgejo, Transmission, WSL), `athena` (local AI: Ollama + Open WebUI, n8n), `argus` (monitoring hub), `janus` (Hyprland desktop client — browser + SSH into the rest).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
 

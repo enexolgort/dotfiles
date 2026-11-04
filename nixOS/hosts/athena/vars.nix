@@ -11,6 +11,7 @@
   aiEnable = true; # Ollama + Open WebUI — see common/ai.nix
   sftpEnable = false;
   n8nEnable = true; # workflow automation (Docker) — see common/n8n.nix
+  homepageEnable = false;
   monitoringHubEnable = false;
   desktopEnable = false;
 
