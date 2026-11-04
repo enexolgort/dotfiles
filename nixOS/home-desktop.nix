@@ -1,5 +1,5 @@
 # home-desktop.nix — home-manager level config specific to desktop
-# hosts (currently none). Imported conditionally by flake.nix
+# hosts (currently janus). Imported conditionally by flake.nix
 # based on that host's desktopEnable — never applied to the headless
 # server hosts.
 { config, pkgs, lib, vars, ... }:

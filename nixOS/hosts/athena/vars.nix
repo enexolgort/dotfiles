@@ -10,7 +10,7 @@
   gitServerEnable = false;
   aiEnable = true; # Ollama + Open WebUI — see common/ai.nix
   sftpEnable = false;
-  n8nEnable = false;
+  n8nEnable = true; # workflow automation (Docker) — see common/n8n.nix
   monitoringHubEnable = false;
   desktopEnable = false;
 

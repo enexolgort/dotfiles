@@ -1,5 +1,5 @@
 # common/desktop.nix — Hyprland desktop environment. Off unless a host
-# sets desktopEnable = true (currently no host does).
+# sets desktopEnable = true (currently only janus).
 #
 # programs.hyprland.enable already handles polkit, xdg-desktop-portal-
 # hyprland, graphics drivers, fonts, dconf, and XWayland automatically —
@@ -36,6 +36,30 @@ lib.mkIf vars.desktopEnable {
   # directly to your hyprland.conf rather than relying on this module's
   # own autostart.
   programs.nm-applet.enable = true;
+
+  # networkmanager group = connect/forget WiFi networks (nm-applet,
+  # nmcli, the rofi wifi menu) without a polkit password prompt each
+  # time. video = brightnessctl on the backlight without sudo.
+  users.users.${vars.username}.extraGroups = [ "networkmanager" "video" ];
+
+  # Bluetooth — BlueZ plus blueman's tray applet/manager GUI (rules.lua
+  # already floats blueman-manager). powerOnBoot so headphones reconnect
+  # without opening the manager first.
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
+
+  # programs.hyprland turns polkit itself on, but NOT an authentication
+  # agent — without one, anything asking for admin rights from the GUI
+  # (mounting a drive in Dolphin, NetworkManager system connections)
+  # just fails silently. hyprpolkitagent is the Hyprland-native one;
+  # systemd.packages makes its user unit available so hyprland.lua can
+  # `systemctl --user start` it.
+  systemd.packages = [ pkgs.hyprpolkitagent ];
+
+  # Battery/power info for waybar's battery module and for apps that ask
+  # over D-Bus. Harmless on a desktop with no battery.
+  services.upower.enable = true;
 
   # Dolphin (KDE's file manager) rather than Thunar, per request.
   # kdePackages.kio/-fuse/-extras are the wiki-documented required
@@ -74,9 +98,10 @@ lib.mkIf vars.desktopEnable {
   environment.systemPackages = with pkgs; [
     # Core Hyprland ecosystem components
     kitty         # terminal — required for Hyprland's own default config
-    rofi          # app launcher (plain package; rofi-wayland exists as
-                   # an alternative fork if this has Wayland issues —
-                   # untested here, flagging rather than guessing)
+    rofi          # app launcher + dmenu (`rofi -dmenu`) for the clipboard,
+                   # opacity and wifi pickers. Native Wayland since rofi
+                   # 2.0 — the separate rofi-wayland fork was merged back
+                   # into this package (rofi-wayland is just an alias now).
     waybar        # status bar
     wlogout       # logout menu
     btop          # already used elsewhere in this repo for servers too
@@ -86,13 +111,19 @@ lib.mkIf vars.desktopEnable {
     # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
     hyprlock        # lock screen (Hyprland-native)
+    hypridle        # idle daemon — dims, locks, then sleeps the screen
+                     # (config in dotfiles/hypr/hypridle.conf)
+    hyprpolkitagent # polkit auth prompts, see systemd.packages above
     mako            # notification daemon — GTK/Electron apps expect
                      # notifications to work
+    libnotify       # notify-send, used by hypr/scripts/wifi-menu.sh
     grim            # screenshot capture
     slurp           # screen region selection (paired with grim)
     wl-clipboard    # clipboard access under Wayland
     cliphist        # clipboard history manager
-    pavucontrol     # audio mixer GUI
+    pavucontrol     # audio mixer GUI (waybar volume click / Super+A)
+    networkmanagerapplet # nm-connection-editor, for the advanced WiFi /
+                          # VPN settings nm-applet's menu links to
     brightnessctl   # brightness control
     playerctl       # media key controls (play/pause/next/prev) — used in keybinds.lua
     kdePackages.dolphin      # file manager

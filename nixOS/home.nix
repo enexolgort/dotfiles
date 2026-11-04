@@ -40,7 +40,7 @@
     nerd-fonts.jetbrains-mono # patched font for doom's modeline icons
     gnutls             # emacs package.el / straight.el needs this for https
     unzip
-    neofetch
+    hyfetch            # provides neowofetch — neofetch was removed in nixos-26.05 (unmaintained upstream)
   ];
 
   # --- Auto-bootstrap Doom Emacs on first home-manager activation ----
@@ -65,7 +65,8 @@
   # --- Neofetch: shown automatically on every interactive login -------
   # home-manager has no dedicated neofetch module, so this is a plain
   # package (above) + hand-written config.conf, in neofetch's own
-  # bash-sourced config syntax rather than a Nix attrset.
+  # bash-sourced config syntax rather than a Nix attrset. neowofetch
+  # (hyfetch's maintained neofetch fork) reads this same file.
   xdg.configFile."neofetch/config.conf".text = ''
     print_info() {
         info title
@@ -129,7 +130,7 @@
       # Neofetch on every interactive login (skipped for non-interactive
       # shells like scp/rsync/git-over-ssh, so it doesn't spam those).
       if [[ $- == *i* ]]; then
-        neofetch
+        neowofetch
       fi
 
       # --- Named-flag move/copy/rename, e.g.:
