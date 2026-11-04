@@ -23,5 +23,6 @@
 
   projectRepos = [
     "https://github.com/enexolgort/transmission-API"
+    "https://github.com/enexolgort/yt-dlp-API"
   ];
 }
