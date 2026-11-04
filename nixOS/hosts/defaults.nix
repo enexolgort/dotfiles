@@ -37,6 +37,7 @@
   # gitServerEnable   = true | false;
   # aiEnable          = true | false;   # Ollama + Open WebUI, see common/ai.nix
   # n8nEnable         = true | false;   # workflow automation, see common/n8n.nix
+  # homepageEnable    = true | false;   # fleet dashboard on :8082, see common/homepage.nix
   # monitoringHubEnable = true | false; # Prometheus+Grafana+restic REST server, see common/monitoring-hub.nix
   # desktopEnable      = true | false;  # Hyprland desktop, see common/desktop.nix + home-desktop.nix
   #

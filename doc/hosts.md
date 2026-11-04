@@ -7,7 +7,7 @@ Current hosts:
 
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
-| `mnemosyne` | `real` | Jellyfin, SFTP | `transmission-webUi` |
+| `mnemosyne` | `real` | Jellyfin, SFTP, Homepage dashboard (:8082) | `transmission-webUi` |
 | `hermes` | `wsl` | Forgejo | `transmission-API` (runs Transmission + its API) |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
@@ -43,6 +43,7 @@ sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
      aiEnable = false;
      sftpEnable = false;
      n8nEnable = false;
+     homepageEnable = false;
      monitoringHubEnable = false;
      desktopEnable = false;
 
@@ -62,6 +63,7 @@ gitServerEnable = true | false;  # Forgejo
 aiEnable = true | false;         # Ollama + Open WebUI, see common/ai.nix
 sftpEnable = true | false;       # chrooted upload account, see common/sftp.nix
 n8nEnable = true | false;        # workflow automation, see common/n8n.nix
+homepageEnable = true | false;   # fleet dashboard on :8082, see common/homepage.nix
 monitoringHubEnable = true | false; # Prometheus+Grafana+restic REST server, see common/monitoring-hub.nix
 desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + home-desktop.nix
 ```
