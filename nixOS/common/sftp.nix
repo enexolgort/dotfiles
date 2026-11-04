@@ -7,6 +7,7 @@
 lib.mkIf vars.sftpEnable {
   fileSystems."${vars.sftpDir}/upload" = {
     device = vars.mediaDir;
+    fsType = "none"; # no default since nixos-26.05 — "none" is the conventional value for bind mounts
     options = [ "bind" ];
   };
 
