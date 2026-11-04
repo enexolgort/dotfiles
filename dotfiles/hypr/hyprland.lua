@@ -24,10 +24,16 @@ browser    = "brave"
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("dunst")
-    hl.exec_cmd("nm-applet")
+    -- --indicator = StatusNotifierItem tray icon, the only kind waybar's
+    -- tray can show (plain nm-applet uses the old X11 XEmbed tray)
+    hl.exec_cmd("nm-applet --indicator")
+    hl.exec_cmd("blueman-applet")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
-    hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+    -- polkit auth prompts + idle dim/lock/suspend (common/desktop.nix,
+    -- hypr/hypridle.conf)
+    hl.exec_cmd("systemctl --user start hyprpolkitagent")
+    hl.exec_cmd("hypridle")
 
     hl.exec_cmd("awww-daemon")
     hl.exec_cmd("sleep 1 && awww img /home/rp34/Pictures/Wallpapers/w3.png")

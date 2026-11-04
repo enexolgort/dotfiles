@@ -35,6 +35,10 @@ window#waybar {
 #cpu,
 #memory,
 #custom-gpu,
+#network,
+#bluetooth,
+#battery,
+#tray,
 #clock,
 #pulseaudio,
 #mpris,
@@ -83,6 +87,9 @@ tooltip label {
 #cpu,
 #memory,
 #custom-gpu,
+#network,
+#bluetooth,
+#battery,
 #temperature,
 #clock,
 #pulseaudio,
@@ -94,10 +101,47 @@ tooltip label {
 #cpu:hover,
 #memory:hover,
 #custom-gpu:hover,
+#network:hover,
+#bluetooth:hover,
+#battery:hover,
 #temperature:hover,
 #clock:hover,
 #pulseaudio:hover,
 #mpris:hover,
 #custom-power:hover {
     font-size: 14px;
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 6px;
+    color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+}
+
+#workspaces button.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+#workspaces button.urgent {
+    color: #ff5555;
+}
+
+/* Network / bluetooth / battery states */
+#network.disconnected,
+#network.disabled,
+#bluetooth.off,
+#bluetooth.disabled {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#battery.warning {
+    color: #ffb86c;
+}
+
+#battery.critical:not(.charging) {
+    color: #ff5555;
 }

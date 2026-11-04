@@ -4,7 +4,7 @@
 {
   virtualisation.docker = {
     enable = true;
-    package = pkgs.docker_29; # default (docker_28) is unmaintained/insecure as of nixos-25.11
+    package = pkgs.docker_29; # pinned explicitly — already the default since nixos-26.05 (docker_28 removed)
   };
 
   systemd.services.docker = {

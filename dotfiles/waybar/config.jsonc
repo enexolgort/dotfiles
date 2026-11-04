@@ -5,9 +5,56 @@
     "height": 30,
     "spacing": 4,
 
-    "modules-left": ["cpu", "custom/gpu", "memory", "temperature"],
+    // custom/gpu is defined below but left off the bar: its script needs
+    // nvtop (not installed) and the tooltip names the original author's
+    // own iGPU. Add it back here if you install nvtopPackages.full.
+    "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature"],
     "modules-center": ["clock"],
-    "modules-right": ["mpris", "pulseaudio", "custom/power"],
+    "modules-right": ["mpris", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/power"],
+
+    "hyprland/workspaces": {
+        "format": "{id}",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1"
+    },
+
+    // WiFi controller: click = rofi network picker, right-click = full
+    // NetworkManager editor. nm-applet in the tray covers the rest.
+    "network": {
+        "format-wifi": "󰖩  {essid}",
+        "format-ethernet": "󰈀  {ipaddr}",
+        "format-disconnected": "󰖪  Offline",
+        "format-disabled": "󰖪  Off",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr} on {ifname}",
+        "tooltip-format-ethernet": "{ipaddr}/{cidr} on {ifname}",
+        "on-click": "~/.config/hypr/scripts/wifi-menu.sh",
+        "on-click-right": "nm-connection-editor",
+        "interval": 5
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-connected": "󰂱  {device_alias}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "on-click": "blueman-manager"
+    },
+
+    // Absent entirely on machines without a battery
+    "battery": {
+        "states": { "warning": 25, "critical": 10 },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "󰂄  {capacity}%",
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󱊣", "󰁹"]
+    },
+
+    // Required for nm-applet / blueman-applet icons to show up at all
+    "tray": {
+        "icon-size": 14,
+        "spacing": 8
+    },
 
     "cpu": {
         "format": "CPU {usage}%",
@@ -28,7 +75,6 @@
     },
     
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
         "critical-threshold": 80,
         "format": " {temperatureC}°C",
         "format-critical": " {temperatureC}°C",
@@ -57,7 +103,10 @@
             "default": ["", "", ""]
         },
         "tooltip": false,
-        "on-click": "pavucontrol"
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
     },
 
     "custom/power": {

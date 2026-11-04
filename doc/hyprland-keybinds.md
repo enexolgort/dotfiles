@@ -7,8 +7,16 @@ Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr
 |---|---|
 | `Super + T` | Open terminal (kitty) |
 | `Super + D` | App launcher (rofi) |
-| `Super + E` | File manager (thunar) |
-| `Super + B` | Browser |
+| `Super + E` | File manager (Dolphin) |
+| `Super + B` | Browser (Firefox) |
+
+## Controllers
+| Shortcut | Action |
+|---|---|
+| `Super + N` | WiFi picker (rofi dmenu — `hypr/scripts/wifi-menu.sh`) |
+| `Super + Shift + N` | Full network settings (`nm-connection-editor`) |
+| `Super + A` | Audio mixer (`pavucontrol`) |
+| `Super + Shift + B` | Bluetooth manager (`blueman-manager`) |
 
 ## Window management
 | Shortcut | Action |
@@ -52,7 +60,18 @@ No modifier — the actual hardware keys.
 |---|---|
 | Volume Up / Down | ±5% volume |
 | Mute | Toggle mute |
+| Mic mute | Toggle microphone mute |
+| Brightness Up / Down | ±5% backlight (via `brightnessctl`) |
 | Play/Pause, Next, Previous | Media control (via `playerctl`) |
 
-## Known mismatch
-`Super + B` launches `brave` literally in the dotfiles' config — but the desktop config (`desktopEnable = true`) installs **Firefox**, not Brave, so this shortcut won't work until `$browser` in `hypr/hyprland.conf` (or a home-manager override) is updated to point at `firefox` instead.
+## Waybar clicks
+| Module | Click | Right-click | Scroll |
+|---|---|---|---|
+| Workspaces | Switch to it | — | Next / previous workspace |
+| Network | WiFi picker | `nm-connection-editor` | — |
+| Bluetooth | `blueman-manager` | — | — |
+| Volume | `pavucontrol` | Toggle mute | ±5% volume |
+| Power | `wlogout` | — | — |
+
+## Note on browser / file manager
+`dotfiles/hypr/hyprland.lua` still says `brave` and `thunar` (inherited from upstream); `scripts/post-install.sh` rewrites them to `firefox` and `dolphin` when it deploys the config, which is what the tables above reflect.

@@ -9,8 +9,9 @@ Current hosts:
 |---|---|---|---|
 | `mnemosyne` | `real` | Jellyfin, SFTP | `transmission-webUi` |
 | `hermes` | `wsl` | Forgejo | `transmission-API` (runs Transmission + its API) |
-| `athena` | `real` | Ollama + Open WebUI (local AI) | — |
+| `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
+| `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
 
 ## Installing/updating a specific host
 ```bash
@@ -85,7 +86,7 @@ CPU-only by default (`acceleration = false` in `common/ai.nix`). If `athena` has
 Not yet wired up (deliberately, as a separate follow-up): `node_exporter` on `mnemosyne`/`hermes`/`athena` (so Prometheus/Grafana actually have something to scrape), and pointing those hosts' `notifyWebhook` at whatever `argus`'s webhook receiver turns out to be — likely a small Docker container rather than a native NixOS module, same pattern as `transmission-API`/`transmission-webUi`.
 
 ## Desktop (`desktopEnable`) specifically
-No current host sets `desktopEnable = true` — this describes what the toggle does if you turn it on for a host.
+Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 
 `common/desktop.nix` enables `programs.hyprland` — which, per the official Hyprland-on-NixOS wiki, already handles polkit, the XDG desktop portal, graphics drivers, fonts, dconf, and XWayland on its own. SDDM is the login screen.
 
@@ -93,6 +94,16 @@ Your Hyprland config lives in `hypr/` at the repo root — your own, not an exte
 
 Also configured: PipeWire audio (`security.rtkit.enable`, `services.pipewire` with ALSA/PulseAudio-compat/WirePlumber), the standard Hyprland companions (`waybar`, `rofi`, `kitty`, `wlogout`, `hyprlock`, `hyprpaper`, `mako` for notifications, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `brightnessctl`, `playerctl`, `btop`, `cava`, `nwg-look`), Dolphin as the file manager, LazyVim (official starter template, cloned into `~/.config/nvim` via a home-manager activation script — fine to stay activation-script-based since it doesn't depend on any external repo whose format might change), Firefox, Obsidian (the desktop client, not the sync backend — no host currently runs the CouchDB sync backend), Spotify.
 
-**Genuine uncertainty flagged in the code itself**: `rofi` is the plain package, not the `rofi-wayland` fork some Hyprland guides recommend — untested here. Dolphin's "open with" file-association suggestions are known not to work correctly on non-Plasma window managers (an open nixpkgs issue), Hyprland included — it browses/launches files fine regardless.
+Desktop plumbing on top of that: Bluetooth (BlueZ + `blueman`), `hyprpolkitagent` (polkit auth prompts — `programs.hyprland` enables polkit but no agent), `hypridle` (dim → lock → screen off → suspend, `dotfiles/hypr/hypridle.conf`), `upower`, `libnotify`, `nm-connection-editor`, and the user added to the `networkmanager`/`video` groups so WiFi and backlight changes don't need a password.
+
+The controllers, all reachable from waybar and from a shortcut (see [hyprland-keybinds.md](./hyprland-keybinds.md)):
+- **WiFi** — waybar's network module; click opens `hypr/scripts/wifi-menu.sh` (a `rofi -dmenu` network picker over `nmcli`, prompts for the password on new secured networks), right-click opens `nm-connection-editor`. `nm-applet --indicator` also sits in the tray.
+- **Audio** — waybar's volume module; scroll = ±5%, right-click = mute, click = `pavucontrol`. Media/volume/mic-mute hardware keys go through `wpctl`/`playerctl`.
+- **Bluetooth** — waybar's bluetooth module and `blueman-applet` in the tray; click opens `blueman-manager`.
+- **Launcher / dmenu** — `rofi -show drun` for apps, `rofi -dmenu` for the clipboard, opacity and WiFi pickers.
+
+Waybar also gained Hyprland workspaces, battery (hidden on machines without one) and a system tray — without the tray nm-applet/blueman-applet had nowhere to appear. The GPU module is defined but left off the bar (its script needs `nvtop`, not installed).
+
+**Genuine uncertainty flagged in the code itself**: Dolphin's "open with" file-association suggestions are known not to work correctly on non-Plasma window managers (an open nixpkgs issue), Hyprland included — it browses/launches files fine regardless.
 
 [← back to overview](./overview.md)
