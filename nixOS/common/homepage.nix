@@ -72,6 +72,7 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Forgejo"; host = "hermes"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
           (tile { name = "transmission-API"; host = "hermes"; port = 3002; description = "API + SFTP push"; icon = "transmission.png"; path = "/"; monitorPath = "/health"; })
           (tile { name = "Transmission"; host = "hermes"; port = 9091; description = "Daemon web UI / RPC"; icon = "transmission.png"; path = "/transmission/web/"; })
+          (tile { name = "yt-dlp-API"; host = "hermes"; port = 3003; description = "Video downloads + SFTP push"; icon = "si-youtube"; path = "/"; monitorPath = "/health"; })
         ];
       }
       {
