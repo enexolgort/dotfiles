@@ -7,7 +7,7 @@ Current hosts:
 
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
-| `mnemosyne` | `real` | Jellyfin, SFTP, Homepage dashboard (:8082) | `transmission-webUi` |
+| `mnemosyne` | `real` | Jellyfin, SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi` |
 | `hermes` | `wsl` | Forgejo | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |

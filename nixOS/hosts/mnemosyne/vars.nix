@@ -48,6 +48,7 @@
 
   projectRepos = [
     "https://github.com/enexolgort/transmission-webUi"
+    "https://github.com/enexolgort/yt-dlp-webUi"
   ];
 }
 
