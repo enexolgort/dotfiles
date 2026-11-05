@@ -17,6 +17,13 @@ lib.mkIf vars.desktopEnable {
   # drops to a black screen.
   programs.hyprland.withUWSM = true;
 
+  # Lock screen. The NixOS module (not just the package) is what adds
+  # the `hyprlock` PAM service — without it hyprlock can lock the screen
+  # but can't verify your password to unlock it. Its config is
+  # dotfiles/hypr/hyprlock.conf (Catppuccin Mocha), deployed to
+  # ~/.config/hypr by scripts/post-install.sh.
+  programs.hyprlock.enable = true;
+
   # SDDM as the login screen. A themed version is a manual follow-up if
   # wanted later, not something auto-applied.
   #
@@ -117,7 +124,6 @@ lib.mkIf vars.desktopEnable {
 
     # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
-    hyprlock        # lock screen (Hyprland-native)
     hypridle        # idle daemon — dims, locks, then sleeps the screen
                      # (config in dotfiles/hypr/hypridle.conf)
     hyprpolkitagent # polkit auth prompts, see systemd.packages above
