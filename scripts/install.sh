@@ -147,12 +147,18 @@ sudo mkdir -p "$NIXOS_DIR"
 
 # Preserve any existing REAL hardware-configuration.nix files (per host)
 # before wiping — never let the repo's placeholders clobber a real one.
+# Only placeholders yield: if the repo has a real file for a host (e.g.
+# janus-vm), the repo wins, so changes to it actually get deployed.
+HW_PLACEHOLDER_MARK="PLACEHOLDER — DO NOT USE AS-IS"
+is_placeholder() { [ -f "$1" ] && grep -q "$HW_PLACEHOLDER_MARK" "$1"; }
+
 TMP_HW_BACKUP="$(mktemp -d)"
 if [ -d "$NIXOS_DIR/hosts" ]; then
   for hostDir in "$NIXOS_DIR"/hosts/*/; do
     [ -d "$hostDir" ] || continue
     hwFile="$hostDir/hardware-configuration.nix"
-    if [ -f "$hwFile" ]; then
+    # Nothing worth keeping in a placeholder copied in by an earlier run
+    if [ -f "$hwFile" ] && ! is_placeholder "$hwFile"; then
       hostName="$(basename "$hostDir")"
       mkdir -p "$TMP_HW_BACKUP/$hostName"
       sudo cp "$hwFile" "$TMP_HW_BACKUP/$hostName/hardware-configuration.nix"
@@ -171,6 +177,11 @@ for hostNameDir in "$TMP_HW_BACKUP"/*/; do
   # restore into, and cp would fail under `set -e`.
   if [ ! -d "$NIXOS_DIR/hosts/$hostName" ]; then
     echo "==> Skipping hardware-configuration.nix for '$hostName' (host no longer in repo)"
+    continue
+  fi
+  # The repo ships a real file for this host — use it, don't restore.
+  if ! is_placeholder "$NIXOS_SRC_DIR/hosts/$hostName/hardware-configuration.nix"; then
+    echo "==> Using the repo's hardware-configuration.nix for host '$hostName'"
     continue
   fi
   if [ -f "$hostNameDir/hardware-configuration.nix" ]; then
