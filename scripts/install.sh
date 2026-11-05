@@ -23,7 +23,9 @@
 #      real one already exists at the destination (unless --regen-hardware
 #      updated the repo's own copy first, in which case that's what flows
 #      through here).
-#   4. Clones the selected host's projectRepos into its projectsDir.
+#   4. Clones the selected host's projectRepos into its projectsDir. Repos
+#      already cloned are pulled (fast-forward only) and, if they have a
+#      compose file, their Docker image is rebuilt and restarted.
 
 set -euo pipefail
 
@@ -195,6 +197,34 @@ mapfile -t REPOS < <(
     | jq -r '.[]' 2>/dev/null || true
 )
 
+# Rebuilds a pulled project's Docker image and restarts its container(s),
+# if it has a compose file. Skipped (with a note) when Docker isn't usable
+# yet — e.g. on a fresh machine before the first nixos-rebuild switch.
+rebuild_compose_project() {
+  local name="$1" dir="$2" f compose_file=""
+  for f in docker-compose.yml docker-compose.yaml compose.yml compose.yaml; do
+    if [ -f "$dir/$f" ]; then compose_file="$f"; break; fi
+  done
+  [ -n "$compose_file" ] || return 0
+
+  local compose=()
+  if docker compose version >/dev/null 2>&1; then
+    compose=(docker compose)
+  elif command -v docker-compose >/dev/null 2>&1; then
+    compose=(docker-compose)
+  fi
+  if [ ${#compose[@]} -eq 0 ] || ! docker info >/dev/null 2>&1; then
+    echo "!! Docker not available yet, skipping rebuild of $name"
+    echo "   After nixos-rebuild: (cd \"$dir\" && docker compose up -d --build)"
+    return 0
+  fi
+
+  echo "==> Rebuilding and restarting $name ($compose_file)..."
+  if ! (cd "$dir" && "${compose[@]}" -f "$compose_file" up -d --build); then
+    echo "!! Docker rebuild failed for $name — check the output above"
+  fi
+}
+
 if [ ${#REPOS[@]} -eq 0 ]; then
   echo "==> No projectRepos declared for host '$HOST', skipping project cloning"
 else
@@ -207,7 +237,14 @@ else
     target="$PROJECTS_DIR/$name"
 
     if [ -d "$target/.git" ]; then
-      echo "==> $name already cloned, skipping (run 'git -C \"$target\" pull' to update)"
+      echo "==> $name already cloned, pulling latest..."
+      # --ff-only: never create merge commits or clobber local edits. A
+      # failed pull just warns — one dirty repo shouldn't abort the install.
+      if ! git -C "$target" pull --ff-only; then
+        echo "!! Could not fast-forward $name (local changes or diverged history?), skipping its rebuild"
+        continue
+      fi
+      rebuild_compose_project "$name" "$target"
       continue
     fi
 
