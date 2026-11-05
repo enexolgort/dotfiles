@@ -10,6 +10,13 @@
 lib.mkIf vars.desktopEnable {
   programs.hyprland.enable = true;
 
+  # Run Hyprland under uwsm (the "Hyprland (uwsm-managed)" session SDDM
+  # offers first). Without this the session entry still exists but uwsm's
+  # systemd user units aren't installed, so logging in fails instantly
+  # with "wayland-session-bindpid@….service returned exit status 5" and
+  # drops to a black screen.
+  programs.hyprland.withUWSM = true;
+
   # SDDM as the login screen. A themed version is a manual follow-up if
   # wanted later, not something auto-applied.
   #
