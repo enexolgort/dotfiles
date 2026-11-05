@@ -11,8 +11,8 @@
 
   # janus-vm is a VirtualBox test copy of janus (the Hyprland desktop
   # client) — keep the toggles below in sync with hosts/janus/vars.nix.
-  # Needs 3D acceleration enabled in the VM's Display settings, or
-  # SDDM/Hyprland come up to a black screen.
+  # Needs 3D acceleration enabled in the VM Display settings (apps then
+  # render in software, see hardware-configuration.nix).
   jellyfinEnable = false;
   obsidianEnable = false;
   gitServerEnable = false;

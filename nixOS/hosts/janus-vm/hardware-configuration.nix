@@ -31,4 +31,11 @@
   # VirtualBox Guest Additions: clipboard, display resizing, shared
   # folders, time sync.
   virtualisation.virtualbox.guest.enable = true;
+
+  # Software OpenGL (Mesa llvmpipe) for the whole session. Under Hyper-V
+  # the VMSVGA 3D channel is broken (vmwgfx "Failed to open channel"), so
+  # GL apps like kitty crash on wl_surface.attach. Hyprland itself still
+  # needs 3D acceleration ENABLED in VirtualBox to start, so: keep 3D on
+  # in the VM's Display settings, and render in software here.
+  environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "1";
 }
