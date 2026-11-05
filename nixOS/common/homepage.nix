@@ -64,6 +64,7 @@ lib.mkIf vars.homepageEnable {
         mnemosyne = [
           (tile { name = "Jellyfin"; host = "mnemosyne"; port = 8096; description = "Media server"; icon = "jellyfin.png"; })
           (tile { name = "Torrent UI"; host = "mnemosyne"; port = 4173; description = "transmission-webUi"; icon = "transmission.png"; })
+          (tile { name = "Video UI"; host = "mnemosyne"; port = 4174; description = "yt-dlp-webUi"; icon = "si-youtube"; })
         ];
       }
       {
