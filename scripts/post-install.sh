@@ -7,6 +7,17 @@
 
 set -euo pipefail
 
+# Everything below writes into $HOME (~/.config/hypr, ~/.config/doom, …)
+# and calls sudo itself where root is actually needed. Run as root (e.g.
+# from a `sudo -i` shell) it would deploy every config into /root
+# instead, leaving your real user on Hyprland's default config.
+if [ "$(id -u)" -eq 0 ]; then
+  echo "!! Don't run post-install.sh as root — it deploys configs into \$HOME ($HOME)." >&2
+  echo "   Run it as your normal user; it uses sudo where needed:" >&2
+  echo "     cd ~/dotFiles && ./scripts/post-install.sh" >&2
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CURRENT_HOST="$(hostname)"
