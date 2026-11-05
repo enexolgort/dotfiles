@@ -159,19 +159,41 @@ if [ "$DESKTOP_ENABLE" = "true" ]; then
       sed -i 's/thunar|brave-browser/dolphin|firefox/' "$RULES_CONF_FILE"
     fi
 
-    # hyprpaper's own config — only written if you actually have a
-    # wallpaper somewhere to point it at. Nothing in your dotfiles/
-    # staging folder provides one, so this is skipped cleanly (not an
-    # error) unless you add images to ~/Pictures/Wallpapers/ yourself.
-    FIRST_WALLPAPER="$(find "$HOME/Pictures/Wallpapers" -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" \) 2>/dev/null | sort | head -1)"
-    if [ -n "$FIRST_WALLPAPER" ]; then
+    # --- Wallpaper (hyprpaper) ------------------------------------------
+    # The repo's images/ folder is copied to ~/Pictures/Wallpapers, then
+    # hyprpaper.conf is written pointing at $WALLPAPER (override with
+    # e.g. `WALLPAPER=pine.jpg ./scripts/post-install.sh`). Falls back to
+    # the first image found if that file isn't there.
+    #
+    # hyprpaper >= 0.8 syntax: a `wallpaper { }` block per output — the
+    # old `preload =` / `wallpaper = ,path` lines no longer exist. An
+    # empty monitor matches every output.
+    WALLPAPER="${WALLPAPER:-flowers-21.png}"
+    WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+    if [ -d "$REPO_ROOT/images" ]; then
+      mkdir -p "$WALLPAPER_DIR"
+      find "$REPO_ROOT/images" -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \) \
+        -exec cp -u {} "$WALLPAPER_DIR/" \;
+      echo "==> Copied wallpapers from $REPO_ROOT/images to $WALLPAPER_DIR"
+    fi
+
+    WALLPAPER_PATH="$WALLPAPER_DIR/$WALLPAPER"
+    if [ ! -f "$WALLPAPER_PATH" ]; then
+      WALLPAPER_PATH="$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \) 2>/dev/null | sort | head -1)"
+    fi
+    if [ -n "$WALLPAPER_PATH" ]; then
       mkdir -p "$HOME/.config/hypr"
       cat > "$HOME/.config/hypr/hyprpaper.conf" << EOF
-preload = $FIRST_WALLPAPER
-wallpaper = ,$FIRST_WALLPAPER
+# Written by scripts/post-install.sh — edit WALLPAPER there, not here.
 splash = false
+
+wallpaper {
+    monitor =
+    path = $WALLPAPER_PATH
+    fit_mode = cover
+}
 EOF
-      echo "    wrote hyprpaper.conf pointing at $FIRST_WALLPAPER"
+      echo "    wrote hyprpaper.conf pointing at $WALLPAPER_PATH"
     fi
   else
     echo "!! No dotfiles/ folder found at $DOTFILES_STAGING — leaving ~/.config as-is"
