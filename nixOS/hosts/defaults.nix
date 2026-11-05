@@ -27,6 +27,8 @@
 
   notifyWebhook = "";
 
+  ytdlpEnable = false; # yt-dlp CLI system-wide, see common/packages.nix
+
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";
   # username          = "...";
