@@ -142,13 +142,10 @@ if [ "$DESKTOP_ENABLE" = "true" ]; then
       # (see hosts/defaults.nix) — was hardcoded to the original
       # author's own "us,latam".
       sed -i 's/kb_layout = "us,latam"/kb_layout = "fr"/' "$HYPR_CONF_FILE"
-      # Monitor fallback: the upstream config only defines outputs named
-      # after the original author's own laptop screens (eDP-1,
-      # HDMI-A-1) — add a wildcard so *some* sane config applies
-      # regardless of what this machine's actual output is named.
-      if ! grep -q 'output = ""' "$HYPR_CONF_FILE"; then
-        sed -i '/hl.monitor({ output = "eDP-1"/i hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })' "$HYPR_CONF_FILE"
-      fi
+      # Monitors: no wildcard fallback is injected any more — Hyprland's
+      # Lua API ignores output = "" / "*". Give each real output its own
+      # hl.monitor() line in dotfiles/hypr/hyprland.lua instead (see the
+      # Virtual-1 line there for janus-vm).
     fi
 
     RULES_CONF_FILE="$HOME/.config/hypr/rules.lua"

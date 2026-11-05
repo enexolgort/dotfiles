@@ -6,6 +6,10 @@
 
 hl.monitor({ output = "eDP-1", disabled = true })
 hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1 })
+-- VirtualBox's display (janus-vm). Must be named explicitly: in the Lua
+-- API (Hyprland 0.55) a wildcard output ("" or "*") is ignored, and
+-- without a rule Hyprland auto-picks scale 2 for this screen.
+hl.monitor({ output = "Virtual-1", mode = "preferred", position = "auto", scale = 1 })
 
 ---- MY PROGRAMS ----
 
