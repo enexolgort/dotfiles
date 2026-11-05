@@ -27,5 +27,7 @@
     ffmpeg
     docker-compose
     nodejs    # includes npm — no separate package needed
+  ] ++ lib.optionals (vars.ytdlpEnable or false) [
+    yt-dlp    # video downloader — enabled per host via ytdlpEnable
   ];
 }
