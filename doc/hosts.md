@@ -12,6 +12,7 @@ Current hosts:
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
+| `janus-vm` | `real` | Same as `janus`, as a VirtualBox VM (BIOS/GRUB, label-based `hardware-configuration.nix` committed for real) | — |
 
 ## Installing/updating a specific host
 ```bash
