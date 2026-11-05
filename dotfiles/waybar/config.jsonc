@@ -32,14 +32,25 @@
         "interval": 5
     },
 
+    // Bluetooth controller button: click = Blueman device manager
+    // (pair/connect), right-click = power the adapter on/off.
+    // format-no-controller keeps the button visible even with no adapter
+    // (e.g. the janus-vm VirtualBox guest) — waybar hides it otherwise.
     "bluetooth": {
         "format": "󰂯",
-        "format-disabled": "󰂲",
+        "format-on": "󰂯",
         "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-no-controller": "󰂲",
         "format-connected": "󰂱  {device_alias}",
-        "tooltip-format-connected": "{device_enumerate}",
+        "format-connected-battery": "󰂱  {device_alias} {device_battery_percentage}%",
+        "tooltip-format": "{controller_alias}  {status}\nClick: devices · Right-click: power",
+        "tooltip-format-connected": "{controller_alias}  {num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}",
-        "on-click": "blueman-manager"
+        "tooltip-format-enumerate-connected-battery": "{device_alias}  {device_battery_percentage}%",
+        "tooltip-format-no-controller": "No Bluetooth adapter\nClick: open Blueman",
+        "on-click": "blueman-manager",
+        "on-click-right": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
     },
 
     // Absent entirely on machines without a battery
