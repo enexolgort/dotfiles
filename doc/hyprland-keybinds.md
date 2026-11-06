@@ -9,7 +9,7 @@ Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr
 | `Super + D` | App launcher (rofi) |
 | `Super + E` | File manager (Dolphin) |
 | `Super + B` | Browser (Firefox) |
-| `Super + C` | VS Code |
+| `Super + C` | Claude Code (in kitty) |
 
 ## Controllers
 | Shortcut | Action |
