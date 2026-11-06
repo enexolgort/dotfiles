@@ -20,6 +20,69 @@
     x11.enable = true;
   };
 
+  # Catppuccin Mocha (mauve accent) for Qt/KDE apps like Dolphin. Read
+  # through the "kde" Qt platform theme set in common/desktop.nix. KDE
+  # apps take colours straight from these [Colors:*] groups (outside
+  # Plasma nothing copies a .colors scheme in for them), so the palette
+  # lives here. Values are Mocha as "R,G,B": https://catppuccin.com/palette
+  xdg.configFile."kdeglobals".text =
+    let
+      base = "30,30,46";
+      mantle = "24,24,37";
+      crust = "17,17,27";
+      surface0 = "49,50,68";
+      surface1 = "69,71,90";
+      overlay0 = "108,112,134";
+      subtext0 = "166,173,200";
+      text = "205,214,244";
+      mauve = "203,166,247";
+      lavender = "180,190,254";
+      blue = "137,180,250";
+      red = "243,139,168";
+      yellow = "249,226,175";
+      green = "166,227,161";
+      group = name: bg: alt: fg: ''
+        [Colors:${name}]
+        BackgroundNormal=${bg}
+        BackgroundAlternate=${alt}
+        ForegroundNormal=${fg}
+        ForegroundInactive=${subtext0}
+        ForegroundActive=${mauve}
+        ForegroundLink=${blue}
+        ForegroundVisited=${lavender}
+        ForegroundNegative=${red}
+        ForegroundNeutral=${yellow}
+        ForegroundPositive=${green}
+        DecorationFocus=${mauve}
+        DecorationHover=${lavender}
+      '';
+    in
+    ''
+      [General]
+      ColorScheme=CatppuccinMochaMauve
+      AccentColor=${mauve}
+
+      [Icons]
+      Theme=breeze-dark
+
+      [KDE]
+      contrast=4
+    ''
+    + group "Window" base mantle text
+    + group "View" base mantle text
+    + group "Button" surface0 surface1 text
+    + group "Header" mantle crust text
+    + group "Tooltip" mantle crust text
+    + group "Complementary" crust mantle text
+    + group "Selection" mauve lavender crust
+    + ''
+      [WM]
+      activeBackground=${mantle}
+      activeForeground=${text}
+      inactiveBackground=${crust}
+      inactiveForeground=${overlay0}
+    '';
+
   # LazyVim — official starter template, cloned fresh only if
   # ~/.config/nvim doesn't already exist (never overwrites an existing
   # config, same caution as the Doom Emacs bootstrap above).
