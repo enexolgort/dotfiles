@@ -39,6 +39,14 @@ hl.window_rule({
     opacity = window_opacity .. " override " .. window_opacity .. " override 1.0 override",
 })
 
+-- Calendar popup from the waybar clock: floating, centred under the bar
+hl.window_rule({
+    name = "calendar-popup",
+    match = { class = "^(gsimplecal)$" },
+    float = true,
+    move = "(monitor_w*0.5-window_w*0.5) 40",
+})
+
 -- Float rules (fixed: unique names + float = true actually set)
 hl.window_rule({
     name = "float-pavucontrol",
