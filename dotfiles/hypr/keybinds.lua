@@ -68,25 +68,25 @@ end)
 -- dispatcher call when moving to Lua.
 hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exit())
 
--- Focus (H/J/K/L = left/down/up/right, vim-style, matching your original)
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
-hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+-- Focus with the arrow keys
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 
 -- Move active window within the layout (old `movewindow`). Verified on
 -- janus-vm (Hyprland 0.55.4): direction = "left" moved a window across.
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }))
+hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }))
 
 -- VERIFY: resize active window by pixel delta (old `resizeactive`, repeating
 -- while held via `binde`). Param names guessed as x/y - confirm with hyprctl eval.
-hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.resize({ x = -40, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 40, y = 0 }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -40 }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 40 }), { repeating = true })
+hl.bind(mainMod .. " + CTRL + left", hl.dsp.window.resize({ x = -40, y = 0 }), { repeating = true })
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.resize({ x = 40, y = 0 }), { repeating = true })
+hl.bind(mainMod .. " + CTRL + up", hl.dsp.window.resize({ x = 0, y = -40 }), { repeating = true })
+hl.bind(mainMod .. " + CTRL + down", hl.dsp.window.resize({ x = 0, y = 40 }), { repeating = true })
 
 -- Workspaces 1-10, and move-to-workspace with SHIFT.
 -- Bound by physical key (xkb keycodes 10-19 = the number row 1..0), not by
