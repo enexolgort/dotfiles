@@ -12,7 +12,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
-hl.bind("SUPER + Tab", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/lock.sh")) -- hyprlock, or swaylock in VirtualBox
+hl.bind(mainMod + "l", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/lock.sh")) -- hyprlock, or swaylock in VirtualBox
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("wlogout -b 1 -c 20 -r 20 -L 1700 -R 1700 -T 325 -B 325"))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("quickshell -c hyprquickpaper"))
 
