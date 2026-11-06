@@ -15,6 +15,12 @@ configuration {
     font:                "JetBrainsMono Nerd Font 11";
 }
 
+/* Start from an empty theme. Without this, rofi 2.0 layers everything
+ * below on top of its built-in default (light Solarized), and any
+ * property not set here — like the background of unselected rows —
+ * shows through as unreadable cream/yellow. */
+@theme "/dev/null"
+
 * {
     base:     #1e1e2e;
     mantle:   #181825;
@@ -92,19 +98,24 @@ element {
     border-radius: 8px;
 }
 
+/* Unselected rows: Mocha background, light text — set explicitly so no
+ * built-in colours can leak in. */
 element normal.normal,
 element alternate.normal {
-    text-color: @text;
+    background-color: @base;
+    text-color:       @text;
 }
 
 element normal.urgent,
 element alternate.urgent {
-    text-color: @red;
+    background-color: @base;
+    text-color:       @red;
 }
 
 element normal.active,
 element alternate.active {
-    text-color: @lavender;
+    background-color: @base;
+    text-color:       @lavender;
 }
 
 element selected.normal,
@@ -119,10 +130,12 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 1.2em;
+    size:             1.2em;
+    background-color: transparent;
 }
 
 element-text {
+    background-color: transparent;
     text-color:       inherit;
     vertical-align:   0.5;
 }
