@@ -34,6 +34,17 @@ lib.mkIf vars.desktopEnable {
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
 
+  # Qt/KDE apps (Dolphin) outside Plasma: the "kde" platform theme
+  # (plasma-integration) makes them read colours/icons from
+  # ~/.config/kdeglobals, which home-desktop.nix fills with Catppuccin
+  # Mocha. Breeze is the widget style; breeze-icons provides the dark
+  # icon set kdeglobals selects.
+  qt = {
+    enable = true;
+    platformTheme = "kde";
+    style = "breeze";
+  };
+
   # Hint Electron apps (Obsidian, Spotify's Electron-based client) to
   # use Wayland natively rather than falling back to XWayland.
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
@@ -142,6 +153,7 @@ lib.mkIf vars.desktopEnable {
     brightnessctl   # brightness control
     playerctl       # media key controls (play/pause/next/prev) — used in keybinds.lua
     kdePackages.dolphin      # file manager
+    kdePackages.breeze-icons # breeze-dark icons for Dolphin (kdeglobals [Icons])
     kdePackages.kio          # required separately since nixos-25.11
     kdePackages.kio-fuse     # mount remote filesystems via FUSE
     kdePackages.kio-extras   # protocol support: sftp, fish, etc.
