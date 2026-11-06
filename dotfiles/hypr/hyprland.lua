@@ -47,7 +47,10 @@ end)
 
 ---- ENVIRONMENT VARIABLES ----
 
-hl.env("XCURSOR_SIZE", "18")
+-- Posy's cursor (installed by home.pointerCursor in nixOS/home-desktop.nix).
+-- Only ships in 32/48/64/96/128 px — other sizes get scaled and blurry.
+hl.env("XCURSOR_THEME", "Posy_Cursor")
+hl.env("XCURSOR_SIZE", "32")
 hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
 
