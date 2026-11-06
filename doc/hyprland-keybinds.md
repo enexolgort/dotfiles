@@ -41,7 +41,7 @@ Workspace keys are bound to the physical number row, so on AZERTY press the `& Ã
 ## System / session
 | Shortcut | Action |
 |---|---|
-| `Super + Tab` | Lock screen (hyprlock) |
+| `Super + L` | Lock screen (hyprlock; swaylock inside VirtualBox) |
 | `Super + Escape` | Logout menu (wlogout) |
 | `Super + Shift + E` | Exit Hyprland session |
 | `Super + W` | Wallpaper picker (quickshell) |
