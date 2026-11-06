@@ -24,9 +24,9 @@ Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr
 | `Super + Q` | Close active window |
 | `Super + F` | Toggle fullscreen |
 | `Super + Space` | Toggle floating |
-| `Super + H/J/K/L` | Move focus left/down/up/right |
-| `Super + Shift + H/J/K/L` | Move window left/down/up/right |
-| `Super + Ctrl + H/J/K/L` | Resize window (left/right/up/down) |
+| `Super + ←/↓/↑/→` | Move focus left/down/up/right |
+| `Super + Shift + ←/↓/↑/→` | Move window left/down/up/right |
+| `Super + Ctrl + ←/↓/↑/→` | Resize window (hold to repeat) |
 | `Super` + drag (mouse button 1) | Move window |
 | `Super` + drag (mouse button 2) | Resize window |
 
@@ -35,6 +35,8 @@ Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr
 |---|---|
 | `Super + 1-9, 0` | Switch to workspace 1–10 |
 | `Super + Shift + 1-9, 0` | Move active window to workspace 1–10 |
+
+Workspace keys are bound to the physical number row, so on AZERTY press the `& é " ' ( - è _ ç à` keys without Shift.
 
 ## System / session
 | Shortcut | Action |
