@@ -13,9 +13,6 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("code")) -- VS Code
 
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
--- Lock screen: hyprlock, or swaylock in VirtualBox. Note `..` (string
--- concat) — `mainMod + "l"` is Lua arithmetic and errors out, which
--- aborts this file and drops every bind below it.
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/lock.sh"))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("wlogout -b 1 -c 20 -r 20 -L 1700 -R 1700 -T 325 -B 325"))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("quickshell -c hyprquickpaper"))
