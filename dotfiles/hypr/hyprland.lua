@@ -27,7 +27,10 @@ browser    = "brave"
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
-    hl.exec_cmd("dunst")
+    -- Notifications (Catppuccin config in dotfiles/mako/config)
+    hl.exec_cmd("mako")
+    -- Volume/brightness pop-ups; the media keys in keybinds.lua talk to it
+    hl.exec_cmd("swayosd-server")
     -- --indicator = StatusNotifierItem tray icon, the only kind waybar's
     -- tray can show (plain nm-applet uses the old X11 XEmbed tray)
     hl.exec_cmd("nm-applet --indicator")

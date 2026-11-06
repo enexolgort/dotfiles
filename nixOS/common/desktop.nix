@@ -24,8 +24,9 @@ lib.mkIf vars.desktopEnable {
   # ~/.config/hypr by scripts/post-install.sh.
   programs.hyprlock.enable = true;
 
-  # SDDM as the login screen. A themed version is a manual follow-up if
-  # wanted later, not something auto-applied.
+  # SDDM as the login screen, Catppuccin Mocha (catppuccin-sddm, mauve
+  # accent — package in systemPackages below). The theme is Qt6, so SDDM
+  # itself must be the Qt6 build (kdePackages.sddm).
   #
   # wayland.enable is required explicitly — SDDM's NixOS module asserts
   # that either services.xserver.enable or this must be true. Since
@@ -33,6 +34,29 @@ lib.mkIf vars.desktopEnable {
   # applies.
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
+  services.displayManager.sddm.package = pkgs.kdePackages.sddm;
+  services.displayManager.sddm.theme = "catppuccin-mocha-mauve";
+
+  # File open/save dialogs: the Hyprland portal has no file chooser, so
+  # GTK/Electron apps (Firefox, Obsidian…) get theirs from the GTK portal.
+  # KDE apps like Dolphin keep their own KDE dialogs.
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.hyprland = {
+      default = [ "hyprland" "gtk" ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+    };
+  };
+
+  # USB drives: udisks2 lets Dolphin (and other apps) list and mount
+  # them without root; gvfs does the same for GTK apps' file dialogs.
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+
+  # Volume/brightness pop-ups (swayosd). Its udev rules let your user
+  # change the backlight for the brightness OSD.
+  services.udev.packages = [ pkgs.swayosd ];
 
   # Qt/KDE apps (Dolphin) outside Plasma: the "kde" platform theme
   # (plasma-integration) makes them read colours/icons from
@@ -151,6 +175,14 @@ lib.mkIf vars.desktopEnable {
     networkmanagerapplet # nm-connection-editor, for the advanced WiFi /
                           # VPN settings nm-applet's menu links to
     brightnessctl   # brightness control
+    swayosd         # volume/brightness pop-ups — media keys in keybinds.lua,
+                     # Catppuccin style in dotfiles/swayosd/style.css
+    (catppuccin-sddm.override {
+      flavor = "mocha";
+      accent = "mauve";
+      font = "JetBrainsMono Nerd Font";
+      fontSize = "11";
+    })              # login screen theme (services.displayManager.sddm.theme)
     playerctl       # media key controls (play/pause/next/prev) — used in keybinds.lua
     kdePackages.dolphin      # file manager
     kdePackages.breeze-icons # breeze-dark icons for Dolphin (kdeglobals [Icons])
@@ -166,5 +198,7 @@ lib.mkIf vars.desktopEnable {
     spotify
     neovim
     claude-code     # Claude Code CLI (`claude`; unfree, allowed in base.nix) — Super+C opens it in kitty
+    kdePackages.gwenview # image viewer (default for images, home-desktop.nix)
+    mpv             # video/audio player (default for media, home-desktop.nix)
   ];
 }

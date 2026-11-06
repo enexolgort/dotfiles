@@ -1,0 +1,46 @@
+/* ~/.config/swayosd/style.css — Catppuccin Mocha volume/brightness pop-up
+ * swayosd-server is started from hyprland.lua; the media keys in
+ * keybinds.lua and the waybar volume scroll call swayosd-client.
+ * Palette: https://catppuccin.com/palette (Mocha) */
+
+window#osd {
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 2px solid #cba6f7;        /* mauve */
+    background: rgba(30, 30, 46, 0.95); /* base */
+}
+
+window#osd #container {
+    margin: 16px;
+}
+
+window#osd image,
+window#osd label {
+    color: #cdd6f4;                   /* text */
+}
+
+window#osd progressbar:disabled,
+window#osd image:disabled {
+    opacity: 0.5;
+}
+
+window#osd progressbar {
+    min-height: 6px;
+    border-radius: 999px;
+    background: transparent;
+    border: none;
+}
+
+window#osd trough {
+    min-height: inherit;
+    border-radius: inherit;
+    border: none;
+    background: #313244;              /* surface0 */
+}
+
+window#osd progress {
+    min-height: inherit;
+    border-radius: inherit;
+    border: none;
+    background: #cba6f7;              /* mauve */
+}

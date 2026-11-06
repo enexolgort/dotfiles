@@ -33,6 +33,10 @@
 
       mkHomeManagerModule = vars: {
         home-manager.useGlobalPkgs = true;
+        # If a file home-manager now manages already exists (e.g. a GTK
+        # settings.ini an app wrote), move it to *.hm-backup instead of
+        # failing the whole rebuild.
+        home-manager.backupFileExtension = "hm-backup";
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = { inherit vars; };
         home-manager.users.${vars.username} = {

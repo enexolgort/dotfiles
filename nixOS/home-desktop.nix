@@ -61,6 +61,8 @@
       [General]
       ColorScheme=CatppuccinMochaMauve
       AccentColor=${mauve}
+      TerminalApplication=kitty
+      TerminalService=kitty.desktop
 
       [Icons]
       Theme=breeze-dark
@@ -82,6 +84,66 @@
       inactiveBackground=${crust}
       inactiveForeground=${overlay0}
     '';
+
+  # GTK apps (Firefox dialogs, pavucontrol, Blueman, nwg-look) in
+  # Catppuccin Mocha with Papirus icons (mauve folders). Theme/icon names
+  # are the directories these packages install.
+  gtk = {
+    enable = true;
+    theme = {
+      name = "catppuccin-mocha-mauve-standard+default";
+      package = pkgs.catppuccin-gtk.override {
+        variant = "mocha";
+        accents = [ "mauve" ];
+      };
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "mauve";
+      };
+    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+  };
+  # libadwaita/GTK4 apps ignore GTK themes but follow this dark preference.
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
+  # Default apps (~/.config/mimeapps.list). force = true: apps sometimes
+  # rewrite this file ("always open with…"), which would otherwise make
+  # the next home-manager activation fail on a clobbered file.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications =
+      let
+        browser = "firefox.desktop";
+        images = "org.kde.gwenview.desktop";
+        media = "mpv.desktop";
+      in
+      {
+        "inode/directory" = "org.kde.dolphin.desktop";
+        "text/html" = browser;
+        "x-scheme-handler/http" = browser;
+        "x-scheme-handler/https" = browser;
+        "x-scheme-handler/about" = browser;
+        "x-scheme-handler/unknown" = browser;
+        "application/pdf" = browser;
+        "text/plain" = "nvim.desktop"; # opens in kitty (kdeglobals TerminalApplication)
+        "image/png" = images;
+        "image/jpeg" = images;
+        "image/gif" = images;
+        "image/webp" = images;
+        "image/svg+xml" = images;
+        "video/mp4" = media;
+        "video/webm" = media;
+        "video/x-matroska" = media;
+        "audio/mpeg" = media;
+        "audio/flac" = media;
+        "audio/ogg" = media;
+      };
+  };
+  xdg.configFile."mimeapps.list".force = true;
 
   # LazyVim — official starter template, cloned fresh only if
   # ~/.config/nvim doesn't already exist (never overwrites an existing
