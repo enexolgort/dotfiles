@@ -91,7 +91,7 @@
   gtk = {
     enable = true;
     theme = {
-      name = "catppuccin-mocha-mauve-standard+default";
+      name = "catppuccin-mocha-mauve-standard"; # dir name the package installs
       package = pkgs.catppuccin-gtk.override {
         variant = "mocha";
         accents = [ "mauve" ];
