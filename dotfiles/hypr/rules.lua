@@ -13,6 +13,16 @@
 
 local window_opacity = 0.7
 
+-- Keep new windows tiled: some clients (kitty here) ask to be maximized
+-- when they open, so a new window covered the whole workspace instead of
+-- splitting it. Ignore client maximize requests; Super+F still works.
+-- Verified on janus-vm: 4 kitty windows tiled 632/632/314/312 px wide.
+hl.window_rule({
+    name = "no-client-maximize",
+    match = { class = ".*" },
+    suppress_event = "maximize",
+})
+
 -- Layer rules (old: layerrule = blur on / ignore_alpha 0.15, match:namespace rofi)
 hl.layer_rule({
     match = { namespace = "rofi" },

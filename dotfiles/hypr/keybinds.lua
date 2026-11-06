@@ -74,10 +74,8 @@ hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 
--- VERIFY: move active window within layout (old `movewindow` dispatcher).
--- Confirmed pattern is hl.dsp.window.move({ workspace = N }) for sending to a
--- workspace (used below) - the direction-swap variant isn't shown in the
--- official example, so double check this fires like the old movewindow did.
+-- Move active window within the layout (old `movewindow`). Verified on
+-- janus-vm (Hyprland 0.55.4): direction = "left" moved a window across.
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
@@ -90,12 +88,15 @@ hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 40, y = 0 }), { rep
 hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -40 }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 40 }), { repeating = true })
 
--- Workspaces 1-10, and move-to-workspace with SHIFT (confirmed pattern from
--- the official example config)
+-- Workspaces 1-10, and move-to-workspace with SHIFT.
+-- Bound by physical key (xkb keycodes 10-19 = the number row 1..0), not by
+-- the "1".."0" keysyms: on AZERTY (kb_layout = "fr") those keys type
+-- & é " ' ( - è _ ç à without Shift, so `SUPER + 1` never fired.
+-- Verified on janus-vm: Super + the "2" key switches to workspace 2.
 for i = 1, 10 do
-    local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+    local code = "code:" .. (9 + i) -- 1 -> code:10 ... 10 (key 0) -> code:19
+    hl.bind(mainMod .. " + " .. code, hl.dsp.focus({ workspace = i }))
+    hl.bind(mainMod .. " + SHIFT + " .. code, hl.dsp.window.move({ workspace = i }))
 end
 
 -- Mouse move/resize (confirmed pattern from the official example config)
