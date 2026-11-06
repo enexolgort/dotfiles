@@ -124,6 +124,8 @@ lib.mkIf vars.desktopEnable {
 
     # Standard companions for any real Hyprland setup:
     hyprpaper       # wallpaper daemon (Hyprland-native)
+    swaybg          # CPU-only wallpaper fallback when hyprpaper can't start
+                     # (janus-vm) — see dotfiles/hypr/scripts/wallpaper.sh
     hypridle        # idle daemon — dims, locks, then sleeps the screen
                      # (config in dotfiles/hypr/hypridle.conf)
     hyprpolkitagent # polkit auth prompts, see systemd.packages above

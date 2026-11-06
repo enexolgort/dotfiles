@@ -39,8 +39,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("hypridle")
 
-    hl.exec_cmd("awww-daemon")
-    hl.exec_cmd("sleep 1 && awww img /home/rp34/Pictures/Wallpapers/w3.png")
+    -- Wallpaper: hyprpaper, falling back to swaybg where hyprpaper can't
+    -- run (janus-vm) — see hypr/scripts/wallpaper.sh. The image is set
+    -- by scripts/post-install.sh in ~/.config/hypr/hyprpaper.conf.
+    hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
