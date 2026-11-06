@@ -165,6 +165,20 @@ lib.mkIf vars.desktopEnable {
     obsidian
     spotify
     neovim
-    vscode          # Visual Studio Code (unfree; allowUnfree is on in base.nix) — Super+C
+    # Visual Studio Code (unfree; allowUnfree is on in base.nix) — Super+C.
+    # Workaround: nixpkgs' vscode 1.144.0 fails in postPatch with
+    # "rm: cannot remove 'resources/app/node_modules/@vscode/ripgrep/bin/rg'"
+    # — that release no longer ships the bundled rg the package swaps for
+    # the system one. Make that rm tolerant so the symlink to nixpkgs'
+    # ripgrep is still created. No-op once nixpkgs fixes it; drop then.
+    (vscode.overrideAttrs (old: {
+      postPatch =
+        builtins.replaceStrings
+          [ "rm resources/app/node_modules/@vscode/ripgrep/bin/rg" ]
+          [
+            "rm -f resources/app/node_modules/@vscode/ripgrep/bin/rg; mkdir -p resources/app/node_modules/@vscode/ripgrep/bin"
+          ]
+          old.postPatch;
+    }))
   ];
 }
