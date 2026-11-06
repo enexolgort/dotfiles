@@ -1,30 +1,30 @@
 {
-    "label" : "lock",
-    "action" : "sh -c '$HOME/.config/hypr/scripts/lock.sh'",
-    "text" : "󰌾  Lock",
-    "keybind" : "l"
-}
-{
     "label" : "logout",
     "action" : "uwsm stop",
-    "text" : "󰍃  Log out",
+    "text" : "Sign out",
     "keybind" : "e"
-}
-{
-    "label" : "suspend",
-    "action" : "systemctl suspend",
-    "text" : "󰒲  Suspend",
-    "keybind" : "u"
-}
-{
-    "label" : "reboot",
-    "action" : "systemctl reboot",
-    "text" : "󰜉  Reboot",
-    "keybind" : "r"
 }
 {
     "label" : "shutdown",
     "action" : "systemctl poweroff",
-    "text" : "󰐥  Shut down",
+    "text" : "Shut Down",
     "keybind" : "s"
+}
+{
+    "label" : "reboot",
+    "action" : "systemctl reboot",
+    "text" : "Restart",
+    "keybind" : "r"
+}
+{
+    "label" : "hibernate",
+    "action" : "systemctl hibernate",
+    "text" : "Hibernate",
+    "keybind" : "h"
+}
+{
+    "label" : "cancel",
+    "action" : "true",
+    "text" : "Cancel",
+    "keybind" : "c"
 }

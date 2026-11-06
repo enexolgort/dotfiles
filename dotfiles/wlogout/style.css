@@ -1,46 +1,45 @@
-/* ~/.config/wlogout/style.css — Catppuccin Mocha
- * Power menu (Super+Escape, waybar power button). Buttons use Nerd Font
- * glyphs from the layout's "text" instead of icon images, so there are
- * no /usr/share paths to break on NixOS. Keys: L lock, E log out,
- * U suspend, R reboot, S shut down, Esc close.
+/* ~/.config/wlogout/style.css — power menu, Catppuccin Mocha
+ * Opened by hypr/scripts/power-menu.sh (waybar power button,
+ * Super+Escape): a row of five square tiles, outline icon above a bold
+ * label, Cancel in red, uptime at the bottom of the screen (drawn by
+ * the script). Icons are the SVGs in ./icons (paths are relative to
+ * this file). Keys: E sign out, S shut down, R restart, H hibernate,
+ * C / Esc cancel.
  * Palette: https://catppuccin.com/palette (Mocha) */
 
 * {
     background-image: none;
     box-shadow: none;
-    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
 }
 
 window {
-    background-color: rgba(17, 17, 27, 0.85); /* crust */
+    background-color: rgba(17, 17, 27, 0.92);   /* crust */
 }
 
 button {
-    color: #cdd6f4;                /* text */
-    background-color: #1e1e2e;     /* base */
-    border: 2px solid #45475a;     /* surface1 */
-    border-radius: 16px;
-    margin: 12px;
-    font-size: 22px;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    color: #cdd6f4;                  /* text */
+    background-color: #313244;       /* surface0 */
+    border: none;
+    border-radius: 0;
+    margin: 3px;
+    padding-top: 90px;               /* label sits under the icon */
+    font-size: 17px;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: center 36%;
+    background-size: 56px 56px;
+    transition: background-color 0.12s ease;
 }
 
 button:focus,
 button:hover {
-    color: #11111b;                /* crust */
-    background-color: #cba6f7;     /* mauve */
-    border-color: #cba6f7;
+    background-color: #45475a;       /* surface1 */
     outline-style: none;
 }
 
-#shutdown:focus,
-#shutdown:hover {
-    background-color: #f38ba8;     /* red */
-    border-color: #f38ba8;
-}
-
-#reboot:focus,
-#reboot:hover {
-    background-color: #fab387;     /* peach */
-    border-color: #fab387;
-}
+#logout    { background-image: url("icons/logout.svg"); }
+#shutdown  { background-image: url("icons/shutdown.svg"); }
+#reboot    { background-image: url("icons/reboot.svg"); }
+#hibernate { background-image: url("icons/hibernate.svg"); }
+#cancel    { background-image: url("icons/cancel.svg"); color: #f38ba8; }  /* red */
