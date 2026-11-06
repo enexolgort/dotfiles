@@ -38,6 +38,9 @@
   # needs 3D acceleration ENABLED in VirtualBox to start, so: keep 3D on
   # in the VM's Display settings, and render in software here.
   environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "1";
+  # GTK4 apps (swayosd pop-ups, nwg-look…) draw with the CPU renderer
+  # too, so they never touch the broken GPU path.
+  environment.sessionVariables.GSK_RENDERER = "cairo";
 
   # Lock screen for this VM: hyprlock's GPU path crashes here and wedges
   # VirtualBox's 3D, so hypr/scripts/lock.sh uses swaylock-effects
