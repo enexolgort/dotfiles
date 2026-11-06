@@ -99,7 +99,11 @@
 
     "clock": {
         "format": "{:%a %d %b  %H:%M}",
-        "tooltip-format": "<tt>{calendar}</tt>"
+        "tooltip-format": "<tt>{calendar}</tt>",
+        // Click: calendar popup (gsimplecal, Catppuccin via the GTK theme;
+        // placed under the clock by the rule in hypr/rules.lua). Click
+        // again, or click elsewhere, to close it.
+        "on-click": "pkill -x gsimplecal || gsimplecal"
     },
 
     "mpris": {
