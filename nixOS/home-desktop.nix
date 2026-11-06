@@ -106,6 +106,9 @@
     };
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+    # Theme GTK4 apps with Catppuccin too (explicit: home-manager's
+    # default for this changed to null, and warns until it's set).
+    gtk4.theme = config.gtk.theme;
   };
   # libadwaita/GTK4 apps ignore GTK themes but follow this dark preference.
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
