@@ -10,6 +10,7 @@ hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("code")) -- VS Code
 
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- Lock screen: hyprlock, or swaylock in VirtualBox. Note `..` (string

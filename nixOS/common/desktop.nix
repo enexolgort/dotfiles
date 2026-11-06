@@ -165,5 +165,6 @@ lib.mkIf vars.desktopEnable {
     obsidian
     spotify
     neovim
+    vscode          # Visual Studio Code (unfree; allowUnfree is on in base.nix) — Super+C
   ];
 }
