@@ -38,4 +38,11 @@
   # needs 3D acceleration ENABLED in VirtualBox to start, so: keep 3D on
   # in the VM's Display settings, and render in software here.
   environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "1";
+
+  # Lock screen for this VM: hyprlock's GPU path crashes here and wedges
+  # VirtualBox's 3D, so hypr/scripts/lock.sh uses swaylock-effects
+  # (CPU-drawn, Catppuccin Mocha via dotfiles/swaylock/config) instead.
+  # The PAM service is what lets it check your password to unlock.
+  environment.systemPackages = [ pkgs.swaylock-effects ];
+  security.pam.services.swaylock = { };
 }
