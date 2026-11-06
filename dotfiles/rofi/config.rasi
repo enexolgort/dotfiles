@@ -1,0 +1,128 @@
+/* ~/.config/rofi/config.rasi — Catppuccin Mocha
+ * Used by every rofi menu here: the app launcher (Super+D, `rofi -show
+ * drun`) and all the `rofi -dmenu` pickers (clipboard Super+V, Wi-Fi
+ * Super+N, opacity). Deployed by scripts/post-install.sh.
+ * Palette: https://catppuccin.com/palette (Mocha) */
+
+configuration {
+    modi:                "drun,run,window";
+    show-icons:          true;
+    display-drun:        "  Apps";
+    display-run:         "  Run";
+    display-window:      "  Windows";
+    display-dmenu:       "  ";
+    drun-display-format: "{name}";
+    font:                "JetBrainsMono Nerd Font 11";
+}
+
+* {
+    base:     #1e1e2e;
+    mantle:   #181825;
+    crust:    #11111b;
+    surface0: #313244;
+    surface1: #45475a;
+    overlay0: #6c7086;
+    subtext0: #a6adc8;
+    text:     #cdd6f4;
+    mauve:    #cba6f7;
+    lavender: #b4befe;
+    red:      #f38ba8;
+
+    background-color: transparent;
+    text-color:       @text;
+    margin:  0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    location:         center;
+    width:            560px;
+    background-color: @base;
+    border:           2px;
+    border-color:     @mauve;
+    border-radius:    12px;
+}
+
+mainbox {
+    padding:  12px;
+    spacing:  10px;
+    children: [ inputbar, message, listview ];
+}
+
+inputbar {
+    padding:          10px 12px;
+    spacing:          8px;
+    background-color: @surface0;
+    border-radius:    8px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @mauve;
+}
+
+entry {
+    placeholder:       "Search…";
+    placeholder-color: @overlay0;
+    cursor:            text;
+}
+
+message {
+    padding:          8px 12px;
+    background-color: @mantle;
+    border-radius:    8px;
+}
+
+textbox {
+    text-color: @subtext0;
+}
+
+listview {
+    lines:     8;
+    columns:   1;
+    spacing:   4px;
+    scrollbar: false;
+    fixed-height: false;
+}
+
+element {
+    padding:       8px 12px;
+    spacing:       10px;
+    border-radius: 8px;
+}
+
+element normal.normal,
+element alternate.normal {
+    text-color: @text;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    text-color: @red;
+}
+
+element normal.active,
+element alternate.active {
+    text-color: @lavender;
+}
+
+element selected.normal,
+element selected.active {
+    background-color: @mauve;
+    text-color:       @crust;
+}
+
+element selected.urgent {
+    background-color: @red;
+    text-color:       @crust;
+}
+
+element-icon {
+    size: 1.2em;
+}
+
+element-text {
+    text-color:       inherit;
+    vertical-align:   0.5;
+}
