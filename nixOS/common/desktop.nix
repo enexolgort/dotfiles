@@ -49,6 +49,10 @@ lib.mkIf vars.desktopEnable {
     };
   };
 
+  # SVG support for GTK3 images (GdkPixbuf): without it, CSS-loaded SVGs
+  # silently don't show — e.g. the power menu's icons and uptime line.
+  programs.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
+
   # USB drives: udisks2 lets Dolphin (and other apps) list and mount
   # them without root; gvfs does the same for GTK apps' file dialogs.
   services.udisks2.enable = true;
@@ -200,5 +204,6 @@ lib.mkIf vars.desktopEnable {
     claude-code     # Claude Code CLI (`claude`; unfree, allowed in base.nix) — Super+C opens it in kitty
     kdePackages.gwenview # image viewer (default for images, home-desktop.nix)
     mpv             # video/audio player (default for media, home-desktop.nix)
+    gsimplecal      # calendar popup when clicking the waybar clock
   ];
 }

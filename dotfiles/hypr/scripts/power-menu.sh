@@ -43,6 +43,11 @@ cat > "$DIR/uptime.svg" <<EOF
 EOF
 cat > "$DIR/style.css" <<EOF
 @import url("file://$HOME/.config/wlogout/style.css");
+/* Same size for every tile (otherwise widths follow the label length) */
+button {
+    min-width: $((TILE - 6))px;
+    min-height: $((TILE - 6))px;
+}
 window {
     background-image: url("file://$DIR/uptime.svg");
     background-size: 100% 100%;
