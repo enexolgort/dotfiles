@@ -14,8 +14,8 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(terminal .. " --class claude -e claud
 
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/lock.sh"))
--- Power menu: 5 buttons in one row (layout + Catppuccin style in dotfiles/wlogout)
-hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("wlogout -b 5 -T 300 -B 300 -L 150 -R 150"))
+-- Power menu (hypr/scripts/power-menu.sh + dotfiles/wlogout)
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/power-menu.sh"))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("quickshell -c hyprquickpaper"))
 
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 0 }))

@@ -126,6 +126,6 @@
     "custom/power": {
         "format": "⏻",
         "tooltip": false,
-        "on-click": "wlogout -b 5 -T 300 -B 300 -L 150 -R 150"
+        "on-click": "~/.config/hypr/scripts/power-menu.sh"
     }
 }
