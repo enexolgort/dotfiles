@@ -49,6 +49,11 @@ lib.mkIf vars.desktopEnable {
     };
   };
 
+  # OBS Studio (recording/streaming). Screen capture on Hyprland goes
+  # through PipeWire + xdg-desktop-portal-hyprland ("Screen Capture
+  # (PipeWire)" source).
+  programs.obs-studio.enable = true;
+
   # SVG support for GTK3 images (GdkPixbuf): without it, CSS-loaded SVGs
   # silently don't show — e.g. the power menu's icons and uptime line.
   programs.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
@@ -206,5 +211,7 @@ lib.mkIf vars.desktopEnable {
     mpv             # video/audio player (default for media, home-desktop.nix)
     gsimplecal      # calendar popup when clicking the waybar clock
     hoppscotch      # API client (open-source Postman alternative)
+    blender         # 3D creation suite
+    discord         # chat (unfree, allowed in base.nix)
   ];
 }
