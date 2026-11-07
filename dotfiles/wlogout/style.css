@@ -23,7 +23,8 @@ button {
     border: none;
     border-radius: 0;
     margin: 3px;
-    padding-top: 90px;               /* label sits under the icon */
+    padding: 90px 0 0 0;             /* label sits under the icon; no side
+                                        padding so tiles stay square */
     font-size: 17px;
     font-weight: bold;
     background-repeat: no-repeat;
