@@ -43,10 +43,12 @@ cat > "$DIR/uptime.svg" <<EOF
 EOF
 cat > "$DIR/style.css" <<EOF
 @import url("file://$HOME/.config/wlogout/style.css");
-/* Same size for every tile (otherwise widths follow the label length) */
+/* Same size for every tile (otherwise widths follow the label length).
+ * GTK's min-* exclude padding: subtract the 90px top padding and the
+ * 3px margins so each tile is exactly TILE x TILE. */
 button {
     min-width: $((TILE - 6))px;
-    min-height: $((TILE - 6))px;
+    min-height: $((TILE - 6 - 90))px;
 }
 window {
     background-image: url("file://$DIR/uptime.svg");
