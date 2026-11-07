@@ -39,7 +39,7 @@ hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd("hyprctl switchxkblayout current next
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/wifi-menu.sh"))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("nm-connection-editor"))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("pavucontrol"))
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("blueman-manager"))
+hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/bluetooth-menu.sh"))
 
 -- Toggle window Center and rezise
 hl.bind(mainMod .. " + Space", function()
