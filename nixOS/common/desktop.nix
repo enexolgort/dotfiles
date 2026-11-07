@@ -205,5 +205,6 @@ lib.mkIf vars.desktopEnable {
     kdePackages.gwenview # image viewer (default for images, home-desktop.nix)
     mpv             # video/audio player (default for media, home-desktop.nix)
     gsimplecal      # calendar popup when clicking the waybar clock
+    hoppscotch      # API client (open-source Postman alternative)
   ];
 }
