@@ -4,7 +4,7 @@ Multiple machine profiles from one repo — Jellyfin, Tailscale (with Tailscale 
 
 ![Homelab architecture](./homelab-architecture.svg)
 
-Currently six hosts: `mnemosyne` (Jellyfin, Forgejo, SFTP, Homepage dashboard, yt-dlp-webUi), `hermes` (Transmission, yt-dlp-API, WSL), `athena` (local AI: Ollama + Open WebUI, n8n), `argus` (monitoring hub), `janus` (Hyprland desktop client — browser + SSH into the rest), `janus-vm` (a VirtualBox copy of janus).
+Currently five hosts: `mnemosyne` (Jellyfin, Forgejo, SFTP, Homepage dashboard, yt-dlp-webUi), `hermes` (Transmission, yt-dlp-API, WSL), `athena` (local AI: Ollama + Open WebUI, n8n), `janus` (Hyprland desktop client — browser + SSH into the rest), `janus-vm` (a VirtualBox copy of janus).
 
 Full documentation lives in [`doc/`](./doc/overview.md):
 
@@ -20,7 +20,7 @@ Full documentation lives in [`doc/`](./doc/overview.md):
 ```bash
 git clone <your-dotfiles-repo-url> ~/dotFiles
 cd ~/dotFiles
-./scripts/install.sh mnemosyne        # or hermes, athena, argus, janus — pick the host you're deploying
+./scripts/install.sh mnemosyne        # or hermes, athena, janus — pick the host you're deploying
 sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
 ./scripts/post-install.sh
 ```

@@ -5,8 +5,8 @@
 #
 # Status dots (siteMonitor) are checked server-side, from the host
 # running Homepage, so they rely on that host resolving the other hosts'
-# MagicDNS names. A service on a host that isn't deployed yet (argus)
-# just shows as down.
+# MagicDNS names. A service on a host that isn't deployed yet just
+# shows as down.
 { config, pkgs, lib, vars, ... }:
 
 let
@@ -45,7 +45,6 @@ lib.mkIf vars.homepageEnable {
         mnemosyne = { style = "row"; columns = 3; };
         hermes = { style = "row"; columns = 3; };
         athena = { style = "row"; columns = 3; };
-        argus = { style = "row"; columns = 3; };
       };
     };
 
@@ -82,12 +81,6 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Open WebUI"; host = "athena"; port = 8080; description = "Chat with local models"; icon = "open-webui.png"; })
           (tile { name = "Ollama"; host = "athena"; port = 11434; description = "Model runner API"; icon = "ollama.png"; })
           (tile { name = "n8n"; host = "athena"; port = 5678; description = "Workflow automation"; icon = "n8n.png"; })
-        ];
-      }
-      {
-        argus = [
-          (tile { name = "Grafana"; host = "argus"; port = 3000; description = "Dashboards"; icon = "grafana.png"; })
-          (tile { name = "Prometheus"; host = "argus"; port = 9090; description = "Metrics"; icon = "prometheus.png"; })
         ];
       }
     ];

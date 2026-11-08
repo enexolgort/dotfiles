@@ -3,7 +3,7 @@
 # Run from your laptop (or any device on your tailnet) — checks every
 # service across every host in one shot. Companion to check-remote.sh,
 # which is scoped to a single host at a time; this one covers the whole
-# fleet. Uses bare hostnames (mnemosyne, hermes, athena, argus) assuming
+# fleet. Uses bare hostnames (mnemosyne, hermes, athena) assuming
 # Tailscale MagicDNS resolves them — if that's not working for you, edit
 # the host variables below to use tailscale IPs instead.
 
@@ -12,7 +12,6 @@ set -uo pipefail
 MNEMOSYNE="mnemosyne"
 HERMES="hermes"
 ATHENA="athena"
-ARGUS="argus"
 
 PASS=0
 FAIL=0
@@ -81,12 +80,6 @@ check_tcp "$ATHENA" 22 "SSH"
 check_http "$ATHENA" 11434 "/" "Ollama API"
 check_http "$ATHENA" 8080 "/" "Open WebUI"
 
-echo
-echo "=== argus (monitoring hub — skip/ignore if not installed yet) ==="
-check_tcp "$ARGUS" 22 "SSH"
-check_http "$ARGUS" 9090 "/" "Prometheus"
-check_http "$ARGUS" 3000 "/" "Grafana"
-check_http "$ARGUS" 8000 "/" "restic REST server"
 
 echo
 echo "Summary: $PASS passed, $FAIL failed"

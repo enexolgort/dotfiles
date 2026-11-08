@@ -10,7 +10,6 @@ Current hosts:
 | `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi` |
 | `hermes` | `wsl` | — (Transmission + yt-dlp-API run from its project repos) | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
-| `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
 | `janus-vm` | `real` | Same as `janus`, as a VirtualBox VM (BIOS/GRUB, label-based `hardware-configuration.nix` committed for real) | — |
 
@@ -45,7 +44,6 @@ sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
      sftpEnable = false;
      n8nEnable = false;
      homepageEnable = false;
-     monitoringHubEnable = false;
      desktopEnable = false;
 
      projectRepos = [ ];
@@ -65,7 +63,6 @@ aiEnable = true | false;         # Ollama + Open WebUI, see common/ai.nix
 sftpEnable = true | false;       # chrooted upload account, see common/sftp.nix
 n8nEnable = true | false;        # workflow automation, see common/n8n.nix
 homepageEnable = true | false;   # fleet dashboard on :8082, see common/homepage.nix
-monitoringHubEnable = true | false; # Prometheus+Grafana+restic REST server, see common/monitoring-hub.nix
 desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + home-desktop.nix
 ```
 `common/backups.nix`'s restic paths are conditional on these too — a host with `jellyfinEnable = false` won't try backing up `/var/lib/jellyfin`, since it wouldn't exist there anyway.
@@ -82,11 +79,6 @@ projectRepos = [
 `common/ai.nix` enables `services.ollama` (the model runner, port `11434`) and `services.open-webui` (the ChatGPT-style frontend for it, default port `8080`) — both real, existing NixOS modules, not something built from scratch. Reachable at `http://<tailscale-ip>:8080` once `aiEnable = true` and rebuilt.
 
 CPU-only by default (`acceleration = false` in `common/ai.nix`). If `athena` has a compatible GPU, tell me which one and I'll wire up the right acceleration option — CPU inference works but is genuinely slow beyond small models.
-
-## Monitoring hub (argus) specifically
-`common/monitoring-hub.nix` enables Prometheus (port `9090`), Grafana (port `3000`), and a restic REST server (port `8000`) — the last of these is the actual offsite backup *target* the other hosts' `backupRepo` values point at (e.g. `rest:http://<argus-tailscale-ip>:8000/mnemosyne`), not another client backing itself up. `argus`'s own `backupEnable` stays `false` for exactly that reason.
-
-Not yet wired up (deliberately, as a separate follow-up): `node_exporter` on `mnemosyne`/`hermes`/`athena` (so Prometheus/Grafana actually have something to scrape), and pointing those hosts' `notifyWebhook` at whatever `argus`'s webhook receiver turns out to be — likely a small Docker container rather than a native NixOS module, same pattern as `transmission-API`/`transmission-webUi`.
 
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.

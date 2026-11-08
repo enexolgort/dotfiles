@@ -11,7 +11,6 @@
   sftpEnable = false;
   n8nEnable = false;
   homepageEnable = false;
-  monitoringHubEnable = false;
   desktopEnable = false;
   ytdlpEnable = true; # yt-dlp CLI — used by the yt-dlp-API project
 

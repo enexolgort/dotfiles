@@ -20,7 +20,6 @@
   sftpEnable = false;
   n8nEnable = false;
   homepageEnable = false;
-  monitoringHubEnable = false;
   desktopEnable = true;
 
   backupEnable = false;

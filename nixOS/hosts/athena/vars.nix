@@ -12,7 +12,6 @@
   sftpEnable = false;
   n8nEnable = true; # workflow automation (Docker) — see common/n8n.nix
   homepageEnable = false;
-  monitoringHubEnable = false;
   desktopEnable = false;
 
   # Models Ollama pulls automatically on rebuild. Starting with the
