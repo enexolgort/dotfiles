@@ -64,15 +64,15 @@ check_json_field() {
   fi
 }
 
-echo "=== mnemosyne (Jellyfin, SFTP, transmission-webUi) ==="
+echo "=== mnemosyne (Jellyfin, SFTP, transmission-webUi, Forgejo) ==="
 check_tcp "$MNEMOSYNE" 22 "SSH"
 check_http "$MNEMOSYNE" 8096 "/" "Jellyfin"
+check_http "$MNEMOSYNE" 3000 "/" "Forgejo"
 check_http "$MNEMOSYNE" 4173 "/" "transmission-webUi"
 
 echo
-echo "=== hermes (Forgejo, transmission-API) ==="
+echo "=== hermes (transmission-API) ==="
 check_tcp "$HERMES" 22 "SSH"
-check_http "$HERMES" 3000 "/" "Forgejo"
 check_json_field "$HERMES" 3001 "/health" "transmission-API health" '"status":"ok"'
 
 echo

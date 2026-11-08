@@ -6,7 +6,7 @@
 # Deliberately NOT here: anything specific to one particular service
 # (sftpPublicKeys/sftpDir, couchdbAdminUser/Pass, gitAdminUser/Pass,
 # backupEnable/Repo/Password). Those live in whichever host's vars.nix
-# actually turns that service on — see hosts/mnemosyne, hosts/hermes.
+# actually turns that service on — see hosts/mnemosyne.
 {
   system = "x86_64-linux"; # aarch64-linux if on ARM
 
@@ -18,6 +18,7 @@
 
   mediaDir = "/data/media";
   projectsDir = "/data/projects"; # where install.sh clones a host's projectRepos
+  gitDataDir = "/var/lib/forgejo"; # Forgejo state (repos, DB) — override per host, see hosts/mnemosyne
 
   sambaWorkgroup = "WORKGROUP";
 
@@ -60,6 +61,7 @@
   # couchdbAdminPass  = "...";                            # if obsidianEnable
   # gitAdminUser      = "gituser"; # "admin" is reserved   # if gitServerEnable
   # gitAdminPass      = "...";                            # if gitServerEnable
+  # gitDataDir        = "/data/media/forgejo";            # optional, if gitServerEnable
   # backupEnable      = true | false;
   # backupRepo        = "/mnt/backup/restic-repo";        # if backupEnable
   # backupPassword    = "...";                            # if backupEnable

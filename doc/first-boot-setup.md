@@ -75,13 +75,26 @@ Grabs the raw config/database (excluding regenerable cache/metadata/transcodes),
 Stops Jellyfin, backs up whatever's currently live (to `/var/lib/jellyfin.pre-restore.<timestamp>`, so the restore itself is undoable), restores from `./jellyfin/raw`, fixes ownership, and restarts Jellyfin. Prompts for confirmation before doing anything destructive — pass `--force` to skip that (still takes the safety backup regardless). Use `--input-dir`/`--output-dir` on the two scripts if you keep snapshots somewhere other than `./jellyfin`.
 
 ### Self-hosted git (Forgejo)
-Browse to `http://<tailscale-ip>:3000` from a device in your tailnet. Log in with the `gitAdminUser`/`gitAdminPass` you set in `vars.nix` — that account already exists automatically (created declaratively on first boot), no setup wizard needed. Public registration is off (`DISABLE_REGISTRATION = true`), since this is meant as your own private, tailnet-only git server, not a public one.
+Runs on `mnemosyne`. Browse to `http://mnemosyne:3000` (or `http://<tailscale-ip>:3000`) from a device in your tailnet. Log in with the `gitAdminUser`/`gitAdminPass` you set in `vars.nix` — that account already exists automatically (created declaratively on first boot), no setup wizard needed. Public registration is off (`DISABLE_REGISTRATION = true`), since this is meant as your own private, tailnet-only git server, not a public one.
 
 Create a new repo from the web UI, then clone it like any git remote:
 ```bash
 git clone http://<tailscale-ip>:3000/<gitAdminUser>/<repo-name>.git
 ```
-Your actual git repos live at `/var/lib/forgejo` on the server — already included in the restic backups if you've enabled those.
+Your git repos, LFS objects and database live in `gitDataDir` — on mnemosyne that's `/data/media/forgejo`, on the media drive, so they're in the daily restic backup to the backup drive automatically. Forgejo won't start if that drive isn't mounted (it would otherwise write to the root disk unnoticed).
+
+**Moving existing repos from hermes** (Forgejo used to run there): on hermes, `sudo systemctl stop forgejo`, then copy its data over Tailscale and fix ownership on mnemosyne:
+```bash
+# on hermes
+sudo tar -C /var/lib/forgejo -czf /tmp/forgejo.tgz .
+scp /tmp/forgejo.tgz mnemosyne:/tmp/
+# on mnemosyne
+sudo systemctl stop forgejo
+sudo tar -C /data/media/forgejo -xzf /tmp/forgejo.tgz
+sudo chown -R forgejo:forgejo /data/media/forgejo
+sudo systemctl start forgejo
+```
+Then point your existing clones at the new host: `git remote set-url origin http://mnemosyne:3000/<gitAdminUser>/<repo>.git`.
 
 ## Checking everything's actually reachable
 `check-remote.sh` (in `scripts/`) is a client-side health check — run it from **any device on your tailnet**, not the server itself, to verify SSH, SFTP, Jellyfin, and CouchDB are all actually reachable in one shot instead of manually `curl`/`ping`-ing each one:

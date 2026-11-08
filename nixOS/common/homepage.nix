@@ -65,11 +65,11 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Jellyfin"; host = "mnemosyne"; port = 8096; description = "Media server"; icon = "jellyfin.png"; })
           (tile { name = "Torrent UI"; host = "mnemosyne"; port = 4173; description = "transmission-webUi"; icon = "transmission.png"; })
           (tile { name = "Video UI"; host = "mnemosyne"; port = 4174; description = "yt-dlp-webUi"; icon = "si-youtube"; })
+          (tile { name = "Forgejo"; host = "mnemosyne"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
         ];
       }
       {
         hermes = [
-          (tile { name = "Forgejo"; host = "hermes"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
           (tile { name = "transmission-API"; host = "hermes"; port = 3002; description = "API + SFTP push"; icon = "transmission.png"; path = "/"; monitorPath = "/health"; })
           (tile { name = "Transmission"; host = "hermes"; port = 9091; description = "Daemon web UI / RPC"; icon = "transmission.png"; path = "/transmission/web/"; })
           (tile { name = "yt-dlp-API"; host = "hermes"; port = 3003; description = "Video downloads + SFTP push"; icon = "si-youtube"; path = "/"; monitorPath = "/health"; })

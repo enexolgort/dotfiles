@@ -3,19 +3,24 @@
 # covers this port automatically, same as Jellyfin/CouchDB.
 # Lightweight (single Go binary, SQLite by default) — fine for modest
 # hardware. Reachable at http://<tailscale-ip>:3000. Off unless a host
-# sets gitServerEnable = true.
+# sets gitServerEnable = true (currently mnemosyne).
+#
+# Data (repos, LFS, SQLite DB) lives in vars.gitDataDir — on mnemosyne
+# that's /data/media/forgejo on the media HDD, which restic backs up
+# daily to the backup drive (common/backups.nix).
 { config, pkgs, lib, vars, ... }:
 
 lib.mkIf vars.gitServerEnable {
   services.forgejo = {
     enable = true;
+    stateDir = vars.gitDataDir;
     settings.server = {
       HTTP_ADDR = "0.0.0.0"; # firewall (trustedInterfaces) restricts real exposure
       HTTP_PORT = 3000;
       ROOT_URL = "http://${vars.hostname}:3000/";
     };
     settings.service.DISABLE_REGISTRATION = true; # single-user server — no public signup
-    settings.webhook.ALLOWED_HOST_LIST = "loopback";   # allow webhooks to call 127.0.0.1 / localhost — needed since n8n runs on the same host
+    settings.webhook.ALLOWED_HOST_LIST = "loopback";   # webhooks may call 127.0.0.1 / localhost
   };
 
   # Declaratively ensures your admin account exists — idempotent (`|| true`
@@ -30,5 +35,8 @@ lib.mkIf vars.gitServerEnable {
   '';
 
   systemd.services.forgejo.after = [ "network-online.target" ];
+  # The media drive is mounted with "nofail": never start Forgejo (and
+  # silently write repos to the root disk) if it isn't mounted.
+  systemd.services.forgejo.unitConfig.RequiresMountsFor = [ vars.gitDataDir ];
   systemd.services.forgejo.wants = [ "network-online.target" ];
 }

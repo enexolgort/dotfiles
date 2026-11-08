@@ -6,7 +6,7 @@
 
   jellyfinEnable = false;
   obsidianEnable = false;
-  gitServerEnable = true; # Forgejo — see common/forgejo.nix
+  gitServerEnable = false; # Forgejo moved to mnemosyne
   aiEnable = false;
   sftpEnable = false;
   n8nEnable = false;
@@ -14,11 +14,6 @@
   monitoringHubEnable = false;
   desktopEnable = false;
   ytdlpEnable = true; # yt-dlp CLI — used by the yt-dlp-API project
-
-  # gitServerEnable = true, so these need to actually be here.
-  # NOTE: "admin" itself is a reserved username in Forgejo.
-  gitAdminUser = "gituser";
-  gitAdminPass = "changeme-git"; # CHANGE THIS
 
   backupEnable = false;
 

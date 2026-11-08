@@ -20,7 +20,9 @@
     ]
     ++ lib.optional vars.obsidianEnable "/var/lib/couchdb"
     ++ lib.optional vars.jellyfinEnable "/var/lib/jellyfin"
-    ++ lib.optional vars.gitServerEnable "/var/lib/forgejo";
+    # Forgejo data — skipped when it already lives inside mediaDir
+    # (mnemosyne: /data/media/forgejo), which is backed up above.
+    ++ lib.optional (vars.gitServerEnable && !lib.hasPrefix "${vars.mediaDir}/" vars.gitDataDir) vars.gitDataDir;
     exclude = lib.optionals vars.jellyfinEnable [
       # Regenerable / often huge — not meaningfully "config", skip them
       "/var/lib/jellyfin/cache"

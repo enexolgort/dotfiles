@@ -7,8 +7,8 @@ Current hosts:
 
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
-| `mnemosyne` | `real` | Jellyfin, SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi` |
-| `hermes` | `wsl` | Forgejo | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
+| `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi` |
+| `hermes` | `wsl` | — (Transmission + yt-dlp-API run from its project repos) | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `argus` | `real` | Monitoring hub: Prometheus, Grafana, restic REST server (offsite backup target for the other three) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |

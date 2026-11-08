@@ -2,8 +2,8 @@
 
 ## Multiple machines, one repo
 This flake builds a **separate NixOS system for every machine profile** under `nixOS/hosts/`. Right now that's four:
-- **`mnemosyne`** — real machine. Jellyfin, SFTP, Homepage dashboard (:8082), clones `transmission-webUi` and `yt-dlp-webUi`.
-- **`hermes`** — NixOS-WSL. Self-hosted git server (Forgejo), Transmission + its API (clones `transmission-API`), yt-dlp-API (clones `yt-dlp-API`).
+- **`mnemosyne`** — real machine. Jellyfin, self-hosted git server (Forgejo, data on the backed-up media drive), SFTP, Homepage dashboard (:8082), clones `transmission-webUi` and `yt-dlp-webUi`.
+- **`hermes`** — NixOS-WSL. Transmission + its API (clones `transmission-API`), yt-dlp-API (clones `yt-dlp-API`).
 - **`athena`** — real machine. Local AI models (Ollama) + a web UI (Open WebUI), plus n8n workflow automation.
 - **`argus`** — real machine. Monitoring hub (Prometheus, Grafana, restic REST server).
 

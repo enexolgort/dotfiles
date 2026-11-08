@@ -7,7 +7,7 @@
 
   jellyfinEnable = true;
   obsidianEnable = false;
-  gitServerEnable = false;
+  gitServerEnable = true; # Forgejo — see common/forgejo.nix
   aiEnable = false;
   sftpEnable = true;
   n8nEnable = false;
@@ -21,6 +21,14 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfCPT1zuWITFVKSAOmkLAr4wpXkHLDxzNUVptgI88lf sftp-laptop" # filezila@laptop
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITDNIuGEqX2bs89Tv+BWZcFCI3CLOM9xQCj89G/eumc transmission-api push" # transmission-API@hermes
   ];
+
+  # gitServerEnable = true, so these need to actually be here.
+  # NOTE: "admin" itself is a reserved username in Forgejo.
+  gitAdminUser = "gituser";
+  gitAdminPass = "changeme-git"; # CHANGE THIS
+  # Forgejo data on the media HDD (/data/media), which restic backs up
+  # daily to the backup drive — see common/backups.nix.
+  gitDataDir = "/data/media/forgejo";
 
   # mnemosyne's two physical drives — this was missing from the new
   # multi-host vars.nix entirely (would've silently left both drives
