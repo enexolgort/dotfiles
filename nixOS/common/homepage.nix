@@ -12,10 +12,12 @@
 let
   port = 8082;
   # One tile: href is what your browser opens, siteMonitor what Homepage
-  # pings for the status dot (defaults to the same URL).
+  # pings for the status dot (defaults to the same URL). The port is
+  # appended to the description so each tile shows what it listens on.
   tile = { name, host, port, description, icon, path ? "/", monitorPath ? path }: {
     ${name} = {
-      inherit description icon;
+      inherit icon;
+      description = "${description} · :${toString port}";
       href = "http://${host}:${toString port}${path}";
       siteMonitor = "http://${host}:${toString port}${monitorPath}";
     };
