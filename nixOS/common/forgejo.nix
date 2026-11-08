@@ -1,6 +1,7 @@
-# common/forgejo.nix — self-hosted, tailnet-only git server. No firewall
-# changes needed at all: trustedInterfaces in networking.nix already
-# covers this port automatically, same as Jellyfin/CouchDB.
+# common/forgejo.nix — self-hosted, tailnet-only git server. Tailnet
+# access needs no firewall rule (trustedInterfaces in networking.nix
+# covers it, same as Jellyfin); the one rule below is for local Docker
+# containers.
 # Lightweight (single Go binary, SQLite by default) — fine for modest
 # hardware. Reachable at http://<tailscale-ip>:3000. Off unless a host
 # sets gitServerEnable = true (currently mnemosyne).
@@ -22,6 +23,16 @@ lib.mkIf vars.gitServerEnable {
     settings.service.DISABLE_REGISTRATION = true; # single-user server — no public signup
     settings.webhook.ALLOWED_HOST_LIST = "loopback";   # webhooks may call 127.0.0.1 / localhost
   };
+
+  # Docker containers on this host (e.g. git-dashboard, which reads the
+  # Forgejo API at host.docker.internal:3000) reach the host through a
+  # Docker bridge, not tailscale0, so trustedInterfaces doesn't cover them
+  # and the firewall silently drops the traffic. Open just Forgejo's port,
+  # just on Docker bridges: docker0 for the default network, br-+ (iptables
+  # wildcard) for the per-project networks docker compose creates. LAN and
+  # internet stay blocked.
+  networking.firewall.interfaces."docker0".allowedTCPPorts = [ 3000 ];
+  networking.firewall.interfaces."br-+".allowedTCPPorts = [ 3000 ];
 
   # Declaratively ensures your admin account exists — idempotent (`|| true`
   # means it doesn't fail on every subsequent rebuild once already
