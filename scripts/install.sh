@@ -24,8 +24,8 @@
 #      updated the repo's own copy first, in which case that's what flows
 #      through here).
 #   4. Clones the selected host's projectRepos into its projectsDir. Repos
-#      already cloned are pulled (fast-forward only) and, if they have a
-#      compose file, their Docker image is rebuilt and restarted.
+#      already cloned are pulled (fast-forward only). Either way, a repo
+#      with a compose file then gets its Docker image (re)built and started.
 
 set -euo pipefail
 
@@ -260,7 +260,11 @@ else
     fi
 
     echo "==> Cloning $name..."
-    git clone "$repo_url" "$target"
+    if ! git clone "$repo_url" "$target"; then
+      echo "!! Could not clone $name from $repo_url, skipping it"
+      continue
+    fi
+    rebuild_compose_project "$name" "$target"
   done
 fi
 
