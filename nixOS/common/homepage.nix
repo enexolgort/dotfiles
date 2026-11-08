@@ -67,6 +67,7 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Torrent UI"; host = "mnemosyne"; port = 4173; description = "transmission-webUi"; icon = "transmission.png"; })
           (tile { name = "Video UI"; host = "mnemosyne"; port = 4174; description = "yt-dlp-webUi"; icon = "si-youtube"; })
           (tile { name = "Forgejo"; host = "mnemosyne"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
+          (tile { name = "Git Dashboard"; host = "mnemosyne"; port = 3004; description = "Forgejo git activity"; icon = "si-git"; path = "/"; monitorPath = "/health"; })
         ];
       }
       {

@@ -56,6 +56,10 @@
   projectRepos = [
     "https://github.com/enexolgort/transmission-webUi"
     "https://github.com/enexolgort/yt-dlp-webUi"
+    # Self-hosted on this machine's own Forgejo, so it can only be cloned
+    # once Forgejo is up — on a fresh install, re-run install.sh after the
+    # first nixos-rebuild switch.
+    "http://mnemosyne:3000/enexolgort/git-dashboard"
   ];
 }
 
