@@ -30,6 +30,7 @@ Deploying on a machine: `./scripts/install.sh <host>`, then `sudo nixos-rebuild 
 - **Adding a service:** create `common/<name>.nix` gated on a new `vars.<name>Enable`, add it to `common/default.nix`, document the toggle in `defaults.nix`'s comment block, and set it explicitly in **every** host's `vars.nix`. A missing key is an evaluation error.
 - **Adding a host:** add `hosts/<name>/vars.nix`, plus `hardware-configuration.nix` if `targetType = "real"`. Nothing else changes. See `doc/hosts.md`.
 - **Backups (restic) run only on `mnemosyne`**, to its backup drive (`/data/backup`). Every other host must keep `backupEnable = false` and needs no `backupRepo`/`backupPassword`. Don't turn backups on elsewhere.
+- Packages missing from nixos-26.05 come from the `nixpkgs-unstable` input, passed to modules as `pkgsUnstable` (e.g. `pkgsUnstable.herdr` in `common/desktop.nix`). Keep it to those; everything else stays on stable.
 - Keep service-specific values (passwords, sftp keys, backup repo) out of `defaults.nix`. They belong in the vars of the host that enables the service.
 - Services are tailnet-only. Never set `openFirewall = true` or expose ports on the public interface; `tailscale0` is the trusted interface (`common/networking.nix`).
 - Samba is deliberately disabled on WSL hosts because nmbd crashes under WSL2 NAT.
