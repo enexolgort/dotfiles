@@ -23,9 +23,7 @@
       lib = nixpkgs.lib;
       defaults = import ./hosts/defaults.nix;
 
-      # Every subdirectory of ./hosts is a machine profile. defaults.nix
-      # itself is a file (not a directory), so it's naturally excluded
-      # from this list — no special-casing needed.
+      # Every subdirectory of ./hosts is a machine profile.
       hostsDir = ./hosts;
       hostNames = builtins.attrNames (
         lib.filterAttrs (name: type: type == "directory") (builtins.readDir hostsDir)
@@ -33,9 +31,7 @@
 
       mkHomeManagerModule = vars: {
         home-manager.useGlobalPkgs = true;
-        # If a file home-manager now manages already exists (e.g. a GTK
-        # settings.ini an app wrote), move it to *.hm-backup instead of
-        # failing the whole rebuild.
+        # Move clobbered files aside instead of failing the rebuild.
         home-manager.backupFileExtension = "hm-backup";
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = { inherit vars; };

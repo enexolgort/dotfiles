@@ -1,6 +1,4 @@
-# ~/.config/gsimplecal/config — calendar popup for the waybar clock.
-# Colours come from the Catppuccin Mocha GTK theme (home-desktop.nix);
-# position is set by the "calendar-popup" rule in hypr/rules.lua.
+# Position is set by the "calendar-popup" rule in hypr/rules.lua.
 show_calendar = 1
 show_timezones = 0
 mark_today = 1

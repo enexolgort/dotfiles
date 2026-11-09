@@ -1,11 +1,6 @@
 #!/bin/sh
-# ~/.config/hypr/scripts/wallpaper.sh — started from hyprland.lua's autostart.
-#
-# Runs hyprpaper, falling back to swaybg (CPU-drawn) with the image that
-# post-install.sh wrote into hyprpaper.conf. Inside VirtualBox (janus-vm)
-# hyprpaper's GPU (EGL) path aborts a few seconds in, and that crash
-# wedges VirtualBox's 3D until the VM reboots — so there it goes straight
-# to swaybg without trying hyprpaper at all.
+# hyprpaper, falling back to swaybg. In VirtualBox it goes straight to
+# swaybg: hyprpaper's GPU path crashes there and wedges the VM's 3D.
 
 CONF="$HOME/.config/hypr/hyprpaper.conf"
 IMG="$(sed -n 's/^[[:space:]]*path[[:space:]]*=[[:space:]]*//p' "$CONF" 2>/dev/null | head -n 1)"

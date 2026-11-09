@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
-# post-install.sh
-# One-time manual steps to run after `nixos-rebuild switch` succeeds.
-# These aren't things NixOS can set declaratively (loginctl linger state
-# isn't managed by a nix option, tailscale/passwd need interactive input),
-# so they live here instead of in configuration.nix.
+# Run after `nixos-rebuild switch`: steps NixOS can't do declaratively.
 
 set -euo pipefail
 
-# Everything below writes into $HOME (~/.config/hypr, ~/.config/doom, …)
-# and calls sudo itself where root is actually needed. Run as root (e.g.
-# from a `sudo -i` shell) it would deploy every config into /root
-# instead, leaving your real user on Hyprland's default config.
+# Writes into $HOME; as root, every config would land in /root.
 if [ "$(id -u)" -eq 0 ]; then
   echo "!! Don't run post-install.sh as root — it deploys configs into \$HOME ($HOME)." >&2
   echo "   Run it as your normal user; it uses sudo where needed:" >&2
@@ -33,9 +26,7 @@ fi
 echo "==> Enabling linger for $USERNAME (keeps user services, e.g. the Emacs daemon, running without an active login session)"
 sudo loginctl enable-linger "$USERNAME"
 
-# --- Doom Emacs: bootstrap if needed, deploy your tracked config from
-# the repo's doom/ folder, then sync. Safe to re-run any time — copying
-# is a plain overwrite and `doom sync` is idempotent.
+# --- Doom Emacs: deploy dotfiles/doom, then sync.
 DOOM_BIN="$HOME/.config/emacs/bin/doom"
 DOOM_CONF="$HOME/.config/doom"
 DOOM_SRC_DIR="$REPO_ROOT/dotfiles/doom"
@@ -70,11 +61,7 @@ fi
 echo "==> Done."
 echo
 
-# --- Hyprland config: copy from your own tracked dotfiles/{hypr,waybar}
-# staging folders (not an external clone) — same pattern as Doom Emacs
-# above. Only for desktop hosts (desktopEnable = true). Safe to re-run
-# any time — copying is a plain overwrite, and every sed fix below only
-# matches text that hasn't already been fixed.
+# --- Desktop configs (desktop hosts only). Idempotent.
 DOTFILES_STAGING="$REPO_ROOT/dotfiles"
 
 DESKTOP_ENABLE="false"
@@ -87,9 +74,7 @@ if [ "$DESKTOP_ENABLE" = "true" ]; then
     mkdir -p "$HOME/.config"
     for dir in "$DOTFILES_STAGING"/*/; do
       name="$(basename "$dir")"
-      # doom is handled separately above, from its own top-level doom/
-      # folder — skip it here to avoid two mechanisms both writing to
-      # ~/.config/doom.
+      # Deployed above.
       if [ "$name" = "doom" ]; then
         continue
       fi
@@ -106,65 +91,31 @@ if [ "$DESKTOP_ENABLE" = "true" ]; then
       find "$HOME/.config/waybar/scripts" -type f -exec chmod +x {} \;
     fi
 
-    # --- Fix known author-specific hardcodes ----------------------------
-    # These files came from the 43PR/dotfiles upstream originally, which
-    # has several values specific to that author's own machine/
-    # preferences. Applied every run — sed -i on already-fixed text just
-    # matches nothing the second time, so this stays safe to re-run.
-
-    # Any hardcoded reference to the original author's own home
-    # directory (found in hyprland.lua's wallpaper path AND separately
-    # in waybar/config.jsonc's gpu_usage.sh path).
+    # --- Replace leftovers from the upstream dotfiles (43PR/dotfiles).
     grep -rl "/home/rp34" "$HOME/.config/hypr" "$HOME/.config/waybar" 2>/dev/null | while read -r f; do
       sed -i "s|/home/rp34|$HOME|g" "$f"
     done
 
     HYPR_CONF_FILE="$HOME/.config/hypr/hyprland.lua"
     if [ -f "$HYPR_CONF_FILE" ]; then
-      # File manager: this repo installs Dolphin, not Thunar
       sed -i 's/fileManager = "thunar"/fileManager = "dolphin"/' "$HYPR_CONF_FILE"
-      # Browser: opera was removed from nixpkgs, we use Firefox, not Brave
       sed -i 's/browser    = "brave"/browser    = "firefox"/' "$HYPR_CONF_FILE"
-      # Notification daemon: we use mako, not dunst
       sed -i 's/hl.exec_cmd("dunst")/hl.exec_cmd("mako")/' "$HYPR_CONF_FILE"
-      # polkit agent: hardcoded Arch path that doesn't exist on NixOS at
-      # all (/nix/store paths, not /usr/lib) — but programs.hyprland
-      # already handles polkit automatically, so just remove this line
-      # rather than trying to fix the path.
+      # Arch-only polkit path.
       sed -i '/polkit-kde-authentication-agent/d' "$HYPR_CONF_FILE"
-      # Wallpaper daemon: hyprpaper instead of awww (see common/desktop.nix
-      # for why) — hyprpaper reads its own config file instead of a CLI
-      # argument, so replace the daemon launch and drop the awww img line
-      # entirely (hyprpaper.conf, written below, handles that instead).
+      # awww -> hyprpaper (configured via hyprpaper.conf below).
       sed -i 's/hl.exec_cmd("awww-daemon")/hl.exec_cmd("hyprpaper")/' "$HYPR_CONF_FILE"
       sed -i '/awww img/d' "$HYPR_CONF_FILE"
-      # Keyboard layout: this repo's whole vars.nix convention uses "fr"
-      # (see hosts/defaults.nix) — was hardcoded to the original
-      # author's own "us,latam".
       sed -i 's/kb_layout = "us,latam"/kb_layout = "fr"/' "$HYPR_CONF_FILE"
-      # Monitors: no wildcard fallback is injected any more — Hyprland's
-      # Lua API ignores output = "" / "*". Give each real output its own
-      # hl.monitor() line in dotfiles/hypr/hyprland.lua instead (see the
-      # Virtual-1 line there for janus-vm).
     fi
 
     RULES_CONF_FILE="$HOME/.config/hypr/rules.lua"
     if [ -f "$RULES_CONF_FILE" ]; then
-      # Cosmetic only — the opacity window-rule regex still lists
-      # thunar/brave-browser by class name, so it'd silently never match
-      # Dolphin/Firefox.
       sed -i 's/thunar|brave-browser/dolphin|firefox/' "$RULES_CONF_FILE"
     fi
 
-    # --- Wallpaper (hyprpaper) ------------------------------------------
-    # The repo's images/ folder is copied to ~/Pictures/Wallpapers, then
-    # hyprpaper.conf is written pointing at $WALLPAPER (override with
-    # e.g. `WALLPAPER=pine.jpg ./scripts/post-install.sh`). Falls back to
-    # the first image found if that file isn't there.
-    #
-    # hyprpaper >= 0.8 syntax: a `wallpaper { }` block per output — the
-    # old `preload =` / `wallpaper = ,path` lines no longer exist. An
-    # empty monitor matches every output.
+    # --- Wallpaper. Override with WALLPAPER=pine.jpg; falls back to the
+    # first image. hyprpaper >= 0.8 syntax; empty monitor = every output.
     WALLPAPER="${WALLPAPER:-flowers-21.png}"
     WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
     if [ -d "$REPO_ROOT/images" ]; then

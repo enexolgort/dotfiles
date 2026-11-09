@@ -6,13 +6,13 @@
 
   jellyfinEnable = false;
   obsidianEnable = false;
-  gitServerEnable = false; # Forgejo moved to mnemosyne
+  gitServerEnable = false;
   aiEnable = false;
   sftpEnable = false;
   n8nEnable = false;
   homepageEnable = false;
   desktopEnable = false;
-  ytdlpEnable = true; # yt-dlp CLI — used by the yt-dlp-API project
+  ytdlpEnable = true; # used by yt-dlp-API
 
   backupEnable = false;
 

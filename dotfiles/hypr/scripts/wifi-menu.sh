@@ -1,8 +1,5 @@
 #!/bin/bash
-# wifi-menu.sh — pick a WiFi network with rofi -dmenu, connect via nmcli.
-# Known networks connect straight away; new secured ones prompt for the
-# password in a second rofi box. nm-applet / nm-connection-editor stay
-# around for anything more advanced (VPN, static IPs, hidden SSIDs).
+# Pick a WiFi network with rofi, connect via nmcli.
 
 # Nerd Font glyphs, spelled as escapes so they survive any editor
 LOCK=$''      # nf-fa-lock
@@ -21,12 +18,9 @@ connect() {
 
 if [ "$(nmcli -t -f WIFI radio)" = "enabled" ]; then
     menu="$WIFI_OFF  Turn WiFi off"
-    # SSID list: strongest first, one line per SSID, lock if secured,
-    # "*" marker on the network we're currently connected to.
     networks="$(nmcli -t -f IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan auto 2>/dev/null \
         | awk -F: -v lock_icon="$LOCK" '{
-            # SSID is the last field and may itself contain (escaped)
-            # colons, so take everything after the third separator.
+            # SSIDs may contain escaped colons.
             ssid = $0; sub(/^[^:]*:[^:]*:[^:]*:/, "", ssid); gsub(/\\:/, ":", ssid)
             if (ssid == "" || seen[ssid]++) next
             lock = ($3 == "" || $3 == "--") ? " " : lock_icon
@@ -46,11 +40,9 @@ case "$choice" in
     *"Turn WiFi on")  nmcli radio wifi on;  notify "WiFi on";  exit 0 ;;
 esac
 
-# Everything after the first "%  " (the signal column) is the SSID —
-# the marker/lock/signal columns before it never contain a "%".
+# The SSID is everything after the first "%  ".
 ssid="${choice#*%  }"
 
-# Already-saved network: just bring it up
 if nmcli -t -f NAME connection show | grep -Fxq "$ssid"; then
     connect connection up id "$ssid"
 elif [[ "$choice" == *"$LOCK"* ]]; then

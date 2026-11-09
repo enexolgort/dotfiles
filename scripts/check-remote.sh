@@ -1,21 +1,14 @@
 #!/usr/bin/env bash
-# check-remote.sh
-# Run from ANY client device on your tailnet (laptop, phone via Termux,
-# another server) to verify every remotely-controlled service on the
-# media server is actually up and reachable. Does not need to run on the
-# server itself, and does not need the dotfiles repo present.
+# Checks one host's services from any device on the tailnet.
 #
 # Usage:
-#   ./check-remote.sh [--host <tailscale-ip-or-name>] [--sftp-user <name>] [--sftp-key <path>] [--samba]
+#   ./check-remote.sh --host <name-or-ip> [--sftp-user <name>] [--sftp-key <path>] [--samba]
 #
-#   --host        Target server (required — e.g. mnemosyne, hermes, athena,
-#                 or a tailscale IP)
-#   --sftp-user   Attempt an actual SFTP login test (default: skip, port-only check)
-#   --sftp-key    Private key to use for the SFTP login test
-#   --samba       Also check Samba (port 445) — only meaningful on the
-#                 real-machine target; WSL doesn't run Samba at all.
+#   --sftp-user   Also try a real SFTP login (default: port check only)
+#   --sftp-key    Private key for that login
+#   --samba       Also check Samba (real-machine hosts only)
 #
-# Exit code: 0 if everything checked passed, 1 if anything failed.
+# Exits 1 if any check failed.
 
 set -uo pipefail
 
@@ -38,7 +31,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# --- Colors (skip if not a real terminal) -------------------------------
 if [ -t 1 ]; then
   RED=$'\033[31m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; BOLD=$'\033[1m'; RESET=$'\033[0m'
 else
@@ -53,14 +45,12 @@ fail() { echo "  ${RED}✗${RESET} $1"; FAIL_COUNT=$((FAIL_COUNT + 1)); }
 warn() { echo "  ${YELLOW}!${RESET} $1"; }
 section() { echo; echo "${BOLD}$1${RESET}"; }
 
-# --- --host is required now — with multiple, arbitrarily-named hosts
-# there's no sensible default to guess.
 if [ -z "$HOST" ]; then
   echo "!! --host is required, e.g.: $0 --host mnemosyne" >&2
   exit 1
 fi
 
-# --- Portable TCP port check using bash's /dev/tcp, no netcat needed ---
+# TCP check via bash's /dev/tcp (no netcat needed).
 check_port() {
   local host="$1" port="$2" label="$3"
   if timeout 5 bash -c "exec 3<>/dev/tcp/$host/$port" 2>/dev/null; then
@@ -75,9 +65,7 @@ check_port() {
 
 echo "${BOLD}Checking remote services on: $HOST${RESET}"
 
-# ======================================================================
-# 1. Tailscale reachability itself
-# ======================================================================
+# --- 1. Tailscale
 section "Tailscale"
 if command -v tailscale >/dev/null 2>&1; then
   if tailscale ping -c 1 "$HOST" >/dev/null 2>&1; then
@@ -89,16 +77,11 @@ else
   warn "tailscale CLI not found on this client — skipping ping test, falling back to plain TCP checks only"
 fi
 
-# ======================================================================
-# 2. SSH (also covers general reachability, since everything else
-#    depends on the tailnet path being up at all)
-# ======================================================================
+# --- 2. SSH
 section "SSH"
 check_port "$HOST" 22 "SSH"
 
-# ======================================================================
-# 3. SFTP — same port as SSH; optionally do a real login test
-# ======================================================================
+# --- 3. SFTP
 section "SFTP"
 if [ -n "$SFTP_USER" ] && [ -n "$SFTP_KEY" ]; then
   if [ ! -f "$SFTP_KEY" ]; then
@@ -113,9 +96,7 @@ else
   warn "No --sftp-user/--sftp-key given — skipping actual login test (port already checked above via SSH)"
 fi
 
-# ======================================================================
-# 4. Jellyfin
-# ======================================================================
+# --- 4. Jellyfin
 section "Jellyfin"
 if command -v curl >/dev/null 2>&1; then
   code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "http://$HOST:8096" 2>/dev/null)"
@@ -128,9 +109,7 @@ else
   check_port "$HOST" 8096 "Jellyfin"
 fi
 
-# ======================================================================
-# 5. CouchDB (Obsidian sync backend)
-# ======================================================================
+# --- 5. CouchDB
 section "CouchDB / Obsidian sync"
 if command -v curl >/dev/null 2>&1; then
   body="$(curl -s --max-time 5 "http://$HOST:5984" 2>/dev/null)"
@@ -143,9 +122,7 @@ else
   check_port "$HOST" 5984 "CouchDB"
 fi
 
-# ======================================================================
-# 6. Samba (optional, real-machine target only)
-# ======================================================================
+# --- 6. Samba
 if [ "$CHECK_SAMBA" = true ]; then
   section "Samba"
   check_port "$HOST" 445 "Samba"
@@ -154,9 +131,7 @@ else
   warn "Skipped (pass --samba to check; not applicable on the WSL target at all)"
 fi
 
-# ======================================================================
-# Summary
-# ======================================================================
+# --- Summary
 echo
 echo "${BOLD}Summary: $PASS_COUNT passed, $FAIL_COUNT failed${RESET}"
 

@@ -1,5 +1,3 @@
--- ~/.config/hypr/keybinds.lua
--- Migrated from keybinds.conf
 -- Docs: https://wiki.hypr.land/Configuring/Basics/Binds/
 --       https://wiki.hypr.land/Configuring/Basics/Dispatchers/
 
@@ -66,8 +64,6 @@ hl.bind(mainMod .. " + Space", function()
     end
 end)
 
--- VERIFY: exit dispatcher. Docs explicitly say to double check the exit
--- dispatcher call when moving to Lua.
 hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exit())
 
 -- Focus with the arrow keys
@@ -76,38 +72,32 @@ hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 
--- Move active window within the layout (old `movewindow`). Verified on
--- janus-vm (Hyprland 0.55.4): direction = "left" moved a window across.
+-- Move active window within the layout
 hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "left" }))
 hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }))
 hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }))
 
--- VERIFY: resize active window by pixel delta (old `resizeactive`, repeating
--- while held via `binde`). Param names guessed as x/y - confirm with hyprctl eval.
+-- Resize active window by pixel delta, repeating while held.
+-- TODO: x/y param names unconfirmed; check with hyprctl eval.
 hl.bind(mainMod .. " + CTRL + left", hl.dsp.window.resize({ x = -40, y = 0 }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.resize({ x = 40, y = 0 }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + up", hl.dsp.window.resize({ x = 0, y = -40 }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + down", hl.dsp.window.resize({ x = 0, y = 40 }), { repeating = true })
 
--- Workspaces 1-10, and move-to-workspace with SHIFT.
--- Bound by physical key (xkb keycodes 10-19 = the number row 1..0), not by
--- the "1".."0" keysyms: on AZERTY (kb_layout = "fr") those keys type
--- & é " ' ( - è _ ç à without Shift, so `SUPER + 1` never fired.
--- Verified on janus-vm: Super + the "2" key switches to workspace 2.
+-- Workspaces 1-10 (+SHIFT to move). Bound by keycode (10-19, the number
+-- row) because on AZERTY those keys don't produce "1".."0" without Shift.
 for i = 1, 10 do
     local code = "code:" .. (9 + i) -- 1 -> code:10 ... 10 (key 0) -> code:19
     hl.bind(mainMod .. " + " .. code, hl.dsp.focus({ workspace = i }))
     hl.bind(mainMod .. " + SHIFT + " .. code, hl.dsp.window.move({ workspace = i }))
 end
 
--- Mouse move/resize (confirmed pattern from the official example config)
+-- Mouse move/resize
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Media keys (confirmed pattern from the official example config)
--- Volume/brightness go through swayosd-client so a pop-up shows the level
--- (swayosd-server is started in hyprland.lua; style in swayosd/style.css)
+-- Media keys. Volume/brightness go through swayosd-client for the pop-up.
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("swayosd-client --output-volume raise"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("swayosd-client --output-volume lower"), { locked = true, repeating = true })
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), { locked = true })

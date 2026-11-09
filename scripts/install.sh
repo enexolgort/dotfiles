@@ -1,31 +1,12 @@
 #!/usr/bin/env bash
-# install.sh
-# Lives in the dotfiles repo's scripts/ folder; the actual nix files
-# live in ../nixOS/ (repo-root/nixOS/, a sibling of scripts/).
-#
-# MULTI-HOST: this repo defines several machine profiles under
-# nixOS/hosts/<name>/ (each with its own vars.nix; shared defaults live
-# in hosts/defaults.nix). This script:
-#   1. Lets you pick which host you're installing/updating right now —
-#      pass it as an argument (`./install.sh mnemosyne`) or get an
-#      interactive menu if you don't.
-#   2. Optionally regenerates hardware-configuration.nix from this
-#      machine's actual current hardware — pass --regen-hardware. Off by
-#      default: this OVERWRITES the repo's copy for that host, so it'll
-#      silently discard any manual edits (custom GPU driver tweaks,
-#      microcode settings, etc.) you might have made — only pass this
-#      when you actually want a fresh capture, e.g. hardware changed, or
-#      you're not sure the current file is even correct.
-#   3. Copies the WHOLE nixOS/ tree into /etc/nixos — every host's files
-#      need to exist for the flake to evaluate at all, even though only
-#      one host actually gets built right now. Each host's
-#      hardware-configuration.nix is protected: never overwritten if a
-#      real one already exists at the destination (unless --regen-hardware
-#      updated the repo's own copy first, in which case that's what flows
-#      through here).
-#   4. Clones the selected host's projectRepos into its projectsDir. Repos
-#      already cloned are pulled (fast-forward only). Either way, a repo
-#      with a compose file then gets its Docker image (re)built and started.
+# Usage: ./install.sh [host] [--regen-hardware]
+#   1. Picks the host (argument or menu).
+#   2. --regen-hardware overwrites the repo's hardware-configuration.nix
+#      for that host, discarding manual edits.
+#   3. Copies all of nixOS/ into /etc/nixos (every host must exist for the
+#      flake to evaluate), keeping real hardware-configuration.nix files.
+#   4. Clones or pulls the host's projectRepos and (re)starts any compose
+#      projects.
 
 set -euo pipefail
 
@@ -145,10 +126,8 @@ fi
 echo "==> Copying $NIXOS_SRC_DIR into $NIXOS_DIR"
 sudo mkdir -p "$NIXOS_DIR"
 
-# Preserve any existing REAL hardware-configuration.nix files (per host)
-# before wiping — never let the repo's placeholders clobber a real one.
-# Only placeholders yield: if the repo has a real file for a host (e.g.
-# janus-vm), the repo wins, so changes to it actually get deployed.
+# Keep real hardware-configuration.nix files over the repo's placeholders.
+# If the repo ships a real one (janus-vm), the repo wins.
 HW_PLACEHOLDER_MARK="PLACEHOLDER — DO NOT USE AS-IS"
 is_placeholder() { [ -f "$1" ] && grep -q "$HW_PLACEHOLDER_MARK" "$1"; }
 
@@ -157,7 +136,6 @@ if [ -d "$NIXOS_DIR/hosts" ]; then
   for hostDir in "$NIXOS_DIR"/hosts/*/; do
     [ -d "$hostDir" ] || continue
     hwFile="$hostDir/hardware-configuration.nix"
-    # Nothing worth keeping in a placeholder copied in by an earlier run
     if [ -f "$hwFile" ] && ! is_placeholder "$hwFile"; then
       hostName="$(basename "$hostDir")"
       mkdir -p "$TMP_HW_BACKUP/$hostName"
@@ -173,13 +151,11 @@ sudo cp -r "$NIXOS_SRC_DIR"/. "$NIXOS_DIR"/
 for hostNameDir in "$TMP_HW_BACKUP"/*/; do
   [ -d "$hostNameDir" ] || continue
   hostName="$(basename "$hostNameDir")"
-  # Host no longer exists in the repo (renamed/removed) — nothing to
-  # restore into, and cp would fail under `set -e`.
+  # Host removed from the repo.
   if [ ! -d "$NIXOS_DIR/hosts/$hostName" ]; then
     echo "==> Skipping hardware-configuration.nix for '$hostName' (host no longer in repo)"
     continue
   fi
-  # The repo ships a real file for this host — use it, don't restore.
   if ! is_placeholder "$NIXOS_SRC_DIR/hosts/$hostName/hardware-configuration.nix"; then
     echo "==> Using the repo's hardware-configuration.nix for host '$hostName'"
     continue
@@ -191,8 +167,7 @@ for hostNameDir in "$TMP_HW_BACKUP"/*/; do
 done
 rm -rf "$TMP_HW_BACKUP"
 
-# secrets.yaml (sops-nix) lives at the repo root, not inside nixOS/ —
-# only present once you've done the doc/secrets.md setup.
+# Only exists after the doc/secrets.md setup.
 SECRETS_SRC="$REPO_ROOT/secrets.yaml"
 if [ -f "$SECRETS_SRC" ]; then
   sudo cp "$SECRETS_SRC" "$NIXOS_DIR/secrets.yaml"
@@ -208,9 +183,7 @@ mapfile -t REPOS < <(
     | jq -r '.[]' 2>/dev/null || true
 )
 
-# Rebuilds a pulled project's Docker image and restarts its container(s),
-# if it has a compose file. Skipped (with a note) when Docker isn't usable
-# yet — e.g. on a fresh machine before the first nixos-rebuild switch.
+# Skipped when Docker isn't usable yet (before the first rebuild).
 rebuild_compose_project() {
   local name="$1" dir="$2" f compose_file=""
   for f in docker-compose.yml docker-compose.yaml compose.yml compose.yaml; do
@@ -249,8 +222,7 @@ else
 
     if [ -d "$target/.git" ]; then
       echo "==> $name already cloned, pulling latest..."
-      # --ff-only: never create merge commits or clobber local edits. A
-      # failed pull just warns — one dirty repo shouldn't abort the install.
+      # A failed pull only warns.
       if ! git -C "$target" pull --ff-only; then
         echo "!! Could not fast-forward $name (local changes or diverged history?), skipping its rebuild"
         continue

@@ -1,9 +1,5 @@
-# ~/.config/swaylock/config — Catppuccin Mocha (swaylock-effects)
-# Used instead of hyprlock inside VirtualBox (janus-vm), where hyprlock's
-# GPU path crashes — see hypr/scripts/lock.sh. Same look as hyprlock.conf:
-# blurred desktop, mauve ring, peach while checking, red on failure,
-# yellow with Caps Lock. Colours are RRGGBB[AA], no '#'.
-# Palette: https://catppuccin.com/palette (Mocha)
+# swaylock-effects, used in VirtualBox instead of hyprlock (hypr/scripts/lock.sh).
+# Colours are RRGGBB[AA], no '#'.
 
 # --- Behaviour ---------------------------------------------------------------
 ignore-empty-password

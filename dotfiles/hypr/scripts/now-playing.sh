@@ -1,5 +1,4 @@
 #!/bin/bash
-# now-playing.sh
 
 MAX_CHARS=40
 
@@ -9,7 +8,6 @@ if playerctl status 2>/dev/null | grep -q Playing; then
 
     text="$title - $artist"
 
-    # Truncate long titles/artists
     if [ "${#text}" -gt "$MAX_CHARS" ]; then
         text="${text:0:$((MAX_CHARS - 1))}…"
     fi

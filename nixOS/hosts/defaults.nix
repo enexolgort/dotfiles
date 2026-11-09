@@ -1,24 +1,17 @@
-# hosts/defaults.nix
-# Shared across every machine profile. Each host's own hosts/<name>/vars.nix
-# only needs to declare what's actually different for that machine —
-# flake.nix merges these defaults underneath it.
-#
-# Deliberately NOT here: anything specific to one particular service
-# (sftpPublicKeys/sftpDir, couchdbAdminUser/Pass, gitAdminUser/Pass,
-# backupEnable/Repo/Password). Those live in whichever host's vars.nix
-# actually turns that service on — see hosts/mnemosyne.
+# Shared values; each hosts/<name>/vars.nix is merged on top. Service-specific
+# values belong in the vars.nix of the host that enables the service.
 {
-  system = "x86_64-linux"; # aarch64-linux if on ARM
+  system = "x86_64-linux";
 
   timeZone = "Europe/Paris";
   locale = "en_US.UTF-8";
   keyMap = "fr"; # AZERTY. Use "be" for Belgian AZERTY, "us" for QWERTY
 
-  initialPassword = "changeme"; # change on first login with: passwd <username>
+  initialPassword = "changeme";
 
   mediaDir = "/data/media";
-  projectsDir = "/data/projects"; # where install.sh clones a host's projectRepos
-  gitDataDir = "/var/lib/forgejo"; # Forgejo state (repos, DB) — override per host, see hosts/mnemosyne
+  projectsDir = "/data/projects"; # install.sh clones projectRepos here
+  gitDataDir = "/var/lib/forgejo";
 
   sambaWorkgroup = "WORKGROUP";
 
@@ -28,7 +21,7 @@
 
   notifyWebhook = "";
 
-  ytdlpEnable = false; # yt-dlp CLI system-wide, see common/packages.nix
+  ytdlpEnable = false;
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";
@@ -38,20 +31,16 @@
   # jellyfinEnable    = true | false;
   # obsidianEnable    = true | false;
   # gitServerEnable   = true | false;
-  # aiEnable          = true | false;   # Ollama + Open WebUI, see common/ai.nix
-  # n8nEnable         = true | false;   # workflow automation, see common/n8n.nix
-  # homepageEnable    = true | false;   # fleet dashboard on :8082, see common/homepage.nix
-  # desktopEnable      = true | false;  # Hyprland desktop, see common/desktop.nix + home-desktop.nix
+  # aiEnable          = true | false;
+  # n8nEnable         = true | false;
+  # homepageEnable    = true | false;
+  # desktopEnable     = true | false;
   #
   # --- Real-machine (targetType = "real") hosts only ----------------------
-  # bootloader = "systemd-boot" | "grub";  # systemd-boot is UEFI-only —
-  #   use "grub" if the machine/VM runs legacy BIOS (check with
-  #   `sudo parted /dev/sda -- print`: "Partition Table: msdos" = BIOS,
-  #   "gpt" = UEFI, systemd-boot fine)
-  # grubDevice = "/dev/sda";  # only needed if bootloader = "grub" — the
-  #   whole disk device, not a partition
-  # sftpEnable        = true | false;   # chrooted upload account, see common/sftp.nix
-  # projectRepos      = [ "https://..." ... ];  # cloned into projectsDir by install.sh
+  # bootloader        = "systemd-boot" | "grub";  # grub for legacy BIOS
+  # grubDevice        = "/dev/sda";                # if grub
+  # sftpEnable        = true | false;
+  # projectRepos      = [ "https://..." ... ];
   #
   # --- Per-host, only needed if the matching *Enable above is true -------
   # sftpDir           = "/data/sftp";                    # if sftpEnable

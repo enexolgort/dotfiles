@@ -1,19 +1,9 @@
-# common/homepage.nix — one dashboard linking every service in the
-# fleet, with a live up/down dot per service. Reachable only via your
-# tailnet at http://<host>:8082, same as everything else here
-# (openFirewall stays false, tailscale0 is trusted — see networking.nix).
-#
-# Status dots (siteMonitor) are checked server-side, from the host
-# running Homepage, so they rely on that host resolving the other hosts'
-# MagicDNS names. A service on a host that isn't deployed yet just
-# shows as down.
+# Fleet dashboard on :8082 (homepageEnable). Status dots are checked from
+# this host, so they rely on MagicDNS names resolving.
 { config, pkgs, lib, vars, ... }:
 
 let
   port = 8082;
-  # One tile: href is what your browser opens, siteMonitor what Homepage
-  # pings for the status dot (defaults to the same URL). The port is
-  # appended to the description so each tile shows what it listens on.
   tile = { name, host, port, description, icon, path ? "/", monitorPath ? path }: {
     ${name} = {
       inherit icon;
@@ -28,8 +18,7 @@ lib.mkIf vars.homepageEnable {
     enable = true;
     listenPort = port;
     openFirewall = false;
-    # Homepage rejects requests whose Host header isn't listed here, so
-    # this has to include the name you actually type in the browser.
+    # Homepage rejects any Host header not listed here.
     allowedHosts = lib.concatStringsSep "," [
       "${vars.hostname}:${toString port}"
       "localhost:${toString port}"

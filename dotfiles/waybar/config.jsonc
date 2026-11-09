@@ -1,28 +1,21 @@
 {
     "layer": "top",
     "position": "top",
-    // exclusive: reserve the bar's height so tiled windows start below it
-    // instead of sliding underneath.
     "exclusive": true,
     "height": 30,
     "spacing": 4,
 
-    // custom/gpu is defined below but left off the bar: its script needs
-    // nvtop (not installed) and the tooltip names the original author's
-    // own iGPU. Add it back here if you install nvtopPackages.full.
+    // custom/gpu needs nvtop (not installed), so it's left off the bar.
     "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature"],
     "modules-center": ["clock"],
     "modules-right": ["mpris", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{id}",
-        // Lua-config syntax: `hyprctl dispatch` takes hl.dsp.* calls now
         "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
         "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'"
     },
 
-    // WiFi controller: click = rofi network picker, right-click = full
-    // NetworkManager editor. nm-applet in the tray covers the rest.
     "network": {
         "format-wifi": "󰖩  {essid}",
         "format-ethernet": "󰈀  {ipaddr}",
@@ -35,10 +28,7 @@
         "interval": 5
     },
 
-    // Bluetooth controller button: click = Blueman device manager
-    // (pair/connect), right-click = power the adapter on/off.
-    // format-no-controller keeps the button visible even with no adapter
-    // (e.g. the janus-vm VirtualBox guest) — waybar hides it otherwise.
+    // format-no-controller keeps the button visible without an adapter.
     "bluetooth": {
         "format": "󰂯",
         "format-on": "󰂯",
@@ -56,7 +46,6 @@
         "on-click-right": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
     },
 
-    // Absent entirely on machines without a battery
     "battery": {
         "states": { "warning": 25, "critical": 10 },
         "format": "{icon}  {capacity}%",
@@ -64,7 +53,6 @@
         "format-icons": ["󰁺", "󰁼", "󰁾", "󱊣", "󰁹"]
     },
 
-    // Required for nm-applet / blueman-applet icons to show up at all
     "tray": {
         "icon-size": 14,
         "spacing": 8
@@ -100,9 +88,6 @@
     "clock": {
         "format": "{:%a %d %b  %H:%M}",
         "tooltip-format": "<tt>{calendar}</tt>",
-        // Click: calendar popup (gsimplecal, Catppuccin via the GTK theme;
-        // placed under the clock by the rule in hypr/rules.lua). Click
-        // again, or click elsewhere, to close it.
         "on-click": "pkill -x gsimplecal || gsimplecal"
     },
 

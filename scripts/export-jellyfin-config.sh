@@ -1,20 +1,13 @@
 #!/usr/bin/env bash
-# export-jellyfin-config.sh
-# Snapshot Jellyfin's config/library/user data into ./jellyfin/ (or
-# --output-dir). Run this ON THE SERVER, after Jellyfin is set up the way
-# you want (libraries added, users created) — not a client device.
+# Snapshots Jellyfin's config, libraries and users. Run on the server.
 #
 # Usage:
 #   ./export-jellyfin-config.sh [--api-key <key>] [--output-dir <path>] [--url <jellyfin-url>]
 #
-# --api-key    Optional. Get one from the Jellyfin dashboard:
-#              Settings -> API Keys -> '+'. Without it, you still get the
-#              raw config backup and a plain-text library path list
-#              (derived from Jellyfin's own root/ symlinks) — the API key
-#              just adds a proper JSON summary via Jellyfin's own API.
+# --api-key    Optional; adds JSON summaries via the API
+#              (Dashboard -> API Keys -> '+').
 # --output-dir Default: ./jellyfin
-# --url        Default: http://localhost:8096 (run this on the server
-#              itself, so localhost is correct)
+# --url        Default: http://localhost:8096
 
 set -euo pipefail
 
@@ -44,13 +37,7 @@ fi
 mkdir -p "$OUTPUT_DIR/raw"
 
 echo "==> Copying raw config from $JELLYFIN_DATA_DIR"
-# config/  = server settings (system.xml, network.xml, encoding.xml, etc.)
-# data/    = the actual SQLite databases: users, libraries, playback state
-# root/    = one symlink per library, pointing at its real media path —
-#            the handiest human-readable view of "libraries and their paths"
-# plugins/ = installed plugins
-# Deliberately excluded: cache/, metadata/, transcodes/ — regenerable,
-# often huge, not meaningfully "config".
+# cache/, metadata/ and transcodes/ are skipped: regenerable and large.
 for sub in config data root plugins; do
   if [ -d "$JELLYFIN_DATA_DIR/$sub" ]; then
     sudo cp -r "$JELLYFIN_DATA_DIR/$sub" "$OUTPUT_DIR/raw/$sub"

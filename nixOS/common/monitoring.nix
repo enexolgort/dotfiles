@@ -1,6 +1,5 @@
-# common/monitoring.nix — runs check-remote.sh against this machine's
-# own tailscale IP every 15 minutes, logs the result, and POSTs to
-# vars.notifyWebhook on failure if one's configured.
+# Runs check-remote.sh against this host every 15 min; POSTs failures to
+# vars.notifyWebhook if set.
 { config, pkgs, lib, vars, ... }:
 
 {

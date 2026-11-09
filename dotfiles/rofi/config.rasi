@@ -1,8 +1,3 @@
-/* ~/.config/rofi/config.rasi — Catppuccin Mocha
- * Used by every rofi menu here: the app launcher (Super+D, `rofi -show
- * drun`) and all the `rofi -dmenu` pickers (clipboard Super+V, Wi-Fi
- * Super+N, opacity). Deployed by scripts/post-install.sh.
- * Palette: https://catppuccin.com/palette (Mocha) */
 
 configuration {
     modi:                "drun,run,window";
@@ -15,10 +10,7 @@ configuration {
     font:                "JetBrainsMono Nerd Font 11";
 }
 
-/* Start from an empty theme. Without this, rofi 2.0 layers everything
- * below on top of its built-in default (light Solarized), and any
- * property not set here — like the background of unselected rows —
- * shows through as unreadable cream/yellow. */
+/* Otherwise rofi 2.0 layers this over its light default theme. */
 @theme "/dev/null"
 
 * {
@@ -98,8 +90,7 @@ element {
     border-radius: 8px;
 }
 
-/* Unselected rows: Mocha background, light text — set explicitly so no
- * built-in colours can leak in. */
+/* Unselected rows */
 element normal.normal,
 element alternate.normal {
     background-color: @base;

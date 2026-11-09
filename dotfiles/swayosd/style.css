@@ -1,7 +1,3 @@
-/* ~/.config/swayosd/style.css — Catppuccin Mocha volume/brightness pop-up
- * swayosd-server is started from hyprland.lua; the media keys in
- * keybinds.lua and the waybar volume scroll call swayosd-client.
- * Palette: https://catppuccin.com/palette (Mocha) */
 
 window#osd {
     padding: 12px 20px;

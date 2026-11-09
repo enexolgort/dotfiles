@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
-# restore-jellyfin-config.sh
-# Restores a snapshot created by export-jellyfin-config.sh back into
-# /var/lib/jellyfin. Run this ON THE SERVER. Stops Jellyfin during the
-# restore and restarts it after.
+# Restores an export-jellyfin-config.sh snapshot. Run on the server.
 #
 # Usage:
 #   ./restore-jellyfin-config.sh [--input-dir <path>] [--force]
 #
-# --input-dir  Default: ./jellyfin (matches export-jellyfin-config.sh's
-#              default --output-dir)
-# --force      Skip the confirmation prompt (useful for scripting; still
-#              backs up the current state first regardless)
+# --input-dir  Default: ./jellyfin
+# --force      Skip the confirmation (the live state is still backed up)
 
 set -euo pipefail
 
@@ -57,8 +52,6 @@ fi
 echo "==> Stopping Jellyfin"
 sudo systemctl stop jellyfin
 
-# Safety net: back up whatever's currently live before overwriting it,
-# in case the restore itself needs undoing.
 SAFETY_BACKUP="/var/lib/jellyfin.pre-restore.$(date +%Y%m%d-%H%M%S)"
 echo "==> Backing up current live state to $SAFETY_BACKUP first"
 sudo cp -r "$JELLYFIN_DATA_DIR" "$SAFETY_BACKUP"

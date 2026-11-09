@@ -1,17 +1,8 @@
-# home-desktop.nix — home-manager level config specific to desktop
-# hosts (currently janus). Imported conditionally by flake.nix
-# based on that host's desktopEnable — never applied to the headless
-# server hosts.
+# home-manager config for desktopEnable hosts.
 { config, pkgs, lib, vars, ... }:
 
 {
-  # Cursor: Posy's Improved Cursors (simtrami/posy-improved-cursor-linux).
-  # Installs the theme and sets it as the default for GTK, X11/XWayland
-  # and ~/.icons/default; Hyprland picks it up via XCURSOR_THEME in
-  # dotfiles/hypr/hyprland.lua. Ships only in 32/48/64/96/128 px, so the
-  # size must be one of those or the cursor gets scaled and blurry.
-  # Other variants in the same package: Posy_Cursor_Black,
-  # Posy_Cursor_Mono, Posy_Cursor_Mono_Black, Posy_Cursor_Strokeless.
+  # Only ships in 32/48/64/96/128 px; other sizes get blurry.
   home.pointerCursor = {
     name = "Posy_Cursor";
     package = pkgs.posy-cursors;
@@ -20,11 +11,8 @@
     x11.enable = true;
   };
 
-  # Catppuccin Mocha (mauve accent) for Qt/KDE apps like Dolphin. Read
-  # through the "kde" Qt platform theme set in common/desktop.nix. KDE
-  # apps take colours straight from these [Colors:*] groups (outside
-  # Plasma nothing copies a .colors scheme in for them), so the palette
-  # lives here. Values are Mocha as "R,G,B": https://catppuccin.com/palette
+  # Catppuccin Mocha for Qt/KDE apps. Outside Plasma, KDE apps read colours
+  # only from these [Colors:*] groups.
   xdg.configFile."kdeglobals".text =
     let
       base = "30,30,46";
@@ -85,13 +73,10 @@
       inactiveForeground=${overlay0}
     '';
 
-  # GTK apps (Firefox dialogs, pavucontrol, Blueman, nwg-look) in
-  # Catppuccin Mocha with Papirus icons (mauve folders). Theme/icon names
-  # are the directories these packages install.
   gtk = {
     enable = true;
     theme = {
-      name = "catppuccin-mocha-mauve-standard"; # dir name the package installs
+      name = "catppuccin-mocha-mauve-standard";
       package = pkgs.catppuccin-gtk.override {
         variant = "mocha";
         accents = [ "mauve" ];
@@ -106,16 +91,13 @@
     };
     gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
-    # Theme GTK4 apps with Catppuccin too (explicit: home-manager's
-    # default for this changed to null, and warns until it's set).
+    # home-manager warns until this is set explicitly.
     gtk4.theme = config.gtk.theme;
   };
   # libadwaita/GTK4 apps ignore GTK themes but follow this dark preference.
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  # Default apps (~/.config/mimeapps.list). force = true: apps sometimes
-  # rewrite this file ("always open with…"), which would otherwise make
-  # the next home-manager activation fail on a clobbered file.
+  # force: apps rewrite mimeapps.list, which would otherwise break activation.
   xdg.mimeApps = {
     enable = true;
     defaultApplications =
@@ -132,7 +114,7 @@
         "x-scheme-handler/about" = browser;
         "x-scheme-handler/unknown" = browser;
         "application/pdf" = browser;
-        "text/plain" = "nvim.desktop"; # opens in kitty (kdeglobals TerminalApplication)
+        "text/plain" = "nvim.desktop";
         "image/png" = images;
         "image/jpeg" = images;
         "image/gif" = images;
@@ -148,9 +130,7 @@
   };
   xdg.configFile."mimeapps.list".force = true;
 
-  # LazyVim — official starter template, cloned fresh only if
-  # ~/.config/nvim doesn't already exist (never overwrites an existing
-  # config, same caution as the Doom Emacs bootstrap above).
+  # Never overwrites an existing ~/.config/nvim.
   home.activation.installLazyVim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     NVIM_CONF="$HOME/.config/nvim"
 

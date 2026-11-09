@@ -15,25 +15,8 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      # NOTE: we deliberately do NOT run a blanket `nix flake check
-      # --all-systems` here. That tries to fully build EVERY host's
-      # nixosConfiguration, and real-machine hosts (targetType = "real")
-      # depend on their own hardware-configuration.nix — which is a
-      # placeholder in this repo on purpose (it's generated from actual
-      # hardware, and a generic CI runner has no way to genuinely
-      # satisfy that). Those hosts can only be validated on the real
-      # machine itself.
-      #
-      # WSL hosts (targetType = "wsl") don't depend on
-      # hardware-configuration.nix at all (WSL2 owns that layer) — so
-      # they're the ones CI actually *can* meaningfully build in full,
-      # and doing so covers the vast majority of the actual config
-      # (everything in common/, home.nix, flake.nix itself).
-      #
-      # Found by reading each host's own targetType directly (not by
-      # guessing from a hostname naming convention like "-wsl" — hosts
-      # can be named anything) — so this keeps working regardless of
-      # how many hosts exist or what they're called.
+      # Not `nix flake check`: real hosts need hardware-configuration.nix,
+      # which is a placeholder here. WSL hosts build fully and cover common/.
       - name: Check formatting
         run: |
           cd nixOS

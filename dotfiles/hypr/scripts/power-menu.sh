@@ -1,11 +1,6 @@
 #!/bin/sh
-# ~/.config/hypr/scripts/power-menu.sh — waybar power button, Super+Escape.
-#
-# Opens wlogout (style + icons in ~/.config/wlogout) as one row of five
-# square tiles centred on the focused screen, with the uptime written at
-# the bottom. wlogout only takes pixel margins, so the tile size is
-# worked out from the screen size here, and the uptime is drawn into an
-# SVG used as the window background. Pressing it again closes the menu.
+# Toggles wlogout. It only takes pixel margins, so tile size comes from the
+# screen size; the uptime is drawn into an SVG background.
 
 pkill -x wlogout && exit 0
 

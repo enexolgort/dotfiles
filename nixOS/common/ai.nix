@@ -1,33 +1,17 @@
-# common/ai.nix — local LLM hosting. Off unless a host's vars.nix sets
-# aiEnable = true. Both services are confirmed real NixOS modules (not
-# something built from scratch) — Ollama is the model runner, Open WebUI
-# is the well-established ChatGPT-style frontend for it, specifically
-# built to pair with Ollama.
-#
-# No firewall changes needed: trustedInterfaces (networking.nix) already
-# covers these ports automatically, same as every other service here.
-# Ollama itself listens on 11434, Open WebUI's frontend on 8080.
+# Ollama (:11434) + Open WebUI (:8080), aiEnable.
 { config, pkgs, lib, vars, ... }:
 
 lib.mkIf vars.aiEnable {
   services.ollama = {
     enable = true;
-    # CPU-only by default. If the host has a compatible GPU, override
-    # this to "cuda" or "rocm" here for real acceleration — CPU inference
-    # works but is slow for anything beyond small models.
-    acceleration = false;
+    acceleration = false; # "cuda" / "rocm" with a GPU
     loadModels = vars.aiModels;
-    host = "0.0.0.0";   # was defaulting to 127.0.0.1-only — same bug as CouchDB/Open WebUI
+    host = "0.0.0.0"; # defaults to 127.0.0.1
   };
 
   services.open-webui = {
     enable = true;
-    # Defaults to 127.0.0.1-only otherwise — same class of bug we hit
-    # with CouchDB earlier. NOT using host = ""; despite that being the
-    # "bind all interfaces" convention some docs mention — there's a
-    # known nixpkgs bug (NixOS/nixpkgs#378188) where the empty string
-    # breaks shell quoting in the generated systemd unit and the service
-    # fails to start entirely. An explicit "0.0.0.0" avoids that bug.
+    # Defaults to 127.0.0.1. Not "": that breaks the unit (NixOS/nixpkgs#378188).
     host = "0.0.0.0";
     environment = {
       OLLAMA_API_BASE_URL = "http://127.0.0.1:11434/api";

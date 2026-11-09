@@ -1,6 +1,4 @@
-# ~/.config/mako/config — Catppuccin Mocha notifications
-# Started from hyprland.lua; reload after editing with `makoctl reload`.
-# Palette: https://catppuccin.com/palette (Mocha)
+# Reload with `makoctl reload`.
 
 font=JetBrainsMono Nerd Font 10
 background-color=#1e1e2e

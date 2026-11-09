@@ -1,14 +1,9 @@
--- ~/.config/hypr/hyprland.lua
 -- Docs: https://wiki.hypr.land/Configuring/Start/
-
--- Old: monitor = eDP-1,disable
--- Old: monitor = HDMI-A-1,preferred,auto,1
 
 hl.monitor({ output = "eDP-1", disabled = true })
 hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1 })
--- VirtualBox's display (janus-vm). Must be named explicitly: in the Lua
--- API (Hyprland 0.55) a wildcard output ("" or "*") is ignored, and
--- without a rule Hyprland auto-picks scale 2 for this screen.
+-- janus-vm. Wildcard outputs are ignored by the Lua API, and without a
+-- rule Hyprland picks scale 2 here.
 hl.monitor({ output = "Virtual-1", mode = "preferred", position = "auto", scale = 1 })
 
 ---- MY PROGRAMS ----
@@ -22,36 +17,26 @@ browser    = "brave"
 
 ---- AUTOSTART ----
 
--- Old exec-once lines. hl.exec_cmd() fires immediately (not a dispatcher),
--- so these are wrapped in the hyprland.start event, same timing as exec-once.
+-- hl.exec_cmd() runs immediately, so autostart goes in hyprland.start.
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
-    -- Notifications (Catppuccin config in dotfiles/mako/config)
     hl.exec_cmd("mako")
-    -- Volume/brightness pop-ups; the media keys in keybinds.lua talk to it
     hl.exec_cmd("swayosd-server")
-    -- --indicator = StatusNotifierItem tray icon, the only kind waybar's
-    -- tray can show (plain nm-applet uses the old X11 XEmbed tray)
+    -- --indicator: waybar's tray only shows StatusNotifierItem icons
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
-    -- polkit auth prompts + idle dim/lock/suspend (common/desktop.nix,
-    -- hypr/hypridle.conf)
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("hypridle")
 
-    -- Wallpaper: hyprpaper, falling back to swaybg where hyprpaper can't
-    -- run (janus-vm) — see hypr/scripts/wallpaper.sh. The image is set
-    -- by scripts/post-install.sh in ~/.config/hypr/hyprpaper.conf.
     hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
 
--- Posy's cursor (installed by home.pointerCursor in nixOS/home-desktop.nix).
--- Only ships in 32/48/64/96/128 px — other sizes get scaled and blurry.
+-- Posy only ships 32/48/64/96/128 px; other sizes get blurry.
 hl.env("XCURSOR_THEME", "Posy_Cursor")
 hl.env("XCURSOR_SIZE", "32")
 hl.env("QT_QPA_PLATFORM", "wayland")
@@ -101,10 +86,8 @@ hl.config({
     },
 })
 
--- Old: bezier = easeOut,0.05,0.9,0.1,1.0
 hl.curve("easeOut", { type = "bezier", points = { {0.05, 0.9}, {0.1, 1.0} } })
 
--- Old: animation = windows,1,5,easeOut  (enabled, speed, style)
 hl.animation({ leaf = "windows",    enabled = true, speed = 5, bezier = "easeOut" })
 hl.animation({ leaf = "windowsOut", enabled = true, speed = 5, bezier = "easeOut" })
 hl.animation({ leaf = "border",     enabled = true, speed = 5, bezier = "default" })

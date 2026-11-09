@@ -5,22 +5,13 @@
   home.homeDirectory = "/home/${vars.username}";
   home.stateVersion = "24.11";
 
-  # --- Emacs itself --------------------------------------------------
-  # pgtk build = native Wayland/X11 GTK, with native-comp for speed.
-  # Doom Emacs is NOT packaged here as a nix derivation; instead we let
-  # it manage itself the normal way (git clone + doom sync), which is
-  # far less likely to break on Doom updates than a nixified version.
+  # Doom manages itself (git clone + doom sync) rather than being nixified.
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-pgtk;
   };
 
-  # --- Run Emacs as a background daemon ------------------------------
-  # Socket-activated: systemd starts it on first `emacsclient` connection
-  # rather than unconditionally at login, and keeps it running after —
-  # so Doom's (slower) startup cost only happens once, not on every
-  # `emacs` invocation. Requires `loginctl enable-linger <username>`
-  # (see README) if you want it to keep running with no session open.
+  # Socket-activated daemon. Needs `loginctl enable-linger` to outlive the session.
   services.emacs = {
     enable = true;
     client.enable = true;
@@ -28,7 +19,7 @@
     socketActivation.enable = true;
   };
 
-  # --- Tools Doom Emacs expects to find on PATH -----------------------
+  # Tools Doom expects on PATH.
   home.packages = with pkgs; [
     git
     ripgrep
@@ -37,13 +28,12 @@
     imagemagick
     sqlite            # org-roam
     fontconfig
-    nerd-fonts.jetbrains-mono # patched font for doom's modeline icons
-    gnutls             # emacs package.el / straight.el needs this for https
+    nerd-fonts.jetbrains-mono
+    gnutls
     unzip
-    hyfetch            # provides neowofetch — neofetch was removed in nixos-26.05 (unmaintained upstream)
+    hyfetch            # neowofetch; neofetch was removed in nixos-26.05
   ];
 
-  # --- Auto-bootstrap Doom Emacs on first home-manager activation ----
   home.activation.installDoomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     DOOM_DIR="$HOME/.config/emacs"
     DOOM_CONF="$HOME/.config/doom"
@@ -59,14 +49,9 @@
     fi
   '';
 
-  # Put doom's bin on PATH
   home.sessionPath = [ "$HOME/.config/emacs/bin" ];
 
-  # --- Neofetch: shown automatically on every interactive login -------
-  # home-manager has no dedicated neofetch module, so this is a plain
-  # package (above) + hand-written config.conf, in neofetch's own
-  # bash-sourced config syntax rather than a Nix attrset. neowofetch
-  # (hyfetch's maintained neofetch fork) reads this same file.
+  # Read by neowofetch.
   xdg.configFile."neofetch/config.conf".text = ''
     print_info() {
         info title
@@ -87,7 +72,6 @@
         info cols
     }
 
-    # NixOS snowflake logo, colored to match the distro automatically
     ascii_distro="auto"
     ascii_colors=(distro)
     ascii_bold="on"
@@ -97,7 +81,6 @@
     underline_char="-"
     separator=" ->"
 
-    # colored blocks under the info, distro-themed
     color_blocks="on"
     block_range=(0 15)
     block_width=3
@@ -127,20 +110,13 @@
     enable = true;
 
     initExtra = ''
-      # Neofetch on every interactive login (skipped for non-interactive
-      # shells like scp/rsync/git-over-ssh, so it doesn't spam those).
+      # Interactive shells only, so scp/rsync/git-over-ssh stay clean.
       if [[ $- == *i* ]]; then
         neowofetch
       fi
 
-      # --- Named-flag move/copy/rename, e.g.:
-      #   move --source /src/file --destination /dst/file
-      #   copy --source /src/dir  --destination /dst/dir
-      #   rename --source /old/name --destination /new/name
-      # Functions, not aliases — aliases can't parse --flags.
+      # move/copy/rename --source <path> --destination <path>
       _parse_source_dest() {
-        # sets $__src and $__dst from --source/--destination, or prints
-        # usage and returns 1 if either is missing.
         local fn_name="$1"; shift
         __src=""
         __dst=""
@@ -172,10 +148,7 @@
         mv -- "$__src" "$__dst"
       }
 
-      # 'doom' with no arguments launches Emacs in the terminal; 'doom
-      # <anything else>' (sync, install, etc.) still forwards to the real
-      # Doom CLI, so this doesn't break doom sync/doom install like a
-      # plain alias would.
+      # No args: terminal Emacs. Otherwise: the Doom CLI.
       doom() {
         if [ $# -eq 0 ]; then
           emacs -nw
@@ -184,15 +157,10 @@
         fi
       }
 
-      # 'rebuild' — no explicit #attr needed, nixos-rebuild auto-detects
-      # from this machine's own hostname (works for both athena and
-      # athena-wsl automatically).
+      # nixos-rebuild picks the host from the hostname.
       alias rebuild='sudo nixos-rebuild switch --flake /etc/nixos'
 
-      # 'update-server' — the full loop we've run by hand dozens of
-      # times: pull latest config, sync it into /etc/nixos, rebuild,
-      # then run post-install (Doom sync, linger, etc.). Adjust the repo
-      # path below if yours differs from ~/dotFiles.
+      # Pull, install into /etc/nixos, rebuild, post-install.
       update-server() {
         local repo="$HOME/dotFiles"
         if [ ! -d "$repo" ]; then
@@ -209,10 +177,7 @@
         )
       }
 
-      # 'backup --nixVars' / 'restore --nixVars' — copy vars.nix to/from
-      # ~/backup, a quick manual safety net separate from the full
-      # restic backups. Flag-based so more options (--dotfiles, --doom,
-      # etc.) can be added later without renaming anything.
+      # backup/restore --nixVars: copy vars.nix to/from ~/backup.
       backup() {
         case "$1" in
           --nixVars)
@@ -254,7 +219,7 @@
     enable = true;
     settings.user = {
       name = vars.username;
-      email = vars.gitEmail; # <-- set your real email in vars.nix
+      email = vars.gitEmail;
     };
   };
 }

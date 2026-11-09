@@ -1,11 +1,4 @@
-/* ~/.config/wlogout/style.css — power menu, Catppuccin Mocha
- * Opened by hypr/scripts/power-menu.sh (waybar power button,
- * Super+Escape): a row of five square tiles, outline icon above a bold
- * label, Cancel in red, uptime at the bottom of the screen (drawn by
- * the script). Icons are the SVGs in ./icons (paths are relative to
- * this file). Keys: E sign out, S shut down, R restart, H hibernate,
- * C / Esc cancel.
- * Palette: https://catppuccin.com/palette (Mocha) */
+/* Opened by hypr/scripts/power-menu.sh. Icon paths are relative to this file. */
 
 * {
     background-image: none;
@@ -43,4 +36,4 @@ button:hover {
 #shutdown  { background-image: url("icons/shutdown.svg"); }
 #reboot    { background-image: url("icons/reboot.svg"); }
 #hibernate { background-image: url("icons/hibernate.svg"); }
-#cancel    { background-image: url("icons/cancel.svg"); color: #f38ba8; }  /* red */
+#cancel    { background-image: url("icons/cancel.svg"); color: #f38ba8; }

@@ -3,35 +3,28 @@
   username = "enexolgort";
   gitEmail = "enexolgort@mnemosyne.local";
   targetType = "real";
-  bootloader = "systemd-boot"; # bare-metal, UEFI (/boot is a vfat ESP in hardware-configuration.nix)
+  bootloader = "systemd-boot";
 
   jellyfinEnable = true;
   obsidianEnable = false;
-  gitServerEnable = true; # Forgejo — see common/forgejo.nix
+  gitServerEnable = true;
   aiEnable = false;
   sftpEnable = true;
   n8nEnable = false;
-  homepageEnable = true; # fleet dashboard on :8082 — see common/homepage.nix
+  homepageEnable = true;
   desktopEnable = false;
 
-  # sftpEnable = true, so these need to actually be here.
   sftpDir = "/data/sftp";
   sftpPublicKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfCPT1zuWITFVKSAOmkLAr4wpXkHLDxzNUVptgI88lf sftp-laptop" # filezila@laptop
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITDNIuGEqX2bs89Tv+BWZcFCI3CLOM9xQCj89G/eumc transmission-api push" # transmission-API@hermes
   ];
 
-  # gitServerEnable = true, so these need to actually be here.
-  # NOTE: "admin" itself is a reserved username in Forgejo.
-  gitAdminUser = "gituser";
+  gitAdminUser = "gituser"; # "admin" is reserved in Forgejo
   gitAdminPass = "changeme-git"; # CHANGE THIS
-  # Forgejo data on the media HDD (/data/media), which restic backs up
-  # daily to the backup drive — see common/backups.nix.
+  # On the media drive, so it's covered by the mediaDir backup.
   gitDataDir = "/data/media/forgejo";
 
-  # mnemosyne's two physical drives — this was missing from the new
-  # multi-host vars.nix entirely (would've silently left both drives
-  # unmounted). Real UUIDs, not placeholders.
   extraMounts = [
    {
       device = "/dev/disk/by-uuid/354d0fc5-b1fd-482d-bc7b-2261324f590d"; # media drive (dwsdb)
@@ -47,15 +40,14 @@
     }
   ];
 
-  # mnemosyne is the host that actually has the second drive set up for
-  # restic — see doc/backups.md.
+  # The only host with backups (to the backup drive).
   backupEnable = true;
   backupRepo = "/data/backup/restic-repo";
   backupPassword = "changeme-restic-backup-password"; # CHANGE THIS
 
   projectRepos = [
-    "https://github.com/enexolgort/transmission-webUi"
-    "https://github.com/enexolgort/yt-dlp-webUi"
+    "http://mnemosyne:3000/enexolgort/transmission-webUis"
+    "http://mnemosyne:3000/enexolgort/yt-dlp-API"
     "http://mnemosyne:3000/enexolgort/git-dashboard"
   ];
 }
