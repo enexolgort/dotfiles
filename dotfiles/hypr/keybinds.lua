@@ -20,8 +20,8 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 0 }))
 
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/opacity.sh"))
 
--- Toggle waybar
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("sh -c 'pgrep -x waybar >/dev/null && pkill waybar || nohup waybar >/dev/null 2>&1 &'"))
+-- Toggle waybar. Matched by command line: on NixOS the process is .waybar-wrapped.
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("sh -c 'pgrep -f \"^waybar( |$)\" >/dev/null && pkill -f \"^waybar( |$)\" || nohup waybar >/dev/null 2>&1 &'"))
 
 -- Screenshots
 hl.bind(mainMod .. " + Delete", hl.dsp.exec_cmd("grim " .. home .. "/Pictures/$(date +%s).png"))
@@ -38,6 +38,10 @@ hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/wifi-m
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("nm-connection-editor"))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("pavucontrol"))
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/bluetooth-menu.sh"))
+
+-- Homelab
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/ssh-menu.sh"))
+hl.bind(mainMod .. " + H", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/services-menu.sh"))
 
 -- Toggle window Center and rezise
 hl.bind(mainMod .. " + Space", function()

@@ -19,6 +19,12 @@ Pulled directly from the [43PR/dotfiles](https://github.com/43PR/dotfiles) `hypr
 | `Super + A` | Audio mixer (`pavucontrol`) |
 | `Super + Shift + B` | Bluetooth manager (`blueman-manager`) |
 
+## Homelab
+| Shortcut | Action |
+|---|---|
+| `Super + S` | SSH into a tailnet machine (rofi dmenu — `hypr/scripts/ssh-menu.sh`, opens in kitty) |
+| `Super + H` | Open a homelab service in the browser (rofi dmenu — `hypr/scripts/services-menu.sh`, list from Homepage on mnemosyne) |
+
 ## Window management
 | Shortcut | Action |
 |---|---|
