@@ -4,13 +4,26 @@
 
 let
   port = 8082;
-  tile = { name, host, port, description, icon, path ? "/", monitorPath ? path }: {
+  tile = { name, host, port, description, icon, path ? "/", monitorPath ? path, widget ? null }: {
     ${name} = {
       inherit icon;
       description = "${description} · :${toString port}";
       href = "http://${host}:${toString port}${path}";
       siteMonitor = "http://${host}:${toString port}${monitorPath}";
-    };
+    } // lib.optionalAttrs (widget != null) { inherit widget; };
+  };
+
+  # backup-health project; its /health answers 503 when the backup is broken.
+  backupWidget = {
+    type = "customapi";
+    url = "http://localhost:3005/api/status";
+    refreshInterval = 60000;
+    mappings = [
+      { field = "status"; label = "Status"; }
+      { field = { lastSnapshot = "time"; }; label = "Last backup"; format = "relativeDate"; }
+      { field = { lastSnapshot = "sizeBytes"; }; label = "Size"; format = "bytes"; }
+      { field = { drive = "usedPercent"; }; label = "Drive"; format = "percent"; }
+    ];
   };
 in
 lib.mkIf vars.homepageEnable {
@@ -57,6 +70,7 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Video UI"; host = "mnemosyne"; port = 4174; description = "yt-dlp-webUi"; icon = "si-youtube"; })
           (tile { name = "Forgejo"; host = "mnemosyne"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
           (tile { name = "Git Dashboard"; host = "mnemosyne"; port = 3004; description = "Forgejo git activity"; icon = "si-git"; path = "/"; monitorPath = "/health"; })
+          (tile { name = "Backups"; host = "mnemosyne"; port = 3005; description = "restic backup health"; icon = "mdi-backup-restore"; path = "/api/status"; monitorPath = "/health"; widget = backupWidget; })
         ];
       }
       {

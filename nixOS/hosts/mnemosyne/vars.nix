@@ -49,6 +49,7 @@
     "http://mnemosyne:3000/enexolgort/transmission-webUis"
     "http://mnemosyne:3000/enexolgort/yt-dlp-API"
     "http://mnemosyne:3000/enexolgort/git-dashboard"
+    "http://mnemosyne:3000/enexolgort/backup-health"
   ];
 }
 

@@ -35,6 +35,25 @@ sudo journalctl -u restic-backups-mediaserver.service -f
 ```
 Runs daily via a systemd timer (`OnCalendar = "daily"`) — check `systemctl list-timers` to see the next scheduled run.
 
+### Backup health (Homepage + waybar)
+On mnemosyne, the [`backup-health`](http://mnemosyne:3000/enexolgort/backup-health) project (cloned and started by `install.sh` from `projectRepos`) reads the repository read-only every 10 minutes and serves the result on port **3005**:
+
+- `GET /api/status` — last snapshot (age, size, data added), snapshot count, backup drive usage, and `ok` / `warning` / `error` with the list of problems
+- `GET /health` — HTTP 503 when the status is `error`
+
+It reports **error** when the newest snapshot is older than 36 h, the repo has no snapshot or can't be opened (drive not mounted, wrong password), or the drive is ≥ 95 % full; **warning** from 85 %. Thresholds are in the project's `.env`.
+
+Where it shows up:
+- **Homepage** — the *Backups* tile in the mnemosyne group: status, last backup, size and drive usage; its dot turns red on error.
+- **waybar** on janus — the fleet module's tooltip starts with a *Backups* section; on error the module turns red and shows `󰁯!`.
+
+```bash
+curl http://mnemosyne:3005/api/status
+curl -X POST http://mnemosyne:3005/api/check   # re-check now
+```
+
+With sops-nix on, set `RESTIC_PASSWORD_HOST_FILE=/run/secrets/backupPassword` in the project's `.env` on mnemosyne.
+
 ## Restoring
 
 **List available snapshots:**
