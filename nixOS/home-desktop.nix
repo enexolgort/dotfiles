@@ -2,6 +2,8 @@
 { config, pkgs, lib, vars, ... }:
 
 {
+  home.packages = [ pkgs.curl ]; # waybar fleet-status.sh
+
   # Only ships in 32/48/64/96/128 px; other sizes get blurry.
   home.pointerCursor = {
     name = "Posy_Cursor";

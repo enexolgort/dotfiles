@@ -57,6 +57,7 @@ window#waybar {
 #pulseaudio,
 #mpris,
 #custom-power,
+#custom-fleet,
 #temperature {
     padding: 0 10px;
     margin: 0 2px;
@@ -73,6 +74,12 @@ window#waybar {
 #bluetooth    { color: @blue; }
 #pulseaudio   { color: @peach; }
 #battery      { color: @green; }
+
+/* Fleet status */
+#custom-fleet.ok          { color: @green; }
+#custom-fleet.degraded    { color: @peach; }
+#custom-fleet.down,
+#custom-fleet.unreachable { color: @red; }
 
 /* Power */
 #custom-power {

@@ -8,12 +8,22 @@
     // custom/gpu needs nvtop (not installed), so it's left off the bar.
     "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature"],
     "modules-center": ["clock"],
-    "modules-right": ["mpris", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/power"],
+    "modules-right": ["mpris", "custom/fleet", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{id}",
         "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
         "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'"
+    },
+
+    // Fleet health from Homepage on mnemosyne. Right-click refreshes.
+    "custom/fleet": {
+        "exec": "~/.config/waybar/scripts/fleet-status.sh",
+        "return-type": "json",
+        "interval": 60,
+        "signal": 9,
+        "on-click": "xdg-open http://mnemosyne:8082",
+        "on-click-right": "pkill -RTMIN+9 waybar"
     },
 
     "network": {
