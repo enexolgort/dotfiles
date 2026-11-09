@@ -46,7 +46,7 @@
   backupPassword = "changeme-restic-backup-password"; # CHANGE THIS
 
   projectRepos = [
-    "http://mnemosyne:3000/enexolgort/transmission-webUis"
+    "http://mnemosyne:3000/enexolgort/transmission-webUi"
     "http://mnemosyne:3000/enexolgort/yt-dlp-API"
     "http://mnemosyne:3000/enexolgort/git-dashboard"
     "http://mnemosyne:3000/enexolgort/backup-health"
