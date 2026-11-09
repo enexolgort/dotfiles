@@ -58,6 +58,7 @@ window#waybar {
 #mpris,
 #custom-power,
 #custom-fleet,
+#custom-weather,
 #temperature {
     padding: 0 10px;
     margin: 0 2px;
@@ -80,6 +81,9 @@ window#waybar {
 #custom-fleet.degraded    { color: @peach; }
 #custom-fleet.down,
 #custom-fleet.unreachable { color: @red; }
+
+#custom-weather             { color: @sapphire; }
+#custom-weather.unreachable { color: @red; }
 
 /* Power */
 #custom-power {

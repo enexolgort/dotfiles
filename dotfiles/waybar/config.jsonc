@@ -7,7 +7,7 @@
 
     // custom/gpu needs nvtop (not installed), so it's left off the bar.
     "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature"],
-    "modules-center": ["clock"],
+    "modules-center": ["clock", "custom/weather"],
     "modules-right": ["mpris", "custom/fleet", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/power"],
 
     "hyprland/workspaces": {
@@ -24,6 +24,16 @@
         "signal": 9,
         "on-click": "xdg-open http://mnemosyne:8082",
         "on-click-right": "pkill -RTMIN+9 waybar"
+    },
+
+    // Set WEATHER_LOCATION (e.g. "Paris") in the session env; empty = geo-IP.
+    "custom/weather": {
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "return-type": "json",
+        "interval": 900,
+        "signal": 10,
+        "on-click": "kitty --title weather --hold ~/.config/waybar/scripts/weather.sh --full",
+        "on-click-right": "pkill -RTMIN+10 waybar"
     },
 
     "network": {

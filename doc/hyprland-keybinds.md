@@ -77,6 +77,7 @@ No modifier — the actual hardware keys.
 | Module | Click | Right-click | Scroll |
 |---|---|---|---|
 | Workspaces | Switch to it | — | Next / previous workspace |
+| Weather (wttr.in) | Full forecast in kitty | Refresh | — |
 | Network | WiFi picker | `nm-connection-editor` | — |
 | Bluetooth | `blueman-manager` | — | — |
 | Volume | `pavucontrol` | Toggle mute | ±5% volume |
