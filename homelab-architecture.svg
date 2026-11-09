@@ -33,6 +33,14 @@
 <text x="145" y="236" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Forgejo</text>
 <text x="145" y="256" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git :3000, on media HDD</text>
 
+<rect x="250" y="214" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="404" y="222" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="335" y="236" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Git Dashboard</text>
+<text x="335" y="256" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">git activity :3004</text>
+
+<line x1="230" y1="242" x2="248" y2="242" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="239" y="282" text-anchor="middle" font-size="11" font-weight="600" fill="#89dceb">API</text>
+
 <rect x="440" y="214" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
 <circle cx="598" cy="222" r="4.5" fill="#a6e3a1"/>
 <text x="525" y="236" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">SFTP upload</text>
