@@ -1,9 +1,10 @@
 # Overview
 
 ## Multiple machines, one repo
-This flake builds a **separate NixOS system for every machine profile** under `nixOS/hosts/`. Right now that's three servers (plus the `janus` desktop and its `janus-vm` test copy):
+This flake builds a **separate NixOS system for every machine profile** under `nixOS/hosts/`. Right now that's three servers, plus the `janus` desktop, its `janus-vm` test copy and the `proteus` WSL laptop:
 - **`mnemosyne`** — real machine. Jellyfin, self-hosted git server (Forgejo, data on the backed-up media drive), SFTP, Homepage dashboard (:8082), clones `transmission-webUi`, `yt-dlp-webUi`, `git-dashboard` (:3004) and `backup-health` (:3005, see [backups.md](./backups.md)).
 - **`hermes`** — NixOS-WSL. Transmission + its API (clones `transmission-API`), yt-dlp-API (clones `yt-dlp-API`).
+- **`proteus`** — NixOS-WSL on the second main laptop. A dev client with no services of its own.
 - **`athena`** — real machine. Local AI models (Ollama) + a web UI (Open WebUI), plus n8n workflow automation.
 
 Adding another machine means adding another `hosts/<name>/` directory — nothing else changes. See [hosts.md](./hosts.md) for the full reference.
@@ -28,6 +29,8 @@ dotFiles/
 │   │   │   └── hardware-configuration.nix
 │   │   ├── hermes/
 │   │   │   └── vars.nix           # WSL — no hardware-configuration.nix needed
+│   │   ├── proteus/
+│   │   │   └── vars.nix           # WSL
 │   │   └── athena/
 │   │       ├── vars.nix
 │   │       └── hardware-configuration.nix
@@ -76,7 +79,7 @@ cd nixOS && nix fmt
 ```
 formats all `.nix` files (via `treefmt` + `alejandra`). Runs automatically in CI too, alongside `shellcheck` on everything in `scripts/`.
 
-CI only **fully builds hosts with `targetType = "wsl"`** (currently just `hermes`) — not real-machine hosts. That's deliberate: real-machine hosts depend on their own `hardware-configuration.nix`, which is a placeholder in this repo on purpose (generated from actual hardware; a CI runner has no way to genuinely satisfy that). WSL hosts don't depend on it at all, and cover the vast majority of the actual config (everything in `common/`) — so they're what CI can meaningfully validate end-to-end. Real-machine hosts can only be validated by actually rebuilding on the real hardware.
+CI only **fully builds hosts with `targetType = "wsl"`** (currently `hermes` and `proteus`) — not real-machine hosts. That's deliberate: real-machine hosts depend on their own `hardware-configuration.nix`, which is a placeholder in this repo on purpose (generated from actual hardware; a CI runner has no way to genuinely satisfy that). WSL hosts don't depend on it at all, and cover the vast majority of the actual config (everything in `common/`) — so they're what CI can meaningfully validate end-to-end. Real-machine hosts can only be validated by actually rebuilding on the real hardware.
 
 ## Doc index
 - [hosts.md](./hosts.md) — the multi-host system: adding a machine, choosing services, install-time selection

@@ -9,6 +9,7 @@ Current hosts:
 |---|---|---|---|
 | `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi`, `git-dashboard` (:3004), `backup-health` (:3005) |
 | `hermes` | `wsl` | — (Transmission + yt-dlp-API run from its project repos) | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
+| `proteus` | `wsl` | None — second main laptop, NixOS-WSL dev client | — |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
 | `janus-vm` | `real` | Same as `janus`, as a VirtualBox VM (BIOS/GRUB, label-based `hardware-configuration.nix` committed for real) | — |
@@ -64,6 +65,9 @@ sftpEnable = true | false;       # chrooted upload account, see common/sftp.nix
 n8nEnable = true | false;        # workflow automation, see common/n8n.nix
 homepageEnable = true | false;   # fleet dashboard on :8082, see common/homepage.nix
 desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + home-desktop.nix
+nvidiaEnable = true | false;     # NVIDIA driver, see common/nvidia.nix
+gamingEnable = true | false;     # Steam + Proton, see common/gaming.nix
+herdrEnable = true | false;      # optional (default false): herdr from nixpkgs-unstable, see common/packages.nix
 ```
 `common/backups.nix`'s restic paths are conditional on these too — a host with `jellyfinEnable = false` won't try backing up `/var/lib/jellyfin`, since it wouldn't exist there anyway.
 
@@ -87,7 +91,7 @@ Only `janus` sets `desktopEnable = true` — this describes what the toggle does
 
 Your Hyprland config lives in `hypr/` at the repo root — your own, not an external clone — and `scripts/post-install.sh` copies it into `~/.config/hypr` the exact same way it already deploys `doom/` into `~/.config/doom`. Only runs for hosts with `desktopEnable = true`. Safe to re-run any time; it's a plain overwrite copy, same as Doom's.
 
-Also configured: PipeWire audio (`security.rtkit.enable`, `services.pipewire` with ALSA/PulseAudio-compat/WirePlumber), the standard Hyprland companions (`waybar`, `rofi`, `kitty`, `wlogout`, `hyprlock`, `hyprpaper`, `mako` for notifications, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `brightnessctl`, `playerctl`, `btop`, `cava`, `nwg-look`), Dolphin as the file manager, LazyVim (official starter template, cloned into `~/.config/nvim` via a home-manager activation script — fine to stay activation-script-based since it doesn't depend on any external repo whose format might change), Firefox, Obsidian (the desktop client, not the sync backend — no host currently runs the CouchDB sync backend), Spotify.
+Also configured: PipeWire audio (`security.rtkit.enable`, `services.pipewire` with ALSA/PulseAudio-compat/WirePlumber), the standard Hyprland companions (`waybar`, `rofi`, `kitty`, `wlogout`, `hyprlock`, `hyprpaper`, `mako` for notifications, `grim`/`slurp` for screenshots, `cliphist`, `pavucontrol`, `brightnessctl`, `playerctl`, `btop`, `cava`, `nwg-look`), Dolphin as the file manager, LazyVim (official starter template, cloned into `~/.config/nvim` via a home-manager activation script — fine to stay activation-script-based since it doesn't depend on any external repo whose format might change), Firefox, Obsidian (the desktop client, not the sync backend — no host currently runs the CouchDB sync backend), Spotify, FileZilla (SFTP client, e.g. for mnemosyne's SFTP upload).
 
 Desktop plumbing on top of that: Bluetooth (BlueZ + `blueman`), `hyprpolkitagent` (polkit auth prompts — `programs.hyprland` enables polkit but no agent), `hypridle` (dim → lock → screen off → suspend, `dotfiles/hypr/hypridle.conf`), `upower`, `libnotify`, `nm-connection-editor`, and the user added to the `networkmanager`/`video` groups so WiFi and backlight changes don't need a password.
 
@@ -96,6 +100,14 @@ The controllers, all reachable from waybar and from a shortcut (see [hyprland-ke
 - **Audio** — waybar's volume module; scroll = ±5%, right-click = mute, click = `pavucontrol`. Media/volume/mic-mute hardware keys go through `wpctl`/`playerctl`.
 - **Bluetooth** — waybar's bluetooth module and `blueman-applet` in the tray; click opens `blueman-manager`.
 - **Launcher / dmenu** — `rofi -show drun` for apps, `rofi -dmenu` for the clipboard, opacity and WiFi pickers.
+
+## NVIDIA and gaming (janus)
+janus is a hybrid laptop (iGPU + RTX 5070). `common/nvidia.nix` loads the NVIDIA driver with the open kernel modules, which Blackwell cards require. When the host sets `nvidiaPrime`, it also turns on PRIME offload: the iGPU drives the screen and the NVIDIA GPU renders only what you ask it to. Leave `nvidiaPrime` out on a desktop with a single NVIDIA card.
+
+`nvidiaPrime` in `hosts/janus/vars.nix` holds **placeholder** bus IDs. Before the first rebuild, run `lspci | grep -E "VGA|3D"` on janus and convert each address to decimal `PCI:bus:device:function` (e.g. `01:00.0` → `PCI:1:0:0`). Use `amdgpuBusId` instead of `intelBusId` if the CPU is AMD.
+
+- Run any app on the NVIDIA GPU with `nvidia-offload <app>`, e.g. `nvidia-offload blender`.
+- `common/gaming.nix` enables Steam with Valve's Proton built in, adds GE-Proton (`proton-ge-bin`), and enables `gamemode`. On a PRIME host, Steam starts with the offload variables set, so its games render on the NVIDIA GPU without per-game launch options. Pick GE-Proton per game under Properties → Compatibility.
 
 Waybar also gained Hyprland workspaces, battery (hidden on machines without one) and a system tray — without the tray nm-applet/blueman-applet had nowhere to appear. The GPU module is defined but left off the bar (its script needs `nvtop`, not installed).
 

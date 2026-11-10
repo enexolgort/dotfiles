@@ -22,6 +22,7 @@
   notifyWebhook = "";
 
   ytdlpEnable = false;
+  herdrEnable = false; # herdr terminal workspace, from nixpkgs-unstable
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";
@@ -35,6 +36,8 @@
   # n8nEnable         = true | false;
   # homepageEnable    = true | false;
   # desktopEnable     = true | false;
+  # nvidiaEnable      = true | false;  # NVIDIA driver, real hosts only
+  # gamingEnable      = true | false;  # Steam + Proton
   #
   # --- Real-machine (targetType = "real") hosts only ----------------------
   # bootloader        = "systemd-boot" | "grub";  # grub for legacy BIOS
@@ -50,6 +53,7 @@
   # gitAdminUser      = "gituser"; # "admin" is reserved   # if gitServerEnable
   # gitAdminPass      = "...";                            # if gitServerEnable
   # gitDataDir        = "/data/media/forgejo";            # optional, if gitServerEnable
+  # nvidiaPrime       = { intelBusId = "PCI:0:2:0"; nvidiaBusId = "PCI:1:0:0"; };  # optional, hybrid laptops (amdgpuBusId for AMD)
   # backupEnable      = true | false;
   # backupRepo        = "/mnt/backup/restic-repo";        # if backupEnable
   # backupPassword    = "...";                            # if backupEnable

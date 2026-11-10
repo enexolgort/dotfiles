@@ -1,4 +1,4 @@
-{ config, pkgs, lib, vars, ... }:
+{ config, pkgs, pkgsUnstable, lib, vars, ... }:
 
 {
   nix.gc = {
@@ -23,5 +23,7 @@
     nodejs
   ] ++ lib.optionals (vars.ytdlpEnable or false) [
     yt-dlp
+  ] ++ lib.optionals vars.herdrEnable [
+    pkgsUnstable.herdr # not in nixos-26.05
   ];
 }

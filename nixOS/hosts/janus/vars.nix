@@ -14,8 +14,18 @@
   n8nEnable = false;
   homepageEnable = false;
   desktopEnable = true;
+  nvidiaEnable = true;
+  gamingEnable = true;
+  herdrEnable = true;
+
+  # Placeholders: replace with `lspci | grep -E "VGA|3D"` on janus, in
+  # PCI:bus:device:function form (decimal). Use amdgpuBusId for an AMD CPU.
+  nvidiaPrime = {
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
 
   backupEnable = false;
 
-  projectRepos = [ ];
+  projectRepos = [];
 }

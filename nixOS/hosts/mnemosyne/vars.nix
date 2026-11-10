@@ -13,6 +13,8 @@
   n8nEnable = false;
   homepageEnable = true;
   desktopEnable = false;
+  nvidiaEnable = false;
+  gamingEnable = false;
 
   sftpDir = "/data/sftp";
   sftpPublicKeys = [

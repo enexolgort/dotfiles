@@ -13,6 +13,8 @@
   n8nEnable = true;
   homepageEnable = false;
   desktopEnable = false;
+  nvidiaEnable = false;
+  gamingEnable = false;
 
   # Pulled on rebuild. Kept small: inference is CPU-only.
   aiModels = [ "qwen2.5:0.5b" ];

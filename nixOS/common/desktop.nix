@@ -1,6 +1,6 @@
 # Hyprland desktop (desktopEnable). programs.hyprland already brings polkit,
 # the Hyprland portal, graphics drivers, fonts, dconf and XWayland.
-{ config, pkgs, pkgsUnstable, lib, vars, ... }:
+{ config, pkgs, lib, vars, ... }:
 
 lib.mkIf vars.desktopEnable {
   programs.hyprland.enable = true;
@@ -124,11 +124,11 @@ lib.mkIf vars.desktopEnable {
     spotify
     neovim
     claude-code
-    pkgsUnstable.herdr # not in nixos-26.05
     kdePackages.gwenview
     mpv
     gsimplecal
     hoppscotch
+    filezilla
     blender
     discord
   ];

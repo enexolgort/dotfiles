@@ -18,6 +18,9 @@
   n8nEnable = false;
   homepageEnable = false;
   desktopEnable = true;
+  nvidiaEnable = false;
+  gamingEnable = false;
+  herdrEnable = true;
 
   backupEnable = false;
 

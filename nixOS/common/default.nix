@@ -10,6 +10,8 @@
     ./n8n.nix
     ./homepage.nix
     ./desktop.nix
+    ./nvidia.nix
+    ./gaming.nix
     ./docker.nix
     ./sftp.nix
     ./backups.nix

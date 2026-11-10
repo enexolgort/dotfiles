@@ -12,6 +12,8 @@
   n8nEnable = false;
   homepageEnable = false;
   desktopEnable = false;
+  nvidiaEnable = false;
+  gamingEnable = false;
   ytdlpEnable = true; # used by yt-dlp-API
 
   backupEnable = false;
