@@ -12,5 +12,7 @@
     enable = true;
     defaultUser = vars.username;
     startMenuLaunchers = true;
+    # GPU-accelerated Vulkan through WSLg, for the herdr desktop app.
+    useWindowsDriver = vars.herdrEnable;
   };
 }

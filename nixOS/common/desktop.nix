@@ -123,7 +123,6 @@ lib.mkIf vars.desktopEnable {
     obsidian
     spotify
     neovim
-    claude-code
     kdePackages.gwenview
     mpv
     gsimplecal

@@ -61,20 +61,20 @@ fi
 echo "==> Done."
 echo
 
-# --- herdr (herdrEnable hosts): upstream installer into ~/.local/bin.
-# Later versions come from `herdr update`.
+# --- herdr desktop app (herdrEnable hosts): upstream installer, which puts
+# herdr-app and herdr-core (hc) under ~/.local. Re-run it to update.
 HERDR_ENABLE="false"
 if [ -f "$VARS_FILE" ]; then
   HERDR_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --file "$VARS_FILE" herdrEnable 2>/dev/null || echo "false")"
 fi
 
+HERDR_INSTALL="curl -fsSL https://releases.herdr.dev/app/install.sh | sh"
 if [ "$HERDR_ENABLE" = "true" ]; then
-  if [ -x "$HOME/.local/bin/herdr" ]; then
-    echo "==> herdr already installed ($HOME/.local/bin/herdr), update it with 'herdr update'"
+  if [ -e "$HOME/.local/bin/herdr-app" ]; then
+    echo "==> herdr app already installed, update it with: $HERDR_INSTALL"
   else
-    echo "==> Installing herdr from https://herdr.dev/install.sh"
-    curl -fsSL https://herdr.dev/install.sh | sh \
-      || echo "!! herdr install failed - rerun: curl -fsSL https://herdr.dev/install.sh | sh"
+    echo "==> Installing the herdr app: $HERDR_INSTALL"
+    sh -c "$HERDR_INSTALL" || echo "!! herdr install failed - rerun: $HERDR_INSTALL"
   fi
   echo
 fi
