@@ -31,13 +31,8 @@ DOOM_BIN="$HOME/.config/emacs/bin/doom"
 DOOM_CONF="$HOME/.config/doom"
 DOOM_SRC_DIR="$REPO_ROOT/dotfiles/doom"
 
+# `doom install` itself runs from home.nix's activation script.
 if [ -x "$DOOM_BIN" ]; then
-  if [ ! -d "$DOOM_CONF" ]; then
-    echo "==> Doom not bootstrapped yet, running 'doom install' first"
-    "$DOOM_BIN" install --no-env -! \
-      || echo "!! 'doom install' failed - fix it later, continuing with the rest"
-  fi
-
   if [ -d "$DOOM_SRC_DIR" ]; then
     echo "==> Deploying tracked Doom config from $DOOM_SRC_DIR to $DOOM_CONF"
     mkdir -p "$DOOM_CONF"

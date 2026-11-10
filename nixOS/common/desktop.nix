@@ -86,7 +86,6 @@ lib.mkIf vars.desktopEnable {
     rofi
     waybar
     wlogout
-    btop
     cava
     nwg-look
 

@@ -19,6 +19,8 @@
 
   services.openssh = {
     enable = true;
+    # Defaults to true, which would open :22 on every interface.
+    openFirewall = false;
     settings.PasswordAuthentication = true; # tailnet-only
   };
 }

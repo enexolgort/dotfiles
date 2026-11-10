@@ -12,11 +12,11 @@
 
   networking.networkmanager.enable = true;
 
-  # LAN Samba share. Not in common/: nmbd crashes under WSL2's NAT.
+  # Samba share, tailnet-only. Not in common/: nmbd crashes under WSL2's NAT.
   # Set the password once: sudo smbpasswd -a <username>
   services.samba = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
     settings = {
       global = {
         workgroup = vars.sambaWorkgroup;
