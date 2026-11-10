@@ -61,6 +61,17 @@ fi
 echo "==> Done."
 echo
 
+# --- herdr-core (every host): lets herdr on another device add this one
+# as a machine. Static binary, so it needs no nix-ld.
+HC_INSTALL="curl -fsSL https://releases.herdr.dev/core/install.sh | sh"
+if [ -e "$HOME/.local/bin/herdr-core" ]; then
+  echo "==> herdr-core already installed, update it with: hc update"
+else
+  echo "==> Installing herdr-core: $HC_INSTALL"
+  sh -c "$HC_INSTALL" || echo "!! herdr-core install failed - rerun: $HC_INSTALL"
+fi
+echo
+
 # --- herdr desktop app (herdrEnable hosts): upstream installer, which puts
 # herdr-app and herdr-core (hc) under ~/.local. Re-run it to update.
 HERDR_ENABLE="false"

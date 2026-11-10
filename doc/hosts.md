@@ -68,6 +68,7 @@ desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + ho
 nvidiaEnable = true | false;     # NVIDIA driver, see common/nvidia.nix
 gamingEnable = true | false;     # Steam + Proton, see common/gaming.nix
 herdrEnable = true | false;      # optional (default false): herdr desktop app, installed by post-install.sh into ~/.local (nix-ld + graphics on)
+                                 # herdr-core (hc) is installed by post-install.sh on every host, toggle or not
 claudeEnable = true | false;     # optional (default false): Claude Code CLI
 ```
 `common/backups.nix`'s restic paths are conditional on these too — a host with `jellyfinEnable = false` won't try backing up `/var/lib/jellyfin`, since it wouldn't exist there anyway.
