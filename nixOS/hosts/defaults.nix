@@ -29,7 +29,7 @@
 
   ytdlpEnable = false;
   herdrEnable = false; # herdr desktop app via its upstream installer (post-install.sh)
-  claudeEnable = false; # Claude Code CLI
+  claudeEnable = false; # Claude Code via its native installer (post-install.sh)
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";

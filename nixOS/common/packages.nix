@@ -23,16 +23,16 @@
     nodejs
   ] ++ lib.optionals (vars.ytdlpEnable or false) [
     yt-dlp
-  ] ++ lib.optionals vars.claudeEnable [
-    claude-code
   ];
 
-  # The herdr desktop app comes from its upstream installer
-  # (scripts/post-install.sh) as a prebuilt GPUI binary in ~/.local. nix-ld
-  # provides the libraries it links or dlopens: X11/Wayland, Vulkan, fonts.
-  programs.nix-ld = lib.mkIf vars.herdrEnable {
-    enable = true;
-    libraries = with pkgs; [
+  # Claude Code (claudeEnable) and the herdr desktop app (herdrEnable) come
+  # from their upstream installers in scripts/post-install.sh as prebuilt
+  # binaries in ~/.local; nix-ld lets them run on NixOS.
+  programs.nix-ld.enable = lib.mkIf (vars.claudeEnable || vars.herdrEnable) true;
+
+  # herdr is a GPUI app: X11/Wayland, Vulkan and fonts are linked or dlopened.
+  programs.nix-ld.libraries = lib.mkIf vars.herdrEnable (
+    with pkgs; [
       stdenv.cc.cc.lib
       zlib
       openssl
@@ -46,8 +46,8 @@
       vulkan-loader
       fontconfig
       freetype
-    ];
-  };
+    ]
+  );
   hardware.graphics.enable = lib.mkIf vars.herdrEnable true;
   fonts.enableDefaultPackages = lib.mkIf vars.herdrEnable true;
 }

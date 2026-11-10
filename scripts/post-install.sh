@@ -94,6 +94,24 @@ if [ "$HERDR_ENABLE" = "true" ]; then
   echo
 fi
 
+# --- Claude Code (claudeEnable hosts): native installer into ~/.local/bin.
+# It keeps itself updated after that.
+CLAUDE_ENABLE="false"
+if [ -f "$VARS_FILE" ]; then
+  CLAUDE_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --file "$VARS_FILE" claudeEnable 2>/dev/null || echo "false")"
+fi
+
+CLAUDE_INSTALL="curl -fsSL https://claude.ai/install.sh | bash"
+if [ "$CLAUDE_ENABLE" = "true" ]; then
+  if [ -e "$HOME/.local/bin/claude" ]; then
+    echo "==> Claude Code already installed ($HOME/.local/bin/claude)"
+  else
+    echo "==> Installing Claude Code: $CLAUDE_INSTALL"
+    bash -c "$CLAUDE_INSTALL" || echo "!! Claude Code install failed - rerun: $CLAUDE_INSTALL"
+  fi
+  echo
+fi
+
 # --- Desktop configs (desktop hosts only). Idempotent.
 DOTFILES_STAGING="$REPO_ROOT/dotfiles"
 
