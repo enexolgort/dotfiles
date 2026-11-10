@@ -67,7 +67,7 @@ homepageEnable = true | false;   # fleet dashboard on :8082, see common/homepage
 desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + home-desktop.nix
 nvidiaEnable = true | false;     # NVIDIA driver, see common/nvidia.nix
 gamingEnable = true | false;     # Steam + Proton, see common/gaming.nix
-herdrEnable = true | false;      # optional (default false): herdr from nixpkgs-unstable, see common/packages.nix
+herdrEnable = true | false;      # optional (default false): herdr TUI, installed by post-install.sh into ~/.local/bin (nix-ld on)
 ```
 `common/backups.nix`'s restic paths are conditional on these too — a host with `jellyfinEnable = false` won't try backing up `/var/lib/jellyfin`, since it wouldn't exist there anyway.
 

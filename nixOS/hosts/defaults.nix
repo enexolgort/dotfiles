@@ -22,7 +22,7 @@
   notifyWebhook = "";
 
   ytdlpEnable = false;
-  herdrEnable = false; # herdr terminal workspace, from nixpkgs-unstable
+  herdrEnable = false; # herdr TUI via its upstream installer (post-install.sh)
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";

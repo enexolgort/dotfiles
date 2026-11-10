@@ -61,6 +61,24 @@ fi
 echo "==> Done."
 echo
 
+# --- herdr (herdrEnable hosts): upstream installer into ~/.local/bin.
+# Later versions come from `herdr update`.
+HERDR_ENABLE="false"
+if [ -f "$VARS_FILE" ]; then
+  HERDR_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --file "$VARS_FILE" herdrEnable 2>/dev/null || echo "false")"
+fi
+
+if [ "$HERDR_ENABLE" = "true" ]; then
+  if [ -x "$HOME/.local/bin/herdr" ]; then
+    echo "==> herdr already installed ($HOME/.local/bin/herdr), update it with 'herdr update'"
+  else
+    echo "==> Installing herdr from https://herdr.dev/install.sh"
+    curl -fsSL https://herdr.dev/install.sh | sh \
+      || echo "!! herdr install failed - rerun: curl -fsSL https://herdr.dev/install.sh | sh"
+  fi
+  echo
+fi
+
 # --- Desktop configs (desktop hosts only). Idempotent.
 DOTFILES_STAGING="$REPO_ROOT/dotfiles"
 

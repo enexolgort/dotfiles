@@ -49,7 +49,7 @@
     fi
   '';
 
-  home.sessionPath = [ "$HOME/.config/emacs/bin" ];
+  home.sessionPath = [ "$HOME/.config/emacs/bin" "$HOME/.local/bin" ];
 
   # Read by neowofetch.
   xdg.configFile."neofetch/config.conf".text = ''

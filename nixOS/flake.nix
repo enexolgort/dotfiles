@@ -3,8 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    # Only for packages not in the stable channel yet (herdr).
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +18,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-wsl, sops-nix, treefmt-nix, ... }:
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, treefmt-nix, ... }:
     let
       lib = nixpkgs.lib;
       defaults = import ./hosts/defaults.nix;
@@ -51,13 +49,7 @@
         nixpkgs.lib.nixosSystem {
           system = vars.system;
           specialArgs =
-            {
-              inherit vars;
-              pkgsUnstable = import nixpkgs-unstable {
-                system = vars.system;
-                config.allowUnfree = true;
-              };
-            }
+            { inherit vars; }
             // lib.optionalAttrs (vars.targetType == "wsl") { inherit nixos-wsl; };
           modules =
             [

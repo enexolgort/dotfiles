@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsUnstable, lib, vars, ... }:
+{ config, pkgs, lib, vars, ... }:
 
 {
   nix.gc = {
@@ -23,7 +23,9 @@
     nodejs
   ] ++ lib.optionals (vars.ytdlpEnable or false) [
     yt-dlp
-  ] ++ lib.optionals vars.herdrEnable [
-    pkgsUnstable.herdr # not in nixos-26.05
   ];
+
+  # herdr comes from its upstream installer (scripts/post-install.sh) as a
+  # prebuilt binary in ~/.local/bin; nix-ld lets it run on NixOS.
+  programs.nix-ld.enable = lib.mkIf vars.herdrEnable true;
 }
