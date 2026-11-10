@@ -80,6 +80,7 @@ Three more opt-in features, all off by default in `hosts/defaults.nix`:
 |---|---|---|
 | `couchdbAdminPass`, `gitAdminPass` | `hosts/defaults.nix` | real passwords |
 | `sftpPublicKeys` | `hosts/defaults.nix` | your actual SSH public key(s) |
+| `sshAuthorizedKeys` | `hosts/defaults.nix` | public keys allowed to log in as the main user on every host (needed for key-only tools like herdr's `hc machine add`) |
 | `hostname`, `username`, `gitEmail` | each `hosts/<name>/vars.nix` | per machine |
 
 **On secrets:** `initialPassword`, `couchdbAdminPass`, `gitAdminPass` land in plaintext in the Nix store (world-readable) until `secretsEnabled` is turned on — see [secrets.md](./secrets.md).

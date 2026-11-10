@@ -35,6 +35,7 @@
     description = "Media server admin";
     extraGroups = [ "wheel" "jellyfin" "docker" "media" ];
     shell = pkgs.bash;
+    openssh.authorizedKeys.keys = vars.sshAuthorizedKeys;
   } // (if vars.secretsEnabled
     then { hashedPasswordFile = config.sops.secrets.userPasswordHash.path; }
     else { initialPassword = vars.initialPassword; });

@@ -9,6 +9,12 @@
 
   initialPassword = "changeme";
 
+  # Public keys allowed to SSH in as the main user on every host
+  # (key-only logins are what herdr's `hc machine add` needs).
+  sshAuthorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfCPT1zuWITFVKSAOmkLAr4wpXkHLDxzNUVptgI88lf sftp-laptop" # Windows desktop-nd37gjk
+  ];
+
   mediaDir = "/data/media";
   projectsDir = "/data/projects"; # install.sh clones projectRepos here
   gitDataDir = "/var/lib/forgejo";
