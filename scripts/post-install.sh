@@ -34,7 +34,8 @@ DOOM_SRC_DIR="$REPO_ROOT/dotfiles/doom"
 if [ -x "$DOOM_BIN" ]; then
   if [ ! -d "$DOOM_CONF" ]; then
     echo "==> Doom not bootstrapped yet, running 'doom install' first"
-    "$DOOM_BIN" install --no-env -!
+    "$DOOM_BIN" install --no-env -! \
+      || echo "!! 'doom install' failed - fix it later, continuing with the rest"
   fi
 
   if [ -d "$DOOM_SRC_DIR" ]; then
@@ -52,7 +53,10 @@ if [ -x "$DOOM_BIN" ]; then
   fi
 
   echo "==> Running 'doom sync' to install/update packages and apply config"
-  "$DOOM_BIN" sync
+  # A failed sync (e.g. an upstream package repo change) must not skip the
+  # herdr and desktop steps below.
+  "$DOOM_BIN" sync \
+    || echo "!! 'doom sync' failed - run 'doom sync' again once fixed, continuing with the rest"
 else
   echo "!! $DOOM_BIN not found — Emacs/Doom may not have been cloned yet."
   echo "   Run 'sudo nixos-rebuild switch' again first, or check ~/.config/emacs exists."
