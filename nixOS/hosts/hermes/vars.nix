@@ -15,7 +15,6 @@
   nvidiaEnable = false;
   gamingEnable = false;
   ytdlpEnable = true; # used by yt-dlp-API
-  claudeEnable = true;
 
   backupEnable = false;
 
