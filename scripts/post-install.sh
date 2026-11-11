@@ -86,6 +86,11 @@ if [ "$HERDR_ENABLE" = "true" ]; then
     echo "==> Installing the herdr app: $HERDR_INSTALL"
     sh -c "$HERDR_INSTALL" || echo "!! herdr install failed - rerun: $HERDR_INSTALL"
   fi
+  if [ -d "$REPO_ROOT/dotfiles/herdr" ]; then
+    mkdir -p "$HOME/.config/herdr"
+    cp -r "$REPO_ROOT/dotfiles/herdr/." "$HOME/.config/herdr/"
+    echo "==> Deployed tracked herdr config to $HOME/.config/herdr"
+  fi
   echo
 fi
 
@@ -121,7 +126,7 @@ if [ "$DESKTOP_ENABLE" = "true" ]; then
     for dir in "$DOTFILES_STAGING"/*/; do
       name="$(basename "$dir")"
       # Deployed above.
-      if [ "$name" = "doom" ]; then
+      if [ "$name" = "doom" ] || [ "$name" = "herdr" ]; then
         continue
       fi
       echo "==> Deploying tracked $name config from $dir to $HOME/.config/$name"

@@ -1,0 +1,10 @@
+onboarding = false
+
+[theme]
+name = "catppuccin-mocha"
+
+[ui]
+status_indicators = "dots"
+
+[ui.toast]
+delivery = "herdr"
