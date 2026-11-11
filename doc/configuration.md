@@ -89,6 +89,7 @@ Three more opt-in features, all off by default in `hosts/defaults.nix`:
 - **Everything sensitive is locked to your tailnet.** The firewall trusts only the `tailscale0` interface — Jellyfin, CouchDB, Forgejo, Ollama/Open WebUI, and SSH/SFTP are not reachable from your LAN or the internet, only from devices in your Tailscale network. Samba is tailnet-only too, and only on real-machine hosts; not enabled on WSL at all (nmbd crashes on WSL2's NAT networking).
 - **Obsidian sync**: Obsidian's own paid Sync service can't be self-hosted. CouchDB + the community plugin **"Self-hosted LiveSync"** is the standard self-hosted alternative, tailnet-only.
 - **SFTP**: a separate, unprivileged `sftpuser` account, chrooted to `sftpDir`, bind-mounted to `mediaDir/upload` — can only ever write into the media folder. Key-based auth only.
+- **Dockhand (`mnemosyne`)**: Docker management UI, official image on host networking (:3006, since Forgejo holds its default :3000). It mounts the Docker socket, which is root-equivalent, so it stays tailnet-only.
 - **Local AI (`athena`)**: Ollama + Open WebUI, both real NixOS modules, CPU-only by default. Plus n8n (official Docker image, port 5678).
 - **Tailscale SSH**: enabled via a one-time `tailscale up --ssh` command per machine (see [first-boot-setup.md](./first-boot-setup.md)).
 

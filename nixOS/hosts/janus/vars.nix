@@ -13,6 +13,7 @@
   sftpEnable = false;
   n8nEnable = false;
   homepageEnable = false;
+  dockhandEnable = false;
   desktopEnable = true;
   nvidiaEnable = true;
   gamingEnable = true;

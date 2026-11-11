@@ -8,6 +8,7 @@
     ./forgejo.nix
     ./ai.nix
     ./n8n.nix
+    ./dockhand.nix
     ./homepage.nix
     ./desktop.nix
     ./nvidia.nix

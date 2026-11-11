@@ -42,6 +42,7 @@
   # aiEnable          = true | false;
   # n8nEnable         = true | false;
   # homepageEnable    = true | false;
+  # dockhandEnable    = true | false;  # Docker UI on :3006
   # desktopEnable     = true | false;
   # nvidiaEnable      = true | false;  # NVIDIA driver, real hosts only
   # gamingEnable      = true | false;  # Steam + Proton

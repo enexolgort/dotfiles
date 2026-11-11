@@ -71,6 +71,7 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Forgejo"; host = "mnemosyne"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
           (tile { name = "Git Dashboard"; host = "mnemosyne"; port = 3004; description = "Forgejo git activity"; icon = "si-git"; path = "/"; monitorPath = "/health"; })
           (tile { name = "Backups"; host = "mnemosyne"; port = 3005; description = "restic backup health"; icon = "mdi-backup-restore"; path = "/api/status"; monitorPath = "/health"; widget = backupWidget; })
+          (tile { name = "Dockhand"; host = "mnemosyne"; port = 3006; description = "Docker management"; icon = "dockhand.png"; })
         ];
       }
       {

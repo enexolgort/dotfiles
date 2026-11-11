@@ -2,6 +2,7 @@
 
 Off by default (`vars.backupEnable = false`). Backs up three things daily:
 - `mediaDir` — your media library
+- `/var/lib/dockhand` (if `dockhandEnable`) — Dockhand's database, stacks and its auto-generated encryption key, without which a restored database is unreadable
 - `/var/lib/couchdb` — CouchDB's actual data directory, i.e. your real Obsidian notes. Easy to forget since it's not the thing you'd naturally think of as "the media server data," but it's genuinely irreplaceable in a way ripped media usually isn't.
 - Forgejo's data (`gitDataDir`) — on mnemosyne it's `/data/media/forgejo`, so it's already covered by `mediaDir`; on a host where it's elsewhere (default `/var/lib/forgejo`) it's added as its own path
 - `/home/<username>/dotFiles` — your config repo (lower priority since it's already in git on GitHub, but doesn't hurt)

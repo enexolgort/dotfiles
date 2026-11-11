@@ -7,7 +7,7 @@ Current hosts:
 
 | Host | targetType | Services | Project repos |
 |---|---|---|---|
-| `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082) | `transmission-webUi`, `yt-dlp-webUi`, `git-dashboard` (:3004), `backup-health` (:3005) |
+| `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082), Dockhand (Docker UI, :3006) | `transmission-webUi`, `yt-dlp-webUi`, `git-dashboard` (:3004), `backup-health` (:3005) |
 | `hermes` | `wsl` | — (Transmission + yt-dlp-API run from its project repos) | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
 | `proteus` | `wsl` | None — second main laptop, NixOS-WSL dev client | — |
 | `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
@@ -45,6 +45,7 @@ sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
      sftpEnable = false;
      n8nEnable = false;
      homepageEnable = false;
+     dockhandEnable = false;
      desktopEnable = false;
 
      projectRepos = [ ];
@@ -64,6 +65,7 @@ aiEnable = true | false;         # Ollama + Open WebUI, see common/ai.nix
 sftpEnable = true | false;       # chrooted upload account, see common/sftp.nix
 n8nEnable = true | false;        # workflow automation, see common/n8n.nix
 homepageEnable = true | false;   # fleet dashboard on :8082, see common/homepage.nix
+dockhandEnable = true | false;   # Dockhand Docker UI on :3006, see common/dockhand.nix
 desktopEnable = true | false;    # Hyprland desktop, see common/desktop.nix + home-desktop.nix
 nvidiaEnable = true | false;     # NVIDIA driver, see common/nvidia.nix
 gamingEnable = true | false;     # Steam + Proton, see common/gaming.nix

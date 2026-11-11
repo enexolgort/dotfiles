@@ -16,6 +16,7 @@
     ]
     ++ lib.optional vars.obsidianEnable "/var/lib/couchdb"
     ++ lib.optional vars.jellyfinEnable "/var/lib/jellyfin"
+    ++ lib.optional vars.dockhandEnable "/var/lib/dockhand"
     # Skipped when it already lives inside mediaDir.
     ++ lib.optional (vars.gitServerEnable && !lib.hasPrefix "${vars.mediaDir}/" vars.gitDataDir) vars.gitDataDir;
     exclude = lib.optionals vars.jellyfinEnable [
