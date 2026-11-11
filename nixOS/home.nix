@@ -32,6 +32,7 @@
     gnutls
     unzip
     hyfetch            # neowofetch; neofetch was removed in nixos-26.05
+    python3            # herdr's Claude Code hook runs under python3
   ];
 
   home.activation.installDoomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
