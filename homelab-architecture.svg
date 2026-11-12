@@ -50,6 +50,16 @@
 <text x="145" y="308" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Dockhand</text>
 <text x="145" y="328" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">Docker UI :3006</text>
 
+<rect x="250" y="286" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<rect x="404" y="294" width="8" height="8" rx="1" fill="none" stroke="#f9e2af" stroke-width="1.8"/>
+<text x="335" y="308" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Backup Health</text>
+<text x="335" y="328" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">restic status :3005</text>
+
+<rect x="440" y="286" width="170" height="56" rx="8" fill="#313244" fill-opacity="0.95" stroke="#585b70" stroke-width="1.2"/>
+<circle cx="598" cy="294" r="4.5" fill="#a6e3a1"/>
+<text x="525" y="308" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="#f5e0dc">Homepage</text>
+<text x="525" y="328" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#bac2de">dashboard :8082</text>
+
 <!-- mnemosyne <-> hermes -->
 <line x1="335" y1="358" x2="335" y2="444" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
 <text x="347" y="396" font-size="12" font-weight="600" fill="#89dceb">REST API calls</text>

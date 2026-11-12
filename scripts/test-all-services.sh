@@ -52,23 +52,30 @@ check_json_field() {
   fi
 }
 
-echo "=== mnemosyne (Jellyfin, SFTP, transmission-webUi, Forgejo) ==="
+echo "=== mnemosyne (Jellyfin, SFTP, Forgejo, web UIs, dashboards, Dockhand) ==="
 check_tcp "$MNEMOSYNE" 22 "SSH"
 check_http "$MNEMOSYNE" 8096 "/" "Jellyfin"
 check_http "$MNEMOSYNE" 3000 "/" "Forgejo"
 check_http "$MNEMOSYNE" 4173 "/" "transmission-webUi"
+check_http "$MNEMOSYNE" 4174 "/" "yt-dlp-webUi"
+check_http "$MNEMOSYNE" 3004 "/health" "git-dashboard health"
+check_http "$MNEMOSYNE" 3005 "/health" "backup-health health"
+check_http "$MNEMOSYNE" 3006 "/" "Dockhand"
+check_http "$MNEMOSYNE" 8082 "/" "Homepage"
 
 echo
-echo "=== hermes (transmission-API, yt-dlp-API) ==="
+echo "=== hermes (Transmission, transmission-API, yt-dlp-API) ==="
 check_tcp "$HERMES" 22 "SSH"
+check_http "$HERMES" 9091 "/transmission/web/" "Transmission"
 check_json_field "$HERMES" 3002 "/health" "transmission-API health" '"status":"ok"'
 check_http "$HERMES" 3003 "/health" "yt-dlp-API health"
 
 echo
-echo "=== athena (local AI) ==="
+echo "=== athena (local AI, n8n) ==="
 check_tcp "$ATHENA" 22 "SSH"
 check_http "$ATHENA" 11434 "/" "Ollama API"
 check_http "$ATHENA" 8080 "/" "Open WebUI"
+check_http "$ATHENA" 5678 "/" "n8n"
 
 
 echo

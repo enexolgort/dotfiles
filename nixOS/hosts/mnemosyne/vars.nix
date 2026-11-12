@@ -51,7 +51,7 @@
 
   projectRepos = [
     "http://mnemosyne:3000/enexolgort/transmission-webUi"
-    "http://mnemosyne:3000/enexolgort/yt-dlp-API"
+    "http://mnemosyne:3000/enexolgort/yt-dlp-webUi"
     "http://mnemosyne:3000/enexolgort/git-dashboard"
     "http://mnemosyne:3000/enexolgort/backup-health"
   ];

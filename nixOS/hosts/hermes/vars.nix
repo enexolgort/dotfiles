@@ -20,7 +20,7 @@
   backupEnable = false;
 
   projectRepos = [
-    "https://github.com/enexolgort/transmission-API"
-    "https://github.com/enexolgort/yt-dlp-API"
+    "http://mnemosyne:3000/enexolgort/transmission-API"
+    "http://mnemosyne:3000/enexolgort/yt-dlp-API"
   ];
 }
