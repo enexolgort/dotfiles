@@ -61,7 +61,7 @@ check_http "$MNEMOSYNE" 4173 "/" "transmission-webUi"
 echo
 echo "=== hermes (transmission-API, yt-dlp-API) ==="
 check_tcp "$HERMES" 22 "SSH"
-check_json_field "$HERMES" 3001 "/health" "transmission-API health" '"status":"ok"'
+check_json_field "$HERMES" 3002 "/health" "transmission-API health" '"status":"ok"'
 check_http "$HERMES" 3003 "/health" "yt-dlp-API health"
 
 echo
