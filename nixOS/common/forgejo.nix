@@ -39,8 +39,9 @@ lib.mkIf vars.gitServerEnable {
   '';
 
   # Forgejo loads theme-<name>.css from customDir; it has no option for a store path.
-  systemd.tmpfiles.rules = [
-    "L+ ${config.services.forgejo.customDir}/public/assets/css/theme-${theme}.css - - - - ${catppuccinThemes}/theme-${theme}.css"
+  # Copied as root ("+") since the dirs may already exist root-owned.
+  systemd.services.forgejo.serviceConfig.ExecStartPre = lib.mkBefore [
+    "+${pkgs.coreutils}/bin/install -D -m 644 -o forgejo -g forgejo ${catppuccinThemes}/theme-${theme}.css ${config.services.forgejo.customDir}/public/assets/css/theme-${theme}.css"
   ];
 
   systemd.services.forgejo.after = [ "network-online.target" ];
