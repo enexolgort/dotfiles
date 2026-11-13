@@ -75,7 +75,7 @@ Grabs the raw config/database (excluding regenerable cache/metadata/transcodes),
 Stops Jellyfin, backs up whatever's currently live (to `/var/lib/jellyfin.pre-restore.<timestamp>`, so the restore itself is undoable), restores from `./jellyfin/raw`, fixes ownership, and restarts Jellyfin. Prompts for confirmation before doing anything destructive — pass `--force` to skip that (still takes the safety backup regardless). Use `--input-dir`/`--output-dir` on the two scripts if you keep snapshots somewhere other than `./jellyfin`.
 
 ### Self-hosted git (Forgejo)
-Runs on `mnemosyne`. Browse to `http://mnemosyne:3000` (or `http://<tailscale-ip>:3000`) from a device in your tailnet. Log in with the `gitAdminUser`/`gitAdminPass` you set in `vars.nix` — that account already exists automatically (created declaratively on first boot), no setup wizard needed. Public registration is off (`DISABLE_REGISTRATION = true`), since this is meant as your own private, tailnet-only git server, not a public one.
+Runs on `mnemosyne`. Browse to `http://mnemosyne:3000` (or `http://<tailscale-ip>:3000`) from a device in your tailnet. Log in with the `gitAdminUser`/`gitAdminPass` you set in `vars.nix` — that account already exists automatically (created declaratively on first boot), no setup wizard needed. The UI defaults to the Catppuccin Mocha (mauve) theme; the stock Forgejo themes stay selectable under Settings → Appearance. Public registration is off (`DISABLE_REGISTRATION = true`), since this is meant as your own private, tailnet-only git server, not a public one.
 
 Create a new repo from the web UI, then clone it like any git remote:
 ```bash

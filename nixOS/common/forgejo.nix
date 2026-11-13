@@ -1,6 +1,14 @@
 # Forgejo git server on :3000 (gitServerEnable).
 { config, pkgs, lib, vars, ... }:
 
+let
+  catppuccinThemes = pkgs.fetchzip {
+    url = "https://github.com/catppuccin/gitea/releases/download/v1.0.2/catppuccin-gitea.tar.gz";
+    hash = "sha256-rZHLORwLUfIFcB6K9yhrzr+UwdPNQVSadsw6rg8Q7gs=";
+    stripRoot = false;
+  };
+  theme = "catppuccin-mocha-mauve";
+in
 lib.mkIf vars.gitServerEnable {
   services.forgejo = {
     enable = true;
@@ -12,6 +20,10 @@ lib.mkIf vars.gitServerEnable {
     };
     settings.service.DISABLE_REGISTRATION = true;
     settings.webhook.ALLOWED_HOST_LIST = "loopback";
+    settings.ui = {
+      DEFAULT_THEME = theme;
+      THEMES = "${theme},forgejo-auto,forgejo-light,forgejo-dark";
+    };
   };
 
   # Local containers (git-dashboard) reach Forgejo over Docker bridges, not
@@ -25,6 +37,11 @@ lib.mkIf vars.gitServerEnable {
       --admin --username ${vars.gitAdminUser} --password "${vars.gitAdminPass}" \
       --email "${vars.gitAdminUser}@${vars.hostname}.local" || true
   '';
+
+  # Forgejo loads theme-<name>.css from customDir; it has no option for a store path.
+  systemd.tmpfiles.rules = [
+    "L+ ${config.services.forgejo.customDir}/public/assets/css/theme-${theme}.css - - - - ${catppuccinThemes}/theme-${theme}.css"
+  ];
 
   systemd.services.forgejo.after = [ "network-online.target" ];
   # The data drive is "nofail"; don't write repos to the root disk if it's missing.
