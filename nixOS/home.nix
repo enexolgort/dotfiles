@@ -110,6 +110,12 @@
   programs.bash = {
     enable = true;
 
+    # Non-login shells (herdr panes, terminal tabs) only read .bashrc, so load
+    # home.sessionPath / sessionVariables here too. The script guards against double-sourcing.
+    bashrcExtra = ''
+      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+    '';
+
     initExtra = ''
       # Interactive shells only, so scp/rsync/git-over-ssh stay clean.
       if [[ $- == *i* ]]; then
