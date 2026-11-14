@@ -16,7 +16,6 @@
   desktopEnable = false;
   nvidiaEnable = false;
   gamingEnable = false;
-  claudeEnable = true;
 
   sftpDir = "/data/sftp";
   sftpPublicKeys = [

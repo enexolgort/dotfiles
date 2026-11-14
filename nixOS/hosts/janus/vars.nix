@@ -18,7 +18,6 @@
   nvidiaEnable = true;
   gamingEnable = true;
   herdrEnable = true;
-  claudeEnable = true;
 
   # Placeholders: replace with `lspci | grep -E "VGA|3D"` on janus, in
   # PCI:bus:device:function form (decimal). Use amdgpuBusId for an AMD CPU.

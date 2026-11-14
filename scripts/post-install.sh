@@ -94,11 +94,13 @@ if [ "$HERDR_ENABLE" = "true" ]; then
   echo
 fi
 
-# --- Claude Code (claudeEnable hosts): native installer into ~/.local/bin.
-# It keeps itself updated after that.
-CLAUDE_ENABLE="false"
+# --- Claude Code (claudeEnable, on by default in defaults.nix): native
+# installer into ~/.local/bin. It keeps itself updated after that.
+DEFAULTS_FILE="$REPO_ROOT/nixOS/hosts/defaults.nix"
+CLAUDE_ENABLE="true"
 if [ -f "$VARS_FILE" ]; then
-  CLAUDE_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --file "$VARS_FILE" claudeEnable 2>/dev/null || echo "false")"
+  CLAUDE_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --impure \
+    --expr "((import $DEFAULTS_FILE) // (import $VARS_FILE)).claudeEnable" 2>/dev/null || echo "true")"
 fi
 
 CLAUDE_INSTALL="curl -fsSL https://claude.ai/install.sh | bash"

@@ -22,7 +22,6 @@
   nvidiaEnable = false;
   gamingEnable = false;
   herdrEnable = true;
-  claudeEnable = true;
 
   backupEnable = false;
 
