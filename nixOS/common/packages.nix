@@ -38,11 +38,11 @@
       zlib
       openssl
       libxkbcommon
-      xorg.libxcb
-      xorg.libX11
-      xorg.libXcursor
-      xorg.libXi
-      xorg.libXrandr
+      libxcb
+      libx11
+      libxcursor
+      libxi
+      libxrandr
       wayland
       vulkan-loader
       fontconfig
