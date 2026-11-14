@@ -1,0 +1,34 @@
+id = "enexolgort.homelab-services"
+name = "Homelab services"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Every homelab service from the dotfiles repo, with live up/down status"
+platforms = ["linux", "macos"]
+
+# The board itself: a popup over the session. Esc or q closes it.
+[[panes]]
+id = "board"
+title = "Homelab services"
+placement = "popup"
+width = "80%"
+height = "80%"
+command = ["python3", "services.py"]
+
+# Bind this to a key to open the board, e.g. in config.toml:
+#   [[keys.command]]
+#   key = "prefix+s"
+#   type = "plugin_action"
+#   command = "enexolgort.homelab-services.open"
+#   description = "homelab services"
+[[actions]]
+id = "open"
+title = "Homelab services"
+contexts = ["workspace"]
+command = ["sh", "-c", "exec \"${HERDR_BIN_PATH:-herdr}\" plugin pane open --plugin \"$HERDR_PLUGIN_ID\" --entrypoint board"]
+
+# Prints the same list once, for scripts: `herdr plugin action invoke enexolgort.homelab-services.list`
+[[actions]]
+id = "list"
+title = "Homelab services (plain list)"
+contexts = ["workspace"]
+command = ["python3", "services.py", "--once"]
