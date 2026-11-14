@@ -4,7 +4,8 @@
 lib.mkIf vars.aiEnable {
   services.ollama = {
     enable = true;
-    acceleration = false; # "cuda" / "rocm" with a GPU
+    # CPU-only. With a GPU use pkgs.ollama-cuda / ollama-rocm / ollama-vulkan.
+    package = pkgs.ollama-cpu;
     loadModels = vars.aiModels;
     host = "0.0.0.0"; # defaults to 127.0.0.1
   };

@@ -87,7 +87,7 @@ projectRepos = [
 ## Local AI (athena) specifically
 `common/ai.nix` enables `services.ollama` (the model runner, port `11434`) and `services.open-webui` (the ChatGPT-style frontend for it, default port `8080`) — both real, existing NixOS modules, not something built from scratch. Reachable at `http://<tailscale-ip>:8080` once `aiEnable = true` and rebuilt.
 
-CPU-only by default (`acceleration = false` in `common/ai.nix`). If `athena` has a compatible GPU, tell me which one and I'll wire up the right acceleration option — CPU inference works but is genuinely slow beyond small models.
+CPU-only by default (`package = pkgs.ollama-cpu` in `common/ai.nix`). If `athena` has a compatible GPU, tell me which one and I'll switch it to `ollama-cuda`, `ollama-rocm` or `ollama-vulkan` — CPU inference works but is genuinely slow beyond small models.
 
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.

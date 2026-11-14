@@ -95,6 +95,6 @@ CI only **fully builds hosts with `targetType = "wsl"`** (currently `hermes` and
 - **Real HTTPS via Tailscale** for Jellyfin/CouchDB (`tailscale serve`)
 - **CouchDB admin password still plaintext-in-store** even with sops-nix on — see [secrets.md](./secrets.md) for why (a real nixpkgs module limitation, not an oversight)
 - **Exit node / subnet router** if you want a server to route LAN traffic into your tailnet
-- **GPU transcoding / GPU acceleration for Ollama** — say which GPU on which host and I'll add it (`common/ai.nix`'s `acceleration` option, or Jellyfin's hardware transcoding)
+- **GPU transcoding / GPU acceleration for Ollama** — say which GPU on which host and I'll add it (`services.ollama.package` in `common/ai.nix`, or Jellyfin's hardware transcoding)
 - **Samba on WSL hosts** — deliberately not enabled there at all (nmbd crashes on WSL2's NAT networking); would need WSL2 "mirrored" networking mode (Windows 11) plus adding Samba to that host's config yourself
 - **Offsite backups** — `backupRepo` defaults to a local placeholder path; point it at a remote target for real disaster protection, see [backups.md](./backups.md)
