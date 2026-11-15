@@ -11,7 +11,7 @@
   # default. Raise it to the full 16 GiB.
   kernelParams = [ "ttm.pages_limit=4194304" ];
   # amdgpu_top: GPU load (btop can't read the BC-250 without ROCm).
-  extraPackages = [ "amdgpu_top" "pciutils" ];
+  extraPackages = [ "amdgpu_top" "pciutils" "lm_sensors" ];
 
   jellyfinEnable = false;
   obsidianEnable = false;
