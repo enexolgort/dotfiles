@@ -21,12 +21,20 @@ lib.mkIf vars.aiEnable {
         limiter = false;
       };
       # Open WebUI and n8n query the JSON API.
-      search.formats = [ "html" "json" ];
+      search = {
+        formats = [ "html" "json" ];
+        # Bing otherwise localises results to the host's region.
+        default_lang = "en";
+      };
       # Merged by name into SearXNG's default engine list. From athena,
-      # Google returns nothing and DuckDuckGo/Startpage answer with
-      # CAPTCHAs, so Bing (off by default) is the engine that answers.
+      # Google returns nothing, DuckDuckGo/Startpage answer with CAPTCHAs
+      # and Brave rate-limits, so they're off and Bing does the searching.
       engines = [
         { name = "bing"; disabled = false; }
+        { name = "google"; disabled = true; }
+        { name = "duckduckgo"; disabled = true; }
+        { name = "startpage"; disabled = true; }
+        { name = "brave"; disabled = true; }
       ];
     };
   };
