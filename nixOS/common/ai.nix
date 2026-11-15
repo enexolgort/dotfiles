@@ -9,6 +9,7 @@ lib.mkIf vars.aiEnable {
     enable = true;
     package = pkgs."ollama-${backend}";
     loadModels = vars.aiModels;
+    environmentVariables = vars.aiEnvironment or {};
     host = "0.0.0.0"; # defaults to 127.0.0.1
   };
 

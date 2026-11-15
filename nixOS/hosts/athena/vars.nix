@@ -7,6 +7,9 @@
   # open-webui is unfree, so never in the binary cache; its frontend build
   # gets OOM-killed without swap (RAM is shared with the GPU).
   swapfileGB = 16;
+  # BC-250: GPU memory comes from system RAM via TTM, capped at ~7.4 GiB by
+  # default. Raise it to the full 16 GiB.
+  kernelParams = [ "ttm.pages_limit=4194304" ];
 
   jellyfinEnable = false;
   obsidianEnable = false;
@@ -22,8 +25,15 @@
 
   # AMD BC-250 (gfx1013): ROCm doesn't support it, Mesa's RADV Vulkan does.
   aiBackend = "vulkan";
-  # Pulled on rebuild.
-  aiModels = [ "qwen2.5:0.5b" ];
+  # Pulled on rebuild. ~8 GiB at 4K context, ~23 tok/s on a stock BC-250.
+  aiModels = [ "qwen3.5:9b" ];
+  # One model at a time: RAM is shared with n8n and Open WebUI.
+  aiEnvironment = {
+    OLLAMA_MAX_LOADED_MODELS = "1";
+    OLLAMA_FLASH_ATTENTION = "1";
+    OLLAMA_KV_CACHE_TYPE = "q8_0";
+    OLLAMA_CONTEXT_LENGTH = "32768";
+  };
 
   backupEnable = false;
 

@@ -12,6 +12,8 @@
 
   networking.networkmanager.enable = true;
 
+  boot.kernelParams = vars.kernelParams or [];
+
   # Optional vars.swapfileGB; NixOS creates the file on first boot.
   swapDevices = lib.optional (vars ? swapfileGB) {
     device = "/var/lib/swapfile";
