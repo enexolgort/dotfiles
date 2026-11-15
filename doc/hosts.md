@@ -10,7 +10,7 @@ Current hosts:
 | `mnemosyne` | `real` | Jellyfin, Forgejo (:3000, data on the media drive), SFTP, Homepage dashboard (:8082), Dockhand (Docker UI, :3006) | `transmission-webUi`, `yt-dlp-webUi`, `git-dashboard` (:3004), `backup-health` (:3005) |
 | `hermes` | `wsl` | — (Transmission + yt-dlp-API run from its project repos) | `transmission-API` (runs Transmission + its API), `yt-dlp-API` |
 | `proteus` | `wsl` | None — second main laptop, NixOS-WSL dev client | — |
-| `athena` | `real` | Ollama + Open WebUI (local AI), n8n (Docker) | — |
+| `athena` | `real` | Ollama + Open WebUI (local AI), SearXNG, n8n (Docker), openwebui-usage (Docker) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
 | `janus-vm` | `real` | Same as `janus`, as a VirtualBox VM (BIOS/GRUB, label-based `hardware-configuration.nix` committed for real) | — |
 
@@ -100,6 +100,8 @@ n8n on athena runs a locally built `n8n-custom:latest` image instead of the upst
 Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open WebUI links `/static/custom.css` on every page but wipes its static directory on each start, so the `open-webui-theme` service writes `common/open-webui-catppuccin-mocha.css` there once the server answers `/health`, and reruns whenever Open WebUI restarts. Like the n8n theme, it only restyles the Dark theme (Settings → General → Theme).
 
 Every `aiEnable` host also runs SearXNG on `:8888` (`common/searx.nix`), a self-hosted metasearch engine with its JSON API on, for web search from Open WebUI and n8n agents. Its secret key is generated on first boot into `/var/lib/searx/secret.env`. Open WebUI gets `WEB_SEARCH_ENGINE=searxng` and `SEARXNG_QUERY_URL`, but those env vars only seed its stored config: on an existing install, turn web search on once under Admin → Settings → Web Search. In n8n, point the SearXNG tool (or an HTTP Request) at `http://127.0.0.1:8888`; n8n uses host networking.
+
+athena's `projectRepos` has [openwebui-usage](http://mnemosyne:3000/enexolgort/openwebui-usage), a dashboard on `:3007` that graphs token usage over time from Open WebUI's database (Ollama itself keeps no history). `install.sh` clones it into `/data/projects` and starts it with Docker Compose; it mounts Open WebUI's data directory read-only. The *AI usage* tile on Homepage shows its last-24-hour totals.
 
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.

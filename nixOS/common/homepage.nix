@@ -13,6 +13,18 @@ let
     } // lib.optionalAttrs (widget != null) { inherit widget; };
   };
 
+  # openwebui-usage project on athena: token usage over the last 24 hours.
+  usageWidget = {
+    type = "customapi";
+    url = "http://athena:3007/api/usage?range=24h";
+    refreshInterval = 300000;
+    mappings = [
+      { field = { totals = "messages"; }; label = "Messages 24h"; format = "number"; }
+      { field = { totals = "output"; }; label = "Output tokens"; format = "number"; }
+      { field = { totals = "avgTps"; }; label = "Tok/s"; format = "float"; }
+    ];
+  };
+
   # backup-health project; its /health answers 503 when the backup is broken.
   backupWidget = {
     type = "customapi";
@@ -86,6 +98,7 @@ lib.mkIf vars.homepageEnable {
           (tile { name = "Open WebUI"; host = "athena"; port = 8080; description = "Chat with local models"; icon = "open-webui.png"; })
           (tile { name = "Ollama"; host = "athena"; port = 11434; description = "Model runner API"; icon = "ollama.png"; })
           (tile { name = "n8n"; host = "athena"; port = 5678; description = "Workflow automation"; icon = "n8n.png"; })
+          (tile { name = "AI usage"; host = "athena"; port = 3007; description = "Open WebUI token usage"; icon = "mdi-chart-bar"; monitorPath = "/health"; widget = usageWidget; })
         ];
       }
     ];

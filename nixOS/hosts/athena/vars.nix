@@ -45,5 +45,7 @@
 
   backupEnable = false;
 
-  projectRepos = [ ];
+  projectRepos = [
+    "http://mnemosyne:3000/enexolgort/openwebui-usage"
+  ];
 }
