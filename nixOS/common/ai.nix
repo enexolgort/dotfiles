@@ -1,11 +1,13 @@
 # Ollama (:11434) + Open WebUI (:8080), aiEnable.
 { config, pkgs, lib, vars, ... }:
 
+let
+  backend = vars.aiBackend or "cpu";
+in
 lib.mkIf vars.aiEnable {
   services.ollama = {
     enable = true;
-    # CPU-only. With a GPU use pkgs.ollama-cuda / ollama-rocm / ollama-vulkan.
-    package = pkgs.ollama-cpu;
+    package = pkgs."ollama-${backend}";
     loadModels = vars.aiModels;
     host = "0.0.0.0"; # defaults to 127.0.0.1
   };
@@ -19,6 +21,9 @@ lib.mkIf vars.aiEnable {
       OLLAMA_BASE_URL = "http://127.0.0.1:11434";
     };
   };
+
+  # Vulkan/ROCm load the GPU driver from /run/opengl-driver.
+  hardware.graphics.enable = lib.mkIf (backend != "cpu") true;
 
   systemd.services.ollama = {
     after = [ "network-online.target" ];

@@ -61,6 +61,8 @@
   # gitAdminUser      = "gituser"; # "admin" is reserved   # if gitServerEnable
   # gitAdminPass      = "...";                            # if gitServerEnable
   # gitDataDir        = "/data/media/forgejo";            # optional, if gitServerEnable
+  # aiModels          = [ "qwen2.5:0.5b" ];               # if aiEnable
+  # aiBackend         = "cpu" | "vulkan" | "rocm" | "cuda";  # optional, if aiEnable (default "cpu")
   # nvidiaPrime       = { intelBusId = "PCI:0:2:0"; nvidiaBusId = "PCI:1:0:0"; };  # optional, hybrid laptops (amdgpuBusId for AMD)
   # backupEnable      = true | false;
   # backupRepo        = "/mnt/backup/restic-repo";        # if backupEnable

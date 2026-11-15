@@ -17,7 +17,9 @@
   nvidiaEnable = false;
   gamingEnable = false;
 
-  # Pulled on rebuild. Kept small: inference is CPU-only.
+  # AMD BC-250 (gfx1013): ROCm doesn't support it, Mesa's RADV Vulkan does.
+  aiBackend = "vulkan";
+  # Pulled on rebuild.
   aiModels = [ "qwen2.5:0.5b" ];
 
   backupEnable = false;
