@@ -54,6 +54,7 @@
   # projectRepos      = [ "https://..." ... ];
   # swapfileGB        = 16;                        # optional, /var/lib/swapfile
   # kernelParams      = [ "..." ];                 # optional, extra boot.kernelParams
+  # extraPackages     = [ "amdgpu_top" ];          # optional, nixpkgs attribute names
   #
   # --- Per-host, only needed if the matching *Enable above is true -------
   # sftpDir           = "/data/sftp";                    # if sftpEnable

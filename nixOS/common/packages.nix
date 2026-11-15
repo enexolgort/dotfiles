@@ -24,7 +24,7 @@
     nodejs
   ] ++ lib.optionals (vars.ytdlpEnable or false) [
     yt-dlp
-  ];
+  ] ++ map (name: pkgs.${name}) (vars.extraPackages or []);
 
   # Claude Code (claudeEnable) and the herdr desktop app (herdrEnable) come
   # from their upstream installers in scripts/post-install.sh as prebuilt

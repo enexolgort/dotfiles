@@ -10,6 +10,8 @@
   # BC-250: GPU memory comes from system RAM via TTM, capped at ~7.4 GiB by
   # default. Raise it to the full 16 GiB.
   kernelParams = [ "ttm.pages_limit=4194304" ];
+  # amdgpu_top: GPU load (btop can't read the BC-250 without ROCm).
+  extraPackages = [ "amdgpu_top" "pciutils" ];
 
   jellyfinEnable = false;
   obsidianEnable = false;
