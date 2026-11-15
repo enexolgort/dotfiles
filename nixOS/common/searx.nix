@@ -21,11 +21,9 @@ lib.mkIf vars.aiEnable {
         limiter = false;
       };
       # Open WebUI and n8n query the JSON API.
-      search = {
-        formats = [ "html" "json" ];
-        # Bing otherwise localises results to the host's region.
-        default_lang = "en";
-      };
+      # No default_lang: with any language set ("en", "en-US"), Bing
+      # returns unrelated pages or nothing; unset, it answers correctly.
+      search.formats = [ "html" "json" ];
       # Merged by name into SearXNG's default engine list. From athena,
       # Google returns nothing, DuckDuckGo/Startpage answer with CAPTCHAs
       # and Brave rate-limits, so they're off and Bing does the searching.
