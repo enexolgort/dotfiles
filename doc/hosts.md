@@ -91,7 +91,7 @@ The inference backend comes from the host's `aiBackend` var: `"cpu"` (the defaul
 
 Open WebUI is unfree in nixpkgs, so the binary cache never has it and every rebuild that bumps it compiles it locally. That frontend build needs more RAM than athena has, because the BC-250 shares its 16 GB with the GPU. athena sets `swapfileGB = 16`, which makes `configuration.nix` add `/var/lib/swapfile`; any real host can set it.
 
-The default model is `qwen3.5:9b`, about 8 GiB at 4K context. The BC-250 maps GPU memory from system RAM through TTM, which caps it at about 7.4 GiB unless `ttm.pages_limit` is raised. athena therefore sets `kernelParams = [ "ttm.pages_limit=4194304" ]` (16 GiB), which needs a reboot to take effect. Through `aiEnvironment`, it also keeps a single model loaded and uses a q8_0 KV cache with flash attention. Models plus KV cache much above ~13 GiB don't fit: `qwen3:14b` (~9 GiB) does, while `gpt-oss:20b` is borderline.
+The default model is `qwen3.5:9b`, about 8 GiB at 4K context. The BC-250 maps GPU memory from system RAM through TTM, which caps it at about 7.4 GiB unless `ttm.pages_limit` is raised. athena therefore sets `kernelParams = [ "ttm.pages_limit=4194304" ]` (16 GiB), which needs a reboot to take effect. Through `aiEnvironment`, it sets `OLLAMA_IGPU_ENABLE=1` (Ollama otherwise classifies the BC-250 as an integrated GPU and falls back to CPU), keeps a single model loaded and uses a q8_0 KV cache with flash attention. Models plus KV cache much above ~13 GiB don't fit: `qwen3:14b` (~9 GiB) does, while `gpt-oss:20b` is borderline.
 
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.

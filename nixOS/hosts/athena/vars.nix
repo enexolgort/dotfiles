@@ -29,6 +29,8 @@
   aiModels = [ "qwen3.5:9b" ];
   # One model at a time: RAM is shared with n8n and Open WebUI.
   aiEnvironment = {
+    # Ollama treats the BC-250 as an iGPU and skips it without this.
+    OLLAMA_IGPU_ENABLE = "1";
     OLLAMA_MAX_LOADED_MODELS = "1";
     OLLAMA_FLASH_ATTENTION = "1";
     OLLAMA_KV_CACHE_TYPE = "q8_0";
