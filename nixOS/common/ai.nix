@@ -1,4 +1,4 @@
-# Ollama (:11434) + Open WebUI (:8080), aiEnable.
+# Ollama (:11434) + Open WebUI (:8080), aiEnable. SearXNG is in searx.nix.
 { config, pkgs, lib, vars, ... }:
 
 let

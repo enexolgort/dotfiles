@@ -99,6 +99,8 @@ n8n on athena runs a locally built `n8n-custom:latest` image instead of the upst
 
 Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open WebUI links `/static/custom.css` on every page but wipes its static directory on each start, so the `open-webui-theme` service writes `common/open-webui-catppuccin-mocha.css` there once the server answers `/health`, and reruns whenever Open WebUI restarts. Like the n8n theme, it only restyles the Dark theme (Settings → General → Theme).
 
+Every `aiEnable` host also runs SearXNG on `:8888` (`common/searx.nix`), a self-hosted metasearch engine with its JSON API on, for web search from Open WebUI and n8n agents. Its secret key is generated on first boot into `/var/lib/searx/secret.env`. Open WebUI gets `WEB_SEARCH_ENGINE=searxng` and `SEARXNG_QUERY_URL`, but those env vars only seed its stored config: on an existing install, turn web search on once under Admin → Settings → Web Search. In n8n, point the SearXNG tool (or an HTTP Request) at `http://127.0.0.1:8888`; n8n uses host networking.
+
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 

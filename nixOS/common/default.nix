@@ -7,6 +7,7 @@
     ./couchdb.nix
     ./forgejo.nix
     ./ai.nix
+    ./searx.nix
     ./n8n.nix
     ./dockhand.nix
     ./homepage.nix
