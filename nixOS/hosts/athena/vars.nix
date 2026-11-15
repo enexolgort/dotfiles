@@ -32,6 +32,7 @@
   aiBackend = "vulkan";
   # Pulled on rebuild. ~8 GiB at 4K context, ~23 tok/s on a stock BC-250.
   aiModels = [ "qwen3.5:9b" ];
+  openWebuiCatppuccin = true;
   # One model at a time: RAM is shared with n8n and Open WebUI.
   aiEnvironment = {
     # Ollama treats the BC-250 as an iGPU and skips it without this.

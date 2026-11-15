@@ -97,6 +97,8 @@ athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://git
 
 n8n on athena runs a locally built `n8n-custom:latest` image instead of the upstream one, because it sets two optional vars (`common/n8n.nix`). `n8nNpmPackages` installs npm packages globally in the image and allows them in the Code node through `NODE_FUNCTION_ALLOW_EXTERNAL`. `n8nCatppuccin = true` links `common/n8n-catppuccin-mocha.css` into the editor; it only restyles n8n's dark theme, so pick *Dark* under Settings → Personal → Theme. The `n8n-image` service rebuilds the image before `docker-n8n` starts, and Docker's cache skips the rebuild when nothing changed. The Execute Command node is on for every n8n host (`NODES_EXCLUDE = "[]"`).
 
+Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open WebUI links `/static/custom.css` on every page but wipes its static directory on each start, so the `open-webui-theme` service writes `common/open-webui-catppuccin-mocha.css` there once the server answers `/health`, and reruns whenever Open WebUI restarts. Like the n8n theme, it only restyles the Dark theme (Settings → General → Theme).
+
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 

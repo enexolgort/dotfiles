@@ -23,6 +23,29 @@ lib.mkIf vars.aiEnable {
     };
   };
 
+  # Open WebUI links /static/custom.css on every page but wipes STATIC_DIR
+  # on each start, so the theme is written once the server is up.
+  systemd.services.open-webui-theme = lib.mkIf (vars.openWebuiCatppuccin or false) {
+    description = "Install the Catppuccin Mocha custom.css for Open WebUI";
+    after = [ "open-webui.service" ];
+    partOf = [ "open-webui.service" ];
+    wantedBy = [ "open-webui.service" "multi-user.target" ];
+    path = [ pkgs.curl ];
+    serviceConfig = {
+      Type = "oneshot";
+      # Stays active so PartOf re-runs it whenever open-webui restarts.
+      RemainAfterExit = true;
+    };
+    script = ''
+      for _ in $(seq 1 150); do
+        curl -sf http://127.0.0.1:${toString config.services.open-webui.port}/health >/dev/null && break
+        sleep 2
+      done
+      install -m 0644 ${./open-webui-catppuccin-mocha.css} \
+        ${config.services.open-webui.environment.STATIC_DIR or "/var/lib/open-webui/static"}/custom.css
+    '';
+  };
+
   # Vulkan/ROCm load the GPU driver from /run/opengl-driver.
   hardware.graphics.enable = lib.mkIf (backend != "cpu") true;
 
