@@ -12,6 +12,12 @@
 
   networking.networkmanager.enable = true;
 
+  # Optional vars.swapfileGB; NixOS creates the file on first boot.
+  swapDevices = lib.optional (vars ? swapfileGB) {
+    device = "/var/lib/swapfile";
+    size = vars.swapfileGB * 1024;
+  };
+
   # Samba share, tailnet-only. Not in common/: nmbd crashes under WSL2's NAT.
   # Set the password once: sudo smbpasswd -a <username>
   services.samba = {

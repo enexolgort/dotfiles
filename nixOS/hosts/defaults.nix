@@ -52,6 +52,7 @@
   # grubDevice        = "/dev/sda";                # if grub
   # sftpEnable        = true | false;
   # projectRepos      = [ "https://..." ... ];
+  # swapfileGB        = 16;                        # optional, /var/lib/swapfile
   #
   # --- Per-host, only needed if the matching *Enable above is true -------
   # sftpDir           = "/data/sftp";                    # if sftpEnable

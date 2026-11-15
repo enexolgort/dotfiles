@@ -4,6 +4,9 @@
   gitEmail = "enexolgort@athena.local";
   targetType = "real";
   bootloader = "systemd-boot";
+  # open-webui is unfree, so never in the binary cache; its frontend build
+  # gets OOM-killed without swap (RAM is shared with the GPU).
+  swapfileGB = 16;
 
   jellyfinEnable = false;
   obsidianEnable = false;

@@ -89,6 +89,8 @@ projectRepos = [
 
 The inference backend comes from the host's `aiBackend` var: `"cpu"` (the default), `"vulkan"`, `"rocm"` or `"cuda"`, which picks `pkgs.ollama-<backend>`. Any GPU backend also turns on `hardware.graphics`. `athena` (AMD BC-250) uses `"vulkan"`, because ROCm doesn't support its gfx1013 GPU.
 
+Open WebUI is unfree in nixpkgs, so the binary cache never has it and every rebuild that bumps it compiles it locally. That frontend build needs more RAM than athena has, because the BC-250 shares its 16 GB with the GPU. athena sets `swapfileGB = 16`, which makes `configuration.nix` add `/var/lib/swapfile`; any real host can set it.
+
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 
