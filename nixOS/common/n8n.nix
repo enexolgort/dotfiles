@@ -5,11 +5,40 @@
 # NixOS firewall, so a mapping would expose n8n beyond the tailnet.
 { config, pkgs, lib, vars, ... }:
 
+let
+  upstreamImage = "docker.n8n.io/n8nio/n8n:latest";
+  # npm packages the Code node may require(). Global installs land in
+  # /usr/local/lib/node_modules, which Node reaches by walking up from
+  # n8n's task runner.
+  npmPackages = vars.n8nNpmPackages or [];
+  catppuccin = vars.n8nCatppuccin or false;
+  customImage = npmPackages != [] || catppuccin;
+
+  # n8n has no theme setting; the stylesheet is linked into the editor UI's
+  # index.html after n8n's own CSS so its variable overrides win.
+  buildContext = pkgs.runCommand "n8n-image-context" {} ''
+    mkdir $out
+    cp ${./n8n-catppuccin-mocha.css} $out/catppuccin-mocha.css
+    cat > $out/Dockerfile <<'EOF'
+    FROM ${upstreamImage}
+    USER root
+    ${lib.optionalString (npmPackages != []) "RUN npm install -g --omit=dev ${lib.escapeShellArgs npmPackages}"}
+    ${lib.optionalString catppuccin ''
+    COPY catppuccin-mocha.css /tmp/catppuccin-mocha.css
+    RUN set -e; \
+        ui="$(readlink -f /usr/local/lib/node_modules/n8n/node_modules/n8n-editor-ui)/dist"; \
+        mv /tmp/catppuccin-mocha.css "$ui/static/"; \
+        sed -i 's#</head>#<link rel="stylesheet" href="/{{BASE_PATH}}/static/catppuccin-mocha.css" nonce="{{CSP_NONCE}}"></head>#' "$ui/index.html"; \
+        grep -q catppuccin-mocha.css "$ui/index.html"''}
+    USER node
+    EOF
+  '';
+in
 lib.mkIf vars.n8nEnable {
   virtualisation.oci-containers.backend = "docker";
 
   virtualisation.oci-containers.containers.n8n = {
-    image = "docker.n8n.io/n8nio/n8n:latest";
+    image = if customImage then "n8n-custom:latest" else upstreamImage;
     autoStart = true;
     extraOptions = [ "--network=host" ];
     volumes = [ "/var/lib/n8n:/home/node/.n8n" ];
@@ -23,6 +52,8 @@ lib.mkIf vars.n8nEnable {
       # Built-ins the Code node may require(). child_process and vm are
       # left out on purpose: they'd allow arbitrary shell execution.
       NODE_FUNCTION_ALLOW_BUILTIN = "net,crypto,fs,path,util,querystring,url,os,stream,zlib,dns,http,https,buffer,assert";
+    } // lib.optionalAttrs customImage {
+      NODE_FUNCTION_ALLOW_EXTERNAL = lib.concatStringsSep "," npmPackages;
     };
   };
 
@@ -34,5 +65,23 @@ lib.mkIf vars.n8nEnable {
   systemd.services.docker-n8n = {
     after = [ "network-online.target" "docker.service" ];
     wants = [ "network-online.target" ];
+    restartTriggers = lib.optional customImage buildContext;
+  };
+
+  # Builds n8n-custom:latest before the container starts. Docker's layer
+  # cache makes this a no-op until the build context or base image changes.
+  systemd.services.n8n-image = lib.mkIf customImage {
+    description = "Build the customised n8n image";
+    requires = [ "docker.service" ];
+    after = [ "docker.service" "network-online.target" ];
+    wants = [ "network-online.target" ];
+    before = [ "docker-n8n.service" ];
+    requiredBy = [ "docker-n8n.service" ];
+    path = [ config.virtualisation.docker.package ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = "docker build -t n8n-custom:latest ${buildContext}";
   };
 }

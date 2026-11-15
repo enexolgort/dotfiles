@@ -95,6 +95,8 @@ The default model is `qwen3.5:9b`, about 8 GiB at 4K context. The BC-250 maps GP
 
 athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://github.com/TesseractCat/bc250-nixos) module (`common/bc250.nix`): nct6687 sensors, the cyan-skillfish GPU governor, zswap, and the CPU core unlock (6c/12t to 8c/16t). The unlock runs in the initrd and reboots once on every cold boot; add `bc250.nocoreunlock` to the kernel command line at the boot menu to skip it for one boot. Stress-test the two extra cores before relying on them.
 
+n8n on athena runs a locally built `n8n-custom:latest` image instead of the upstream one, because it sets two optional vars (`common/n8n.nix`). `n8nNpmPackages` installs npm packages globally in the image and allows them in the Code node through `NODE_FUNCTION_ALLOW_EXTERNAL`. `n8nCatppuccin = true` links `common/n8n-catppuccin-mocha.css` into the editor; it only restyles n8n's dark theme, so pick *Dark* under Settings → Personal → Theme. The `n8n-image` service rebuilds the image before `docker-n8n` starts, and Docker's cache skips the rebuild when nothing changed. The Execute Command node is on for every n8n host (`NODES_EXCLUDE = "[]"`).
+
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 

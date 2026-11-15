@@ -68,6 +68,8 @@
   # aiModels          = [ "qwen2.5:0.5b" ];               # if aiEnable
   # aiBackend         = "cpu" | "vulkan" | "rocm" | "cuda";  # optional, if aiEnable (default "cpu")
   # aiEnvironment     = { OLLAMA_... = "..."; };    # optional, if aiEnable
+  # n8nNpmPackages    = [ "lodash" "axios" ];         # optional, if n8nEnable: npm packages for the Code node
+  # n8nCatppuccin     = true;                         # optional, if n8nEnable: Catppuccin Mocha dark theme
   # nvidiaPrime       = { intelBusId = "PCI:0:2:0"; nvidiaBusId = "PCI:1:0:0"; };  # optional, hybrid laptops (amdgpuBusId for AMD)
   # backupEnable      = true | false;
   # backupRepo        = "/mnt/backup/restic-repo";        # if backupEnable

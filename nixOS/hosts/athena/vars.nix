@@ -19,6 +19,8 @@
   aiEnable = true;
   sftpEnable = false;
   n8nEnable = true;
+  n8nNpmPackages = [ "papaparse" "fast-xml-parser" "cheerio" "turndown" "rss-parser" ];
+  n8nCatppuccin = true;
   homepageEnable = false;
   dockhandEnable = false;
   desktopEnable = false;
