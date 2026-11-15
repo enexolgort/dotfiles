@@ -79,10 +79,10 @@ claudeEnable = true | false;     # optional (default true): Claude Code, install
 ## Project repos per host
 ```nix
 projectRepos = [
-  "https://github.com/enexolgort/transmission-webUi"
+  "http://mnemosyne:3000/enexolgort/transmission-webUi"
 ];
 ```
-`install.sh` clones each of these into that host's `projectsDir` (from `hosts/defaults.nix`, default `/data/projects`) — only for the host you're actually installing, not every host's repos on every machine.
+`install.sh` clones each of these into `projectsDir` (read only from `hosts/defaults.nix`, so a per-host override is ignored; default `/data/projects`) — only for the host you're actually installing, not every host's repos on every machine.
 
 ## Local AI (athena) specifically
 `common/ai.nix` enables `services.ollama` (the model runner, port `11434`) and `services.open-webui` (the ChatGPT-style frontend for it, default port `8080`) — both real, existing NixOS modules, not something built from scratch. Reachable at `http://<tailscale-ip>:8080` once `aiEnable = true` and rebuilt.

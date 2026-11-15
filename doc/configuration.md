@@ -48,7 +48,7 @@ Per-machine values (hostname, username, which services run, project repos) live 
   gitServerEnable = false;
   aiEnable = false;
 
-  projectRepos = [ "https://github.com/enexolgort/transmission-webUi" ];
+  projectRepos = [ "http://mnemosyne:3000/enexolgort/transmission-webUi" ];
 }
 ```
 The final config for a host is `defaults.nix` merged with that host's own file — the host's values win on any overlap.
