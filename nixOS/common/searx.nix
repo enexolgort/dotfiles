@@ -22,6 +22,12 @@ lib.mkIf vars.aiEnable {
       };
       # Open WebUI and n8n query the JSON API.
       search.formats = [ "html" "json" ];
+      # Merged by name into SearXNG's default engine list. From athena,
+      # Google returns nothing and DuckDuckGo/Startpage answer with
+      # CAPTCHAs, so Bing (off by default) is the engine that answers.
+      engines = [
+        { name = "bing"; disabled = false; }
+      ];
     };
   };
 
