@@ -12,13 +12,17 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bc250 = {
+      url = "github:TesseractCat/bc250-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, treefmt-nix, ... }:
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, bc250, treefmt-nix, ... }:
     let
       lib = nixpkgs.lib;
       defaults = import ./hosts/defaults.nix;
@@ -56,6 +60,8 @@
               (if vars.targetType == "wsl" then ./wsl-configuration.nix else ./configuration.nix)
               home-manager.nixosModules.home-manager
               sops-nix.nixosModules.sops
+              # Inert unless hardware.bc250.enable (common/bc250.nix).
+              bc250.nixosModules.bc250
               (mkHomeManagerModule vars)
             ]
             ++ lib.optional (vars.targetType == "real") hardwareFile;

@@ -30,6 +30,7 @@
   ytdlpEnable = false;
   herdrEnable = false; # herdr desktop app via its upstream installer (post-install.sh)
   claudeEnable = true; # Claude Code via its native installer (post-install.sh)
+  bc250Enable = false; # AMD BC-250 board support (common/bc250.nix), real hosts only
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";

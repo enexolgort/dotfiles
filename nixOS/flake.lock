@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "bc250": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792887303,
+        "narHash": "sha256-GVHUKco+6IYcYz278GkX6+1Um3gDbIJVUNxDrV7tNLg=",
+        "owner": "TesseractCat",
+        "repo": "bc250-nixos",
+        "rev": "c875ab7a31d8f9edf92c2e4a567af0753b231692",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TesseractCat",
+        "repo": "bc250-nixos",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -90,6 +110,7 @@
     },
     "root": {
       "inputs": {
+        "bc250": "bc250",
         "home-manager": "home-manager",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",

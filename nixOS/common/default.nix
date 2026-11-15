@@ -13,6 +13,7 @@
     ./desktop.nix
     ./nvidia.nix
     ./gaming.nix
+    ./bc250.nix
     ./docker.nix
     ./sftp.nix
     ./backups.nix

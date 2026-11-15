@@ -24,6 +24,7 @@
   desktopEnable = false;
   nvidiaEnable = false;
   gamingEnable = false;
+  bc250Enable = true;
 
   # AMD BC-250 (gfx1013): ROCm doesn't support it, Mesa's RADV Vulkan does.
   aiBackend = "vulkan";

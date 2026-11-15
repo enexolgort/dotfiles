@@ -93,6 +93,8 @@ Open WebUI is unfree in nixpkgs, so the binary cache never has it and every rebu
 
 The default model is `qwen3.5:9b`, about 8 GiB at 4K context. The BC-250 maps GPU memory from system RAM through TTM, which caps it at about 7.4 GiB unless `ttm.pages_limit` is raised. athena therefore sets `kernelParams = [ "ttm.pages_limit=4194304" ]` (16 GiB), which needs a reboot to take effect. Through `aiEnvironment`, it sets `OLLAMA_IGPU_ENABLE=1` (Ollama otherwise classifies the BC-250 as an integrated GPU and falls back to CPU), keeps a single model loaded and uses a q8_0 KV cache with flash attention. Models plus KV cache much above ~13 GiB don't fit: `qwen3:14b` (~9 GiB) does, while `gpt-oss:20b` is borderline. For GPU load, athena adds `amdgpu_top` through the optional `extraPackages` var (nixpkgs attribute names), since btop needs ROCm to see AMD GPUs.
 
+athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://github.com/TesseractCat/bc250-nixos) module (`common/bc250.nix`): nct6687 sensors, the cyan-skillfish GPU governor, zswap, and the CPU core unlock (6c/12t to 8c/16t). The unlock runs in the initrd and reboots once on every cold boot; add `bc250.nocoreunlock` to the kernel command line at the boot menu to skip it for one boot. Stress-test the two extra cores before relying on them.
+
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 
