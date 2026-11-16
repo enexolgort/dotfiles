@@ -15,7 +15,9 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 
 ## Unreleased
 
-_Nothing yet._
+### Fixed
+- mnemosyne: yt-dlp-API on hermes can push over SFTP; its key
+  (`yt-dlp-api@hermes`) is now in `sftpPublicKeys`.
 
 ## [0.10.0] — 2026-11-16
 

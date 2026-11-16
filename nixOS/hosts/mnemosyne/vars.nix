@@ -21,6 +21,7 @@
   sftpPublicKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfCPT1zuWITFVKSAOmkLAr4wpXkHLDxzNUVptgI88lf sftp-laptop" # filezila@laptop
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITDNIuGEqX2bs89Tv+BWZcFCI3CLOM9xQCj89G/eumc transmission-api push" # transmission-API@hermes
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+HWdwyJ6LeNNwSEP6sNmD6Mg3cj7ThHZqZ+B0CclTZ yt-dlp-api@hermes" # yt-dlp-API@hermes
   ];
 
   gitAdminUser = "gituser"; # "admin" is reserved in Forgejo
