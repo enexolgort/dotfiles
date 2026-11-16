@@ -40,4 +40,4 @@ Deploying on a machine: `./scripts/install.sh <host>`, then `sudo nixos-rebuild 
 - Secrets: sops-nix is off by default (`secretsEnabled = false`), so some vars hold plaintext placeholders. `couchdbAdminPass` always lands in the Nix store; that's a known nixpkgs limitation (see `doc/secrets.md`). Don't commit real secrets.
 - Files use LF line endings (`.gitattributes`). Keep them LF even though the repo is edited from Windows.
 - Comments stay short: only a non-obvious *why* (a workaround, a constraint, an upstream bug). No change history, no "per request / fixed / verified" notes, no restating the code, no repeating what `doc/` already says.
-- When behavior changes, update the matching `doc/*.md` page.
+- When behavior changes, update the matching `doc/*.md` page and add an entry under "Unreleased" in `CHANGELOG.md`. Releases are `vX.Y.Z` tags (see the end of the changelog).
