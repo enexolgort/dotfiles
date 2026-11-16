@@ -9,9 +9,9 @@
   swapfileGB = 16;
   # BC-250: GPU memory comes from system RAM via TTM, capped at ~7.4 GiB by
   # default. Raise it to the full 16 GiB.
-  kernelParams = [ "ttm.pages_limit=4194304" ];
+  kernelParams = ["ttm.pages_limit=4194304"];
   # amdgpu_top: GPU load (btop can't read the BC-250 without ROCm).
-  extraPackages = [ "amdgpu_top" "pciutils" "lm_sensors" ];
+  extraPackages = ["amdgpu_top" "pciutils" "lm_sensors"];
 
   jellyfinEnable = false;
   obsidianEnable = false;
@@ -19,9 +19,9 @@
   aiEnable = true;
   sftpEnable = false;
   n8nEnable = true;
-  n8nNpmPackages = [ "papaparse" "fast-xml-parser" "cheerio" "turndown" "rss-parser" ];
+  n8nNpmPackages = ["papaparse" "fast-xml-parser" "cheerio" "turndown" "rss-parser"];
   n8nCatppuccin = true;
-  n8nCommunityNodes = [ "n8n-nodes-forgejo@0.2.0" ];
+  n8nCommunityNodes = ["n8n-nodes-forgejo@0.2.0"];
   homepageEnable = false;
   dockhandEnable = false;
   desktopEnable = false;
@@ -33,7 +33,7 @@
   # AMD BC-250 (gfx1013): ROCm doesn't support it, Mesa's RADV Vulkan does.
   aiBackend = "vulkan";
   # Pulled on rebuild. ~6 GiB on the GPU, ~38 tok/s on the BC-250.
-  aiModels = [ "qwen3.5:9b" ];
+  aiModels = ["qwen3.5:9b"];
   openWebuiCatppuccin = true;
   # One model at a time: RAM is shared with n8n and Open WebUI.
   aiEnvironment = {

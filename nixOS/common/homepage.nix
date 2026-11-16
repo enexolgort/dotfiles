@@ -1,16 +1,31 @@
 # Fleet dashboard on :8082 (homepageEnable). Status dots are checked from
 # this host, so they rely on MagicDNS names resolving.
-{ config, pkgs, lib, vars, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   port = 8082;
-  tile = { name, host, port, description, icon, path ? "/", monitorPath ? path, widget ? null }: {
-    ${name} = {
-      inherit icon;
-      description = "${description} · :${toString port}";
-      href = "http://${host}:${toString port}${path}";
-      siteMonitor = "http://${host}:${toString port}${monitorPath}";
-    } // lib.optionalAttrs (widget != null) { inherit widget; };
+  tile = {
+    name,
+    host,
+    port,
+    description,
+    icon,
+    path ? "/",
+    monitorPath ? path,
+    widget ? null,
+  }: {
+    ${name} =
+      {
+        inherit icon;
+        description = "${description} · :${toString port}";
+        href = "http://${host}:${toString port}${path}";
+        siteMonitor = "http://${host}:${toString port}${monitorPath}";
+      }
+      // lib.optionalAttrs (widget != null) {inherit widget;};
   };
 
   # openwebui-usage project on athena: token usage over the last 24 hours.
@@ -19,9 +34,21 @@ let
     url = "http://athena:3007/api/usage?range=24h";
     refreshInterval = 300000;
     mappings = [
-      { field = { totals = "messages"; }; label = "Messages 24h"; format = "number"; }
-      { field = { totals = "output"; }; label = "Output tokens"; format = "number"; }
-      { field = { totals = "avgTps"; }; label = "Tok/s"; format = "float"; }
+      {
+        field = {totals = "messages";};
+        label = "Messages 24h";
+        format = "number";
+      }
+      {
+        field = {totals = "output";};
+        label = "Output tokens";
+        format = "number";
+      }
+      {
+        field = {totals = "avgTps";};
+        label = "Tok/s";
+        format = "float";
+      }
     ];
   };
 
@@ -31,81 +58,209 @@ let
     url = "http://localhost:3005/api/status";
     refreshInterval = 60000;
     mappings = [
-      { field = "status"; label = "Status"; }
-      { field = { lastSnapshot = "time"; }; label = "Last backup"; format = "relativeDate"; }
-      { field = { lastSnapshot = "sizeBytes"; }; label = "Size"; format = "bytes"; }
-      { field = { drive = "usedPercent"; }; label = "Drive"; format = "percent"; }
+      {
+        field = "status";
+        label = "Status";
+      }
+      {
+        field = {lastSnapshot = "time";};
+        label = "Last backup";
+        format = "relativeDate";
+      }
+      {
+        field = {lastSnapshot = "sizeBytes";};
+        label = "Size";
+        format = "bytes";
+      }
+      {
+        field = {drive = "usedPercent";};
+        label = "Drive";
+        format = "percent";
+      }
     ];
   };
 in
-lib.mkIf vars.homepageEnable {
-  services.homepage-dashboard = {
-    enable = true;
-    listenPort = port;
-    openFirewall = false;
-    # Homepage rejects any Host header not listed here.
-    allowedHosts = lib.concatStringsSep "," [
-      "${vars.hostname}:${toString port}"
-      "localhost:${toString port}"
-      "127.0.0.1:${toString port}"
-    ];
+  lib.mkIf vars.homepageEnable {
+    services.homepage-dashboard = {
+      enable = true;
+      listenPort = port;
+      openFirewall = false;
+      # Homepage rejects any Host header not listed here.
+      allowedHosts = lib.concatStringsSep "," [
+        "${vars.hostname}:${toString port}"
+        "localhost:${toString port}"
+        "127.0.0.1:${toString port}"
+      ];
 
-    settings = {
-      title = "Homelab";
-      theme = "dark";
-      color = "slate";
-      headerStyle = "clean";
-      layout = {
-        mnemosyne = { style = "row"; columns = 3; };
-        hermes = { style = "row"; columns = 3; };
-        athena = { style = "row"; columns = 3; };
+      settings = {
+        title = "Homelab";
+        theme = "dark";
+        color = "slate";
+        headerStyle = "clean";
+        layout = {
+          mnemosyne = {
+            style = "row";
+            columns = 3;
+          };
+          hermes = {
+            style = "row";
+            columns = 3;
+          };
+          athena = {
+            style = "row";
+            columns = 3;
+          };
+        };
       };
+
+      widgets = [
+        {
+          resources = {
+            label = vars.hostname;
+            cpu = true;
+            memory = true;
+            disk = ["/" vars.mediaDir];
+          };
+        }
+        {
+          datetime = {
+            format = {
+              dateStyle = "long";
+              timeStyle = "short";
+              hour12 = false;
+            };
+          };
+        }
+      ];
+
+      services = [
+        {
+          mnemosyne = [
+            (tile {
+              name = "Jellyfin";
+              host = "mnemosyne";
+              port = 8096;
+              description = "Media server";
+              icon = "jellyfin.png";
+            })
+            (tile {
+              name = "Torrent UI";
+              host = "mnemosyne";
+              port = 4173;
+              description = "transmission-webUi";
+              icon = "transmission.png";
+            })
+            (tile {
+              name = "Video UI";
+              host = "mnemosyne";
+              port = 4174;
+              description = "yt-dlp-webUi";
+              icon = "si-youtube";
+            })
+            (tile {
+              name = "Forgejo";
+              host = "mnemosyne";
+              port = 3000;
+              description = "Git server";
+              icon = "forgejo.png";
+            })
+            (tile {
+              name = "Git Dashboard";
+              host = "mnemosyne";
+              port = 3004;
+              description = "Forgejo git activity";
+              icon = "si-git";
+              path = "/";
+              monitorPath = "/health";
+            })
+            (tile {
+              name = "Backups";
+              host = "mnemosyne";
+              port = 3005;
+              description = "restic backup health";
+              icon = "mdi-backup-restore";
+              path = "/api/status";
+              monitorPath = "/health";
+              widget = backupWidget;
+            })
+            (tile {
+              name = "Dockhand";
+              host = "mnemosyne";
+              port = 3006;
+              description = "Docker management";
+              icon = "dockhand.png";
+            })
+          ];
+        }
+        {
+          hermes = [
+            (tile {
+              name = "transmission-API";
+              host = "hermes";
+              port = 3002;
+              description = "API + SFTP push";
+              icon = "transmission.png";
+              path = "/";
+              monitorPath = "/health";
+            })
+            (tile {
+              name = "Transmission";
+              host = "hermes";
+              port = 9091;
+              description = "Daemon web UI / RPC";
+              icon = "transmission.png";
+              path = "/transmission/web/";
+            })
+            (tile {
+              name = "yt-dlp-API";
+              host = "hermes";
+              port = 3003;
+              description = "Video downloads + SFTP push";
+              icon = "si-youtube";
+              path = "/";
+              monitorPath = "/health";
+            })
+          ];
+        }
+        {
+          athena = [
+            (tile {
+              name = "Open WebUI";
+              host = "athena";
+              port = 8080;
+              description = "Chat with local models";
+              icon = "open-webui.png";
+            })
+            (tile {
+              name = "Ollama";
+              host = "athena";
+              port = 11434;
+              description = "Model runner API";
+              icon = "ollama.png";
+            })
+            (tile {
+              name = "n8n";
+              host = "athena";
+              port = 5678;
+              description = "Workflow automation";
+              icon = "n8n.png";
+            })
+            (tile {
+              name = "AI usage";
+              host = "athena";
+              port = 3007;
+              description = "Open WebUI token usage";
+              icon = "mdi-chart-bar";
+              monitorPath = "/health";
+              widget = usageWidget;
+            })
+          ];
+        }
+      ];
     };
 
-    widgets = [
-      {
-        resources = {
-          label = vars.hostname;
-          cpu = true;
-          memory = true;
-          disk = [ "/" vars.mediaDir ];
-        };
-      }
-      { datetime = { format = { dateStyle = "long"; timeStyle = "short"; hour12 = false; }; }; }
-    ];
-
-    services = [
-      {
-        mnemosyne = [
-          (tile { name = "Jellyfin"; host = "mnemosyne"; port = 8096; description = "Media server"; icon = "jellyfin.png"; })
-          (tile { name = "Torrent UI"; host = "mnemosyne"; port = 4173; description = "transmission-webUi"; icon = "transmission.png"; })
-          (tile { name = "Video UI"; host = "mnemosyne"; port = 4174; description = "yt-dlp-webUi"; icon = "si-youtube"; })
-          (tile { name = "Forgejo"; host = "mnemosyne"; port = 3000; description = "Git server"; icon = "forgejo.png"; })
-          (tile { name = "Git Dashboard"; host = "mnemosyne"; port = 3004; description = "Forgejo git activity"; icon = "si-git"; path = "/"; monitorPath = "/health"; })
-          (tile { name = "Backups"; host = "mnemosyne"; port = 3005; description = "restic backup health"; icon = "mdi-backup-restore"; path = "/api/status"; monitorPath = "/health"; widget = backupWidget; })
-          (tile { name = "Dockhand"; host = "mnemosyne"; port = 3006; description = "Docker management"; icon = "dockhand.png"; })
-        ];
-      }
-      {
-        hermes = [
-          (tile { name = "transmission-API"; host = "hermes"; port = 3002; description = "API + SFTP push"; icon = "transmission.png"; path = "/"; monitorPath = "/health"; })
-          (tile { name = "Transmission"; host = "hermes"; port = 9091; description = "Daemon web UI / RPC"; icon = "transmission.png"; path = "/transmission/web/"; })
-          (tile { name = "yt-dlp-API"; host = "hermes"; port = 3003; description = "Video downloads + SFTP push"; icon = "si-youtube"; path = "/"; monitorPath = "/health"; })
-        ];
-      }
-      {
-        athena = [
-          (tile { name = "Open WebUI"; host = "athena"; port = 8080; description = "Chat with local models"; icon = "open-webui.png"; })
-          (tile { name = "Ollama"; host = "athena"; port = 11434; description = "Model runner API"; icon = "ollama.png"; })
-          (tile { name = "n8n"; host = "athena"; port = 5678; description = "Workflow automation"; icon = "n8n.png"; })
-          (tile { name = "AI usage"; host = "athena"; port = 3007; description = "Open WebUI token usage"; icon = "mdi-chart-bar"; monitorPath = "/health"; widget = usageWidget; })
-        ];
-      }
-    ];
-  };
-
-  systemd.services.homepage-dashboard = {
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-  };
-}
+    systemd.services.homepage-dashboard = {
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
+    };
+  }

@@ -19,7 +19,7 @@ Note: the layout tree in `doc/overview.md` is out of date. It shows `doom/` and 
 
 ## Commands
 ```bash
-cd nixOS && nix fmt                                                   # format all .nix (alejandra via treefmt)
+cd nixOS && nix fmt                                                   # format + lint all .nix (alejandra, deadnix, statix via treefmt)
 cd nixOS && nix build .#checks.x86_64-linux.formatting --no-link      # formatting check (as in CI)
 cd nixOS && nix build .#nixosConfigurations.hermes.config.system.build.toplevel --no-link   # build a WSL host
 shellcheck scripts/*.sh                                               # lint scripts (as in CI)
@@ -35,7 +35,7 @@ Deploying on a machine: `./scripts/install.sh <host>`, then `sudo nixos-rebuild 
 - Keep service-specific values (passwords, sftp keys, backup repo) out of `defaults.nix`. They belong in the vars of the host that enables the service.
 - Services are tailnet-only. Never set `openFirewall = true` or expose ports on the public interface; `tailscale0` is the trusted interface (`common/networking.nix`).
 - Samba is deliberately disabled on WSL hosts because nmbd crashes under WSL2 NAT.
-- Real hosts' `hardware-configuration.nix` files are machine-generated. Don't hand-edit or "fix" them. CI can't build real hosts, so it only fully builds `targetType = "wsl"` hosts. Validate changes to `common/` by building `hermes`.
+- Real hosts' `hardware-configuration.nix` files are machine-generated. Don't hand-edit or "fix" them; treefmt excludes them. CI (`.forgejo/workflows/ci.yml`, run by mnemosyne's Forgejo runner) can't build real hosts, so it only fully builds `targetType = "wsl"` hosts. Validate changes to `common/` by building `hermes`.
 - Flakes only see git-tracked files. `git add` new files before building or evaluating.
 - Secrets: sops-nix is off by default (`secretsEnabled = false`), so some vars hold plaintext placeholders. `couchdbAdminPass` always lands in the Nix store; that's a known nixpkgs limitation (see `doc/secrets.md`). Don't commit real secrets.
 - Files use LF line endings (`.gitattributes`). Keep them LF even though the repo is edited from Windows.

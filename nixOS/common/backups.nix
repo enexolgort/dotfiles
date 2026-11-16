@@ -1,7 +1,11 @@
 # restic (backupEnable), see doc/backups.md.
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   services.restic.backups.mediaserver = lib.mkIf vars.backupEnable {
     initialize = true;
     repository = vars.backupRepo;
@@ -9,16 +13,17 @@
       if vars.secretsEnabled
       then config.sops.secrets.backupPassword.path
       else "/etc/restic-backup-password";
-    paths = [
-      vars.mediaDir
-      "/home/${vars.username}/dotFiles"
-      vars.projectsDir
-    ]
-    ++ lib.optional vars.obsidianEnable "/var/lib/couchdb"
-    ++ lib.optional vars.jellyfinEnable "/var/lib/jellyfin"
-    ++ lib.optional vars.dockhandEnable "/var/lib/dockhand"
-    # Skipped when it already lives inside mediaDir.
-    ++ lib.optional (vars.gitServerEnable && !lib.hasPrefix "${vars.mediaDir}/" vars.gitDataDir) vars.gitDataDir;
+    paths =
+      [
+        vars.mediaDir
+        "/home/${vars.username}/dotFiles"
+        vars.projectsDir
+      ]
+      ++ lib.optional vars.obsidianEnable "/var/lib/couchdb"
+      ++ lib.optional vars.jellyfinEnable "/var/lib/jellyfin"
+      ++ lib.optional vars.dockhandEnable "/var/lib/dockhand"
+      # Skipped when it already lives inside mediaDir.
+      ++ lib.optional (vars.gitServerEnable && !lib.hasPrefix "${vars.mediaDir}/" vars.gitDataDir) vars.gitDataDir;
     exclude = lib.optionals vars.jellyfinEnable [
       # Regenerable and large.
       "/var/lib/jellyfin/cache"

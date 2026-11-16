@@ -3,15 +3,20 @@
 #
 # --network=host, not a port mapping: Docker's published ports bypass the
 # NixOS firewall, so a mapping would expose Dockhand beyond the tailnet.
-{ config, pkgs, lib, vars, ... }:
-
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}:
 lib.mkIf vars.dockhandEnable {
   virtualisation.oci-containers.backend = "docker";
 
   virtualisation.oci-containers.containers.dockhand = {
     image = "fnsys/dockhand:latest";
     autoStart = true;
-    extraOptions = [ "--network=host" ];
+    extraOptions = ["--network=host"];
     volumes = [
       # Root-equivalent access to the host; acceptable only because it's tailnet-only.
       "/var/run/docker.sock:/var/run/docker.sock"
@@ -28,7 +33,7 @@ lib.mkIf vars.dockhandEnable {
   ];
 
   systemd.services.docker-dockhand = {
-    after = [ "network-online.target" "docker.service" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target" "docker.service"];
+    wants = ["network-online.target"];
   };
 }

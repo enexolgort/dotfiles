@@ -1,8 +1,12 @@
 # home-manager config for desktopEnable hosts.
-{ config, pkgs, lib, vars, ... }:
-
 {
-  home.packages = [ pkgs.curl ]; # waybar fleet-status.sh
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
+  home.packages = [pkgs.curl]; # waybar fleet-status.sh
 
   # Only ships in 32/48/64/96/128 px; other sizes get blurry.
   home.pointerCursor = {
@@ -15,38 +19,37 @@
 
   # Catppuccin Mocha for Qt/KDE apps. Outside Plasma, KDE apps read colours
   # only from these [Colors:*] groups.
-  xdg.configFile."kdeglobals".text =
-    let
-      base = "30,30,46";
-      mantle = "24,24,37";
-      crust = "17,17,27";
-      surface0 = "49,50,68";
-      surface1 = "69,71,90";
-      overlay0 = "108,112,134";
-      subtext0 = "166,173,200";
-      text = "205,214,244";
-      mauve = "203,166,247";
-      lavender = "180,190,254";
-      blue = "137,180,250";
-      red = "243,139,168";
-      yellow = "249,226,175";
-      green = "166,227,161";
-      group = name: bg: alt: fg: ''
-        [Colors:${name}]
-        BackgroundNormal=${bg}
-        BackgroundAlternate=${alt}
-        ForegroundNormal=${fg}
-        ForegroundInactive=${subtext0}
-        ForegroundActive=${mauve}
-        ForegroundLink=${blue}
-        ForegroundVisited=${lavender}
-        ForegroundNegative=${red}
-        ForegroundNeutral=${yellow}
-        ForegroundPositive=${green}
-        DecorationFocus=${mauve}
-        DecorationHover=${lavender}
-      '';
-    in
+  xdg.configFile."kdeglobals".text = let
+    base = "30,30,46";
+    mantle = "24,24,37";
+    crust = "17,17,27";
+    surface0 = "49,50,68";
+    surface1 = "69,71,90";
+    overlay0 = "108,112,134";
+    subtext0 = "166,173,200";
+    text = "205,214,244";
+    mauve = "203,166,247";
+    lavender = "180,190,254";
+    blue = "137,180,250";
+    red = "243,139,168";
+    yellow = "249,226,175";
+    green = "166,227,161";
+    group = name: bg: alt: fg: ''
+      [Colors:${name}]
+      BackgroundNormal=${bg}
+      BackgroundAlternate=${alt}
+      ForegroundNormal=${fg}
+      ForegroundInactive=${subtext0}
+      ForegroundActive=${mauve}
+      ForegroundLink=${blue}
+      ForegroundVisited=${lavender}
+      ForegroundNegative=${red}
+      ForegroundNeutral=${yellow}
+      ForegroundPositive=${green}
+      DecorationFocus=${mauve}
+      DecorationHover=${lavender}
+    '';
+  in
     ''
       [General]
       ColorScheme=CatppuccinMochaMauve
@@ -81,7 +84,7 @@
       name = "catppuccin-mocha-mauve-standard";
       package = pkgs.catppuccin-gtk.override {
         variant = "mocha";
-        accents = [ "mauve" ];
+        accents = ["mauve"];
       };
     };
     iconTheme = {
@@ -102,38 +105,36 @@
   # force: apps rewrite mimeapps.list, which would otherwise break activation.
   xdg.mimeApps = {
     enable = true;
-    defaultApplications =
-      let
-        browser = "firefox.desktop";
-        images = "org.kde.gwenview.desktop";
-        media = "mpv.desktop";
-      in
-      {
-        "inode/directory" = "org.kde.dolphin.desktop";
-        "text/html" = browser;
-        "x-scheme-handler/http" = browser;
-        "x-scheme-handler/https" = browser;
-        "x-scheme-handler/about" = browser;
-        "x-scheme-handler/unknown" = browser;
-        "application/pdf" = browser;
-        "text/plain" = "nvim.desktop";
-        "image/png" = images;
-        "image/jpeg" = images;
-        "image/gif" = images;
-        "image/webp" = images;
-        "image/svg+xml" = images;
-        "video/mp4" = media;
-        "video/webm" = media;
-        "video/x-matroska" = media;
-        "audio/mpeg" = media;
-        "audio/flac" = media;
-        "audio/ogg" = media;
-      };
+    defaultApplications = let
+      browser = "firefox.desktop";
+      images = "org.kde.gwenview.desktop";
+      media = "mpv.desktop";
+    in {
+      "inode/directory" = "org.kde.dolphin.desktop";
+      "text/html" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/unknown" = browser;
+      "application/pdf" = browser;
+      "text/plain" = "nvim.desktop";
+      "image/png" = images;
+      "image/jpeg" = images;
+      "image/gif" = images;
+      "image/webp" = images;
+      "image/svg+xml" = images;
+      "video/mp4" = media;
+      "video/webm" = media;
+      "video/x-matroska" = media;
+      "audio/mpeg" = media;
+      "audio/flac" = media;
+      "audio/ogg" = media;
+    };
   };
   xdg.configFile."mimeapps.list".force = true;
 
   # Never overwrites an existing ~/.config/nvim.
-  home.activation.installLazyVim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.installLazyVim = lib.hm.dag.entryAfter ["writeBoundary"] ''
     NVIM_CONF="$HOME/.config/nvim"
 
     if [ ! -d "$NVIM_CONF" ]; then

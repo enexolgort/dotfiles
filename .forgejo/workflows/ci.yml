@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Jobs run on mnemosyne's Forgejo runner, directly on the host
+# (common/forgejo-runner.nix), so Nix and shellcheck are already there.
+jobs:
+  nix:
+    runs-on: native
+    steps:
+      - uses: actions/checkout@v4
+
+      # alejandra, deadnix and statix (nixOS/treefmt.nix).
+      - name: Check formatting and lints
+        run: |
+          cd nixOS
+          nix build .#checks.x86_64-linux.formatting --no-link
+
+      # Not `nix flake check`: real hosts need their machine's
+      # hardware-configuration.nix. WSL hosts build fully and cover common/.
+      - name: Build every WSL-type host
+        run: |
+          cd nixOS
+          built_any=false
+          for hostDir in hosts/*/; do
+            hostName="$(basename "$hostDir")"
+            tt="$(nix eval --raw --file "hosts/$hostName/vars.nix" targetType 2>/dev/null || echo "")"
+            if [ "$tt" = "wsl" ]; then
+              echo "Building nixosConfigurations.$hostName"
+              nix build ".#nixosConfigurations.$hostName.config.system.build.toplevel" --no-link
+              built_any=true
+            fi
+          done
+          if [ "$built_any" = false ]; then
+            echo 'No host with targetType = "wsl" under hosts/, nothing to build.'
+            exit 1
+          fi
+
+  shellcheck:
+    runs-on: native
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shellcheck scripts/
+        run: shellcheck scripts/*.sh

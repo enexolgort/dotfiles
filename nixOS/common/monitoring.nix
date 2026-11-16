@@ -1,17 +1,21 @@
 # Runs check-remote.sh against this host every 15 min; POSTs failures to
 # vars.notifyWebhook if set.
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   systemd.services.healthcheck = {
     description = "Periodic health check of remote-facing services";
-    after = [ "network-online.target" "tailscaled.service" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target" "tailscaled.service"];
+    wants = ["network-online.target"];
     serviceConfig = {
       Type = "oneshot";
       User = vars.username;
     };
-    path = [ pkgs.curl pkgs.bash pkgs.tailscale ];
+    path = [pkgs.curl pkgs.bash pkgs.tailscale];
     script = ''
       set -uo pipefail
       SCRIPT="/home/${vars.username}/dotFiles/scripts/check-remote.sh"
@@ -38,7 +42,7 @@
 
   systemd.timers.healthcheck = {
     description = "Run healthcheck.service every 15 minutes";
-    wantedBy = [ "timers.target" ];
+    wantedBy = ["timers.target"];
     timerConfig = {
       OnCalendar = "*:0/15";
       Persistent = true;

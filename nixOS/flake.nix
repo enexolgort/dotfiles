@@ -22,61 +22,75 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, bc250, treefmt-nix, ... }:
-    let
-      lib = nixpkgs.lib;
-      defaults = import ./hosts/defaults.nix;
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nixos-wsl,
+    sops-nix,
+    bc250,
+    treefmt-nix,
+    ...
+  }: let
+    inherit (nixpkgs) lib;
+    defaults = import ./hosts/defaults.nix;
 
-      # Every subdirectory of ./hosts is a machine profile.
-      hostsDir = ./hosts;
-      hostNames = builtins.attrNames (
-        lib.filterAttrs (name: type: type == "directory") (builtins.readDir hostsDir)
-      );
+    # Every subdirectory of ./hosts is a machine profile.
+    hostsDir = ./hosts;
+    hostNames = builtins.attrNames (
+      lib.filterAttrs (name: type: type == "directory") (builtins.readDir hostsDir)
+    );
 
-      mkHomeManagerModule = vars: {
-        home-manager.useGlobalPkgs = true;
-        # Move clobbered files aside instead of failing the rebuild.
-        home-manager.backupFileExtension = "hm-backup";
-        home-manager.useUserPackages = true;
-        home-manager.extraSpecialArgs = { inherit vars; };
-        home-manager.users.${vars.username} = {
-          imports = [ ./home.nix ] ++ lib.optional vars.desktopEnable ./home-desktop.nix;
-        };
+    mkHomeManagerModule = vars: {
+      home-manager.useGlobalPkgs = true;
+      # Move clobbered files aside instead of failing the rebuild.
+      home-manager.backupFileExtension = "hm-backup";
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = {inherit vars;};
+      home-manager.users.${vars.username} = {
+        imports = [./home.nix] ++ lib.optional vars.desktopEnable ./home-desktop.nix;
+      };
+    };
+
+    mkHost = name: let
+      hostVars = import (hostsDir + "/${name}/vars.nix");
+      vars = defaults // hostVars;
+      hardwareFile = hostsDir + "/${name}/hardware-configuration.nix";
+    in
+      nixpkgs.lib.nixosSystem {
+        inherit (vars) system;
+        specialArgs =
+          {inherit vars;}
+          // lib.optionalAttrs (vars.targetType == "wsl") {inherit nixos-wsl;};
+        modules =
+          [
+            (
+              if vars.targetType == "wsl"
+              then ./wsl-configuration.nix
+              else ./configuration.nix
+            )
+            home-manager.nixosModules.home-manager
+            sops-nix.nixosModules.sops
+            # Inert unless hardware.bc250.enable (common/bc250.nix).
+            bc250.nixosModules.bc250
+            (mkHomeManagerModule vars)
+          ]
+          ++ lib.optional (vars.targetType == "real") hardwareFile;
       };
 
-      mkHost = name:
-        let
-          hostVars = import (hostsDir + "/${name}/vars.nix");
-          vars = defaults // hostVars;
-          hardwareFile = hostsDir + "/${name}/hardware-configuration.nix";
-        in
-        nixpkgs.lib.nixosSystem {
-          system = vars.system;
-          specialArgs =
-            { inherit vars; }
-            // lib.optionalAttrs (vars.targetType == "wsl") { inherit nixos-wsl; };
-          modules =
-            [
-              (if vars.targetType == "wsl" then ./wsl-configuration.nix else ./configuration.nix)
-              home-manager.nixosModules.home-manager
-              sops-nix.nixosModules.sops
-              # Inert unless hardware.bc250.enable (common/bc250.nix).
-              bc250.nixosModules.bc250
-              (mkHomeManagerModule vars)
-            ]
-            ++ lib.optional (vars.targetType == "real") hardwareFile;
-        };
+    inherit (defaults) system;
+    pkgs = nixpkgs.legacyPackages.${system};
+    treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+  in {
+    formatter.${system} = treefmtEval.config.build.wrapper;
+    checks.${system}.formatting = treefmtEval.config.build.check self;
 
-      system = defaults.system;
-      pkgs = nixpkgs.legacyPackages.${system};
-      treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-    in
-    {
-      formatter.${system} = treefmtEval.config.build.wrapper;
-      checks.${system}.formatting = treefmtEval.config.build.check self;
-
-      nixosConfigurations = builtins.listToAttrs (
-        map (name: { inherit name; value = mkHost name; }) hostNames
-      );
-    };
+    nixosConfigurations = builtins.listToAttrs (
+      map (name: {
+        inherit name;
+        value = mkHost name;
+      })
+      hostNames
+    );
+  };
 }

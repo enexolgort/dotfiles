@@ -1,7 +1,10 @@
 # AMD BC-250 board support from github:TesseractCat/bc250-nixos, bc250Enable.
 # Its defaults also turn on the nct6687 sensors, the GPU governor and zswap.
-{ lib, vars, ... }:
-
+{
+  lib,
+  vars,
+  ...
+}:
 lib.mkIf vars.bc250Enable {
   hardware.bc250 = {
     enable = true;

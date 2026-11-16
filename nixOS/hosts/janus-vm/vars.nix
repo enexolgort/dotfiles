@@ -25,5 +25,5 @@
 
   backupEnable = false;
 
-  projectRepos = [ ];
+  projectRepos = [];
 }

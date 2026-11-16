@@ -21,7 +21,7 @@
 
   sambaWorkgroup = "WORKGROUP";
 
-  extraMounts = [ ];
+  extraMounts = [];
 
   secretsEnabled = false;
 
@@ -31,6 +31,7 @@
   herdrEnable = false; # herdr desktop app via its upstream installer (post-install.sh)
   claudeEnable = true; # Claude Code via its native installer (post-install.sh)
   hermesAgentEnable = false; # Nous Research Hermes Agent via its installer (post-install.sh)
+  forgejoRunnerEnable = false; # Forgejo Actions runner for this repo's CI; needs gitServerEnable
   bc250Enable = false; # AMD BC-250 board support (common/bc250.nix), real hosts only
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
@@ -66,6 +67,7 @@
   # gitAdminUser      = "gituser"; # "admin" is reserved   # if gitServerEnable
   # gitAdminPass      = "...";                            # if gitServerEnable
   # gitDataDir        = "/data/media/forgejo";            # optional, if gitServerEnable
+  # forgejoRunnerTokenFile = "/var/lib/forgejo-runner/token.env";  # optional, if forgejoRunnerEnable
   # aiModels          = [ "qwen2.5:0.5b" ];               # if aiEnable
   # aiBackend         = "cpu" | "vulkan" | "rocm" | "cuda";  # optional, if aiEnable (default "cpu")
   # aiEnvironment     = { OLLAMA_... = "..."; };    # optional, if aiEnable

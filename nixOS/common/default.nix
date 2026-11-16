@@ -6,6 +6,7 @@
     ./jellyfin.nix
     ./couchdb.nix
     ./forgejo.nix
+    ./forgejo-runner.nix
     ./ai.nix
     ./searx.nix
     ./n8n.nix

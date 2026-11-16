@@ -1,6 +1,10 @@
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -8,23 +12,26 @@
   };
   nix.settings.auto-optimise-store = true;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    gh
-    wget
-    htop
-    btop
-    ncdu
-    jq
-    tmux
-    restic
-    ffmpeg
-    docker-compose
-    nodejs
-  ] ++ lib.optionals (vars.ytdlpEnable or false) [
-    yt-dlp
-  ] ++ map (name: pkgs.${name}) (vars.extraPackages or []);
+  environment.systemPackages = with pkgs;
+    [
+      vim
+      git
+      gh
+      wget
+      htop
+      btop
+      ncdu
+      jq
+      tmux
+      restic
+      ffmpeg
+      docker-compose
+      nodejs
+    ]
+    ++ lib.optionals (vars.ytdlpEnable or false) [
+      yt-dlp
+    ]
+    ++ map (name: pkgs.${name}) (vars.extraPackages or []);
 
   # Claude Code (claudeEnable), the herdr desktop app (herdrEnable) and
   # Hermes Agent (hermesAgentEnable, with its uv-managed Python and Node)

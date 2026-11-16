@@ -1,60 +1,79 @@
 # SearXNG metasearch on :8888 for hosts with aiEnable: web search for Open
 # WebUI and n8n agents. :8080 (the module default) is Open WebUI's.
-{ config, lib, pkgs, vars, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  vars,
+  ...
+}: let
   port = 8888;
   secretFile = "/var/lib/searx/secret.env";
 in
-lib.mkIf vars.aiEnable {
-  services.searx = {
-    enable = true;
-    package = pkgs.searxng;
-    # Generated on first boot by searx-secret below, never in the Nix store.
-    environmentFile = secretFile;
-    settings = {
-      server = {
-        inherit port;
-        bind_address = "0.0.0.0";
-        secret_key = "$SEARX_SECRET_KEY";
-        # The rate limiter needs Valkey and only matters for public instances.
-        limiter = false;
+  lib.mkIf vars.aiEnable {
+    services.searx = {
+      enable = true;
+      package = pkgs.searxng;
+      # Generated on first boot by searx-secret below, never in the Nix store.
+      environmentFile = secretFile;
+      settings = {
+        server = {
+          inherit port;
+          bind_address = "0.0.0.0";
+          secret_key = "$SEARX_SECRET_KEY";
+          # The rate limiter needs Valkey and only matters for public instances.
+          limiter = false;
+        };
+        # Open WebUI and n8n query the JSON API.
+        # No default_lang: with any language set ("en", "en-US"), Bing
+        # returns unrelated pages or nothing; unset, it answers correctly.
+        search.formats = ["html" "json"];
+        # Merged by name into SearXNG's default engine list. From athena,
+        # Google returns nothing, DuckDuckGo/Startpage answer with CAPTCHAs
+        # and Brave rate-limits, so they're off and Bing does the searching.
+        engines = [
+          {
+            name = "bing";
+            disabled = false;
+          }
+          {
+            name = "google";
+            disabled = true;
+          }
+          {
+            name = "duckduckgo";
+            disabled = true;
+          }
+          {
+            name = "startpage";
+            disabled = true;
+          }
+          {
+            name = "brave";
+            disabled = true;
+          }
+        ];
       };
-      # Open WebUI and n8n query the JSON API.
-      # No default_lang: with any language set ("en", "en-US"), Bing
-      # returns unrelated pages or nothing; unset, it answers correctly.
-      search.formats = [ "html" "json" ];
-      # Merged by name into SearXNG's default engine list. From athena,
-      # Google returns nothing, DuckDuckGo/Startpage answer with CAPTCHAs
-      # and Brave rate-limits, so they're off and Bing does the searching.
-      engines = [
-        { name = "bing"; disabled = false; }
-        { name = "google"; disabled = true; }
-        { name = "duckduckgo"; disabled = true; }
-        { name = "startpage"; disabled = true; }
-        { name = "brave"; disabled = true; }
-      ];
     };
-  };
 
-  systemd.services.searx-secret = {
-    description = "Generate the SearXNG secret key";
-    before = [ "searx-init.service" ];
-    requiredBy = [ "searx-init.service" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      if [ ! -s ${secretFile} ]; then
-        install -d -m 0700 ${dirOf secretFile}
-        (umask 077; echo "SEARX_SECRET_KEY=$(${pkgs.openssl}/bin/openssl rand -hex 32)" > ${secretFile})
-      fi
-    '';
-  };
+    systemd.services.searx-secret = {
+      description = "Generate the SearXNG secret key";
+      before = ["searx-init.service"];
+      requiredBy = ["searx-init.service"];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        if [ ! -s ${secretFile} ]; then
+          install -d -m 0700 ${dirOf secretFile}
+          (umask 077; echo "SEARX_SECRET_KEY=$(${pkgs.openssl}/bin/openssl rand -hex 32)" > ${secretFile})
+        fi
+      '';
+    };
 
-  services.open-webui.environment = {
-    # Only seed Open WebUI's stored config; once saved, Admin > Settings >
-    # Web Search wins.
-    ENABLE_WEB_SEARCH = "True";
-    WEB_SEARCH_ENGINE = "searxng";
-    SEARXNG_QUERY_URL = "http://127.0.0.1:${toString port}/search?q=<query>";
-  };
-}
+    services.open-webui.environment = {
+      # Only seed Open WebUI's stored config; once saved, Admin > Settings >
+      # Web Search wins.
+      ENABLE_WEB_SEARCH = "True";
+      WEB_SEARCH_ENGINE = "searxng";
+      SEARXNG_QUERY_URL = "http://127.0.0.1:${toString port}/search?q=<query>";
+    };
+  }

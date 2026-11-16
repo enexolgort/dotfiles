@@ -28,19 +28,21 @@
   gitAdminPass = "changeme-git"; # CHANGE THIS
   # On the media drive, so it's covered by the mediaDir backup.
   gitDataDir = "/data/media/forgejo";
+  # Runs this repo's CI (.forgejo/workflows) on mnemosyne itself.
+  forgejoRunnerEnable = true;
 
   extraMounts = [
-   {
+    {
       device = "/dev/disk/by-uuid/354d0fc5-b1fd-482d-bc7b-2261324f590d"; # media drive (dwsdb)
       mountPoint = "/data/media";
       fsType = "ext4";
-      options = [ "defaults" "nofail" ];
+      options = ["defaults" "nofail"];
     }
     {
       device = "/dev/disk/by-uuid/580634fd-4d57-4d9e-9b25-77a7965f1b93"; # backup drive (sdb)
       mountPoint = "/data/backup";
       fsType = "ext4";
-      options = [ "defaults" "nofail" ];
+      options = ["defaults" "nofail"];
     }
   ];
 
@@ -56,4 +58,3 @@
     "http://mnemosyne:3000/enexolgort/backup-health"
   ];
 }
-

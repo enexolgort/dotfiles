@@ -98,6 +98,26 @@ athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://git
 
 n8n on athena runs a locally built `n8n-custom:latest` image instead of the upstream one, because it sets optional vars (`common/n8n.nix`). `n8nNpmPackages` installs npm packages globally in the image and allows them in the Code node through `NODE_FUNCTION_ALLOW_EXTERNAL`. `n8nCommunityNodes` installs pinned community node packages (athena: `n8n-nodes-forgejo@0.2.0`, a Forgejo node and credential) into `/opt/n8n-community-nodes` and loads them through `N8N_CUSTOM_EXTENSIONS`, so they're part of the image rather than installed from n8n's UI; peer dependencies are skipped because n8n provides `n8n-workflow` itself. In the editor the node is listed as *Forgejo*; create a *Forgejo API* credential with a token from Forgejo (Settings → Applications). `n8nCatppuccin = true` links `common/n8n-catppuccin-mocha.css` into the editor; it only restyles n8n's dark theme, so pick *Dark* under Settings → Personal → Theme. The `n8n-image` service rebuilds the image before `docker-n8n` starts, and Docker's cache skips the rebuild when nothing changed. The Execute Command node is on for every n8n host (`NODES_EXCLUDE = "[]"`).
 
+`n8n/workflows/host-health.json` is a fleet health check for n8n. Import it in the editor (Workflows → Import from File) and activate it. Every 15 minutes it probes every host over the tailnet: SSH, plus each service `scripts/test-all-services.sh` covers, along with Forgejo's `/api/healthz`, SearXNG and openwebui-usage. It uses the Code node's `net`/`http` built-ins. proteus, janus and janus-vm are only SSH-checked and marked optional, so if they're off they show up as offline but never raise an alert. To get alerts, set `webhookUrl` in the *Config* node (for example an ntfy topic URL). The message is POSTed as `text/plain` only when the set of failing checks changes, so you get one alert when a check fails and one when it recovers. To add a host or service, edit the `checks` list in the *Check all hosts* node and in the JSON file.
+
+### CI (Forgejo Actions on mnemosyne)
+
+The repo's CI is `.forgejo/workflows/ci.yml`: on every push and pull request it runs the formatting and lint check (alejandra, deadnix and statix from `nixOS/treefmt.nix`), builds every `targetType = "wsl"` host, and runs shellcheck on `scripts/`. mnemosyne runs the jobs with `forgejoRunnerEnable = true` (`common/forgejo-runner.nix`): a `forgejo-runner` registered with the `native:host` label, so jobs run directly on mnemosyne with its Nix daemon and store. The module also sets Forgejo's `[actions] ENABLED = true`.
+
+The runner registers with a token that stays out of the repo. Once, on mnemosyne:
+
+1. In Forgejo, go to Site Administration → Actions → Runners → Create new runner, and copy the registration token.
+2. Save it and restart the runner:
+   ```bash
+   sudo install -d -m 0700 /var/lib/forgejo-runner
+   echo 'TOKEN=<registration token>' | sudo tee /var/lib/forgejo-runner/token.env >/dev/null
+   sudo chmod 0600 /var/lib/forgejo-runner/token.env
+   sudo systemctl restart gitea-runner-homelab
+   ```
+3. If the repo has no *Actions* tab, turn Actions on under the repo's Settings → Units.
+
+The runner should then show as idle under Site Administration → Actions → Runners, and each push shows its run in the repo's *Actions* tab. A different token path can be set with `forgejoRunnerTokenFile`.
+
 Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open WebUI links `/static/custom.css` on every page but wipes its static directory on each start, so the `open-webui-theme` service writes `common/open-webui-catppuccin-mocha.css` there once the server answers `/health`, and reruns whenever Open WebUI restarts. Like the n8n theme, it only restyles the Dark theme (Settings → General → Theme).
 
 Every `aiEnable` host also runs SearXNG on `:8888` (`common/searx.nix`), a self-hosted metasearch engine with its JSON API on, for web search from Open WebUI and n8n agents. Its secret key is generated on first boot into `/var/lib/searx/secret.env`. Open WebUI gets `WEB_SEARCH_ENGINE=searxng` and `SEARXNG_QUERY_URL`, but those env vars only seed its stored config: on an existing install, turn web search on once under Admin → Settings → Web Search. In n8n, point the SearXNG tool (or an HTTP Request) at `http://127.0.0.1:8888`; n8n uses host networking.

@@ -1,10 +1,13 @@
-{ config, pkgs, lib, vars, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: let
   # Guarded so a shell reading several of these files adds it only once.
   localBinPath = ''case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac'';
-in
-{
+in {
   home.username = vars.username;
   home.homeDirectory = "/home/${vars.username}";
   home.stateVersion = "24.11";
@@ -30,16 +33,16 @@ in
     fd
     coreutils
     imagemagick
-    sqlite            # org-roam
+    sqlite # org-roam
     fontconfig
     nerd-fonts.jetbrains-mono
     gnutls
     unzip
-    hyfetch            # neowofetch; neofetch was removed in nixos-26.05
-    python3            # herdr's Claude Code hook runs under python3
+    hyfetch # neowofetch; neofetch was removed in nixos-26.05
+    python3 # herdr's Claude Code hook runs under python3
   ];
 
-  home.activation.installDoomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.installDoomEmacs = lib.hm.dag.entryAfter ["writeBoundary"] ''
     DOOM_DIR="$HOME/.config/emacs"
     DOOM_CONF="$HOME/.config/doom"
 
@@ -54,7 +57,7 @@ in
     fi
   '';
 
-  home.sessionPath = [ "$HOME/.config/emacs/bin" "$HOME/.local/bin" ];
+  home.sessionPath = ["$HOME/.config/emacs/bin" "$HOME/.local/bin"];
 
   # Read by neowofetch.
   xdg.configFile."neofetch/config.conf".text = ''

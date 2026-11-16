@@ -1,6 +1,11 @@
 # CouchDB on :5984 for Obsidian's Self-hosted LiveSync plugin (obsidianEnable).
-{ config, pkgs, lib, vars, ... }:
-
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}:
 lib.mkIf vars.obsidianEnable {
   services.couchdb = {
     enable = true;
@@ -23,7 +28,7 @@ lib.mkIf vars.obsidianEnable {
   };
 
   systemd.services.couchdb = {
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
   };
 }

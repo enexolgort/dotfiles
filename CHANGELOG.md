@@ -15,7 +15,30 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 
 ## Unreleased
 
-_Nothing yet._
+### Added
+- n8n: `n8n/workflows/host-health.json`, a workflow that checks SSH and
+  every service on all hosts every 15 minutes and POSTs to a webhook when
+  the set of failing checks changes.
+- **Forgejo Actions CI** on mnemosyne: `forgejoRunnerEnable` toggle
+  (`common/forgejo-runner.nix`) runs a `forgejo-runner` with the
+  `native:host` label, so jobs use the host's Nix. Its registration token
+  is created by hand (doc/hosts.md). Forgejo's Actions are enabled
+  explicitly.
+- treefmt lints: deadnix (lambda arguments kept) and statix, alongside
+  alejandra.
+
+### Changed
+- **Breaking:** CI moved from `.github/workflows` to
+  `.forgejo/workflows/ci.yml`; it no longer installs Nix per job. It needs
+  the runner token set up once on mnemosyne.
+- Every `.nix` file formatted by `nix fmt` (layout only, plus statix
+  rewrites such as `inherit (vars) initialPassword`). Host derivations are
+  unchanged.
+
+### Fixed
+- The formatting check failed on every file, since nothing had been
+  formatted. `hardware-configuration.nix` files are now excluded from
+  treefmt, as they're machine-generated.
 
 ## [0.11.0] — 2026-11-16
 

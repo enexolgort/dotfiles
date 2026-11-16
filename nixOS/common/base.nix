@@ -1,13 +1,17 @@
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   networking.hostName = vars.hostname;
 
   time.timeZone = vars.timeZone;
   i18n.defaultLocale = vars.locale;
   console.keyMap = vars.keyMap;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = true; # jellyfin's ffmpeg wants some unfree codecs
   # Exact version strings; update if a rebuild reports a different insecure Emacs.
   nixpkgs.config.permittedInsecurePackages = [
@@ -30,15 +34,19 @@
   # users are in "users".
   users.groups.media = {};
 
-  users.users.${vars.username} = {
-    isNormalUser = true;
-    description = "Media server admin";
-    extraGroups = [ "wheel" "jellyfin" "docker" "media" ];
-    shell = pkgs.bash;
-    openssh.authorizedKeys.keys = vars.sshAuthorizedKeys;
-  } // (if vars.secretsEnabled
-    then { hashedPasswordFile = config.sops.secrets.userPasswordHash.path; }
-    else { initialPassword = vars.initialPassword; });
+  users.users.${vars.username} =
+    {
+      isNormalUser = true;
+      description = "Media server admin";
+      extraGroups = ["wheel" "jellyfin" "docker" "media"];
+      shell = pkgs.bash;
+      openssh.authorizedKeys.keys = vars.sshAuthorizedKeys;
+    }
+    // (
+      if vars.secretsEnabled
+      then {hashedPasswordFile = config.sops.secrets.userPasswordHash.path;}
+      else {inherit (vars) initialPassword;}
+    );
 
   system.stateVersion = "24.11"; # do not change after initial install
 }

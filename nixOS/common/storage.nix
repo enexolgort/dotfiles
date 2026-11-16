@@ -1,6 +1,10 @@
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   systemd.tmpfiles.rules =
     [
       # "media" lets the admin user and sftpuser write here too (base.nix).

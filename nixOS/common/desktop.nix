@@ -1,7 +1,12 @@
 # Hyprland desktop (desktopEnable). programs.hyprland already brings polkit,
 # the Hyprland portal, graphics drivers, fonts, dconf and XWayland.
-{ config, pkgs, lib, vars, ... }:
-
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}:
 lib.mkIf vars.desktopEnable {
   programs.hyprland.enable = true;
 
@@ -22,24 +27,24 @@ lib.mkIf vars.desktopEnable {
   # The Hyprland portal has no file chooser; use the GTK one.
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
     config.hyprland = {
-      default = [ "hyprland" "gtk" ];
-      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      default = ["hyprland" "gtk"];
+      "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
     };
   };
 
   programs.obs-studio.enable = true;
 
   # Without it, CSS-loaded SVGs (power menu icons) silently don't render.
-  programs.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
+  programs.gdk-pixbuf.modulePackages = [pkgs.librsvg];
 
   # Mount USB drives without root (Dolphin / GTK file dialogs).
   services.udisks2.enable = true;
   services.gvfs.enable = true;
 
   # swayosd's udev rules let the user change the backlight.
-  services.udev.packages = [ pkgs.swayosd ];
+  services.udev.packages = [pkgs.swayosd];
 
   # "kde" makes Qt apps read ~/.config/kdeglobals (written by home-desktop.nix).
   qt = {
@@ -56,7 +61,7 @@ lib.mkIf vars.desktopEnable {
   programs.nm-applet.enable = true;
 
   # WiFi changes without a polkit prompt; backlight without sudo.
-  users.users.${vars.username}.extraGroups = [ "networkmanager" "video" ];
+  users.users.${vars.username}.extraGroups = ["networkmanager" "video"];
 
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
@@ -64,7 +69,7 @@ lib.mkIf vars.desktopEnable {
 
   # programs.hyprland enables polkit but no auth agent; without one, GUI
   # admin actions fail silently. hyprland.lua starts this user unit.
-  systemd.packages = [ pkgs.hyprpolkitagent ];
+  systemd.packages = [pkgs.hyprpolkitagent];
 
   services.upower.enable = true;
 
@@ -90,7 +95,7 @@ lib.mkIf vars.desktopEnable {
     nwg-look
 
     hyprpaper
-    swaybg          # fallback when hyprpaper can't start (janus-vm), see hypr/scripts/wallpaper.sh
+    swaybg # fallback when hyprpaper can't start (janus-vm), see hypr/scripts/wallpaper.sh
     hypridle
     hyprpolkitagent
     mako
@@ -112,9 +117,9 @@ lib.mkIf vars.desktopEnable {
     playerctl
     kdePackages.dolphin
     kdePackages.breeze-icons
-    kdePackages.kio          # no longer pulled in by Dolphin since nixos-25.11
+    kdePackages.kio # no longer pulled in by Dolphin since nixos-25.11
     kdePackages.kio-fuse
-    kdePackages.kio-extras   # sftp:// etc. in Dolphin
+    kdePackages.kio-extras # sftp:// etc. in Dolphin
     nerd-fonts.jetbrains-mono
     font-awesome
 

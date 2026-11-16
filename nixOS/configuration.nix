@@ -1,7 +1,11 @@
 # Base for targetType = "real" (bare metal or VM).
-{ config, pkgs, lib, vars, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}: {
   # systemd-boot is UEFI-only; legacy-BIOS machines/VMs need grub.
   boot.loader.systemd-boot.enable = lib.mkIf (vars.bootloader == "systemd-boot") true;
   boot.loader.systemd-boot.configurationLimit = lib.mkIf (vars.bootloader == "systemd-boot") 10; # small ESP
@@ -49,12 +53,12 @@
     (m: {
       name = m.mountPoint;
       value = {
-        device = m.device;
+        inherit (m) device;
         fsType = m.fsType or "ext4";
-        options = m.options or [ "defaults" "nofail" ];
+        options = m.options or ["defaults" "nofail"];
       };
     })
     vars.extraMounts);
 
-  imports = [ ./common ];
+  imports = [./common];
 }
