@@ -125,7 +125,9 @@ fi
 
 HERMES_INSTALL="curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --skip-browser --skip-computer-use"
 if [ "$HERMES_AGENT_ENABLE" = "true" ]; then
-  if [ -e "$HOME/.local/bin/hermes" ]; then
+  # The installer writes this marker as its last step; the hermes command
+  # appears earlier, so it alone doesn't mean the install finished.
+  if [ -e "$HOME/.hermes/hermes-agent/.hermes-bootstrap-complete" ]; then
     echo "==> Hermes Agent already installed, update it with: hermes update"
   else
     echo "==> Installing Hermes Agent: $HERMES_INSTALL"

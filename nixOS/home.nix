@@ -1,5 +1,9 @@
 { config, pkgs, lib, vars, ... }:
 
+let
+  # Guarded so a shell reading several of these files adds it only once.
+  localBinPath = ''case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac'';
+in
 {
   home.username = vars.username;
   home.homeDirectory = "/home/${vars.username}";
@@ -107,6 +111,20 @@
     image_backend="ascii"
   '';
 
+  # Hermes Agent's installer (and similar ones) append this line to .bashrc,
+  # .profile and .bash_profile unless they already set PATH with .local/bin;
+  # home-manager's copies are read-only, so the append fails the install.
+  # sessionPath already covers PATH; the line is mainly that marker.
+  home.file.".bash_profile".source = lib.mkForce (pkgs.writeText "bash_profile" ''
+    # include .profile if it exists
+    [[ -f ~/.profile ]] && . ~/.profile
+
+    # include .bashrc if it exists
+    [[ -f ~/.bashrc ]] && . ~/.bashrc
+
+    ${localBinPath}
+  '');
+
   programs.bash = {
     enable = true;
 
@@ -114,7 +132,10 @@
     # home.sessionPath / sessionVariables here too. The script guards against double-sourcing.
     bashrcExtra = ''
       . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      ${localBinPath}
     '';
+
+    profileExtra = localBinPath;
 
     initExtra = ''
       # Interactive shells only, so scp/rsync/git-over-ssh stay clean.
