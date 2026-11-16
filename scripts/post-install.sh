@@ -114,6 +114,31 @@ if [ "$CLAUDE_ENABLE" = "true" ]; then
   echo
 fi
 
+# --- Hermes Agent (hermesAgentEnable): Nous Research's upstream installer
+# into ~/.hermes, with the hermes command in ~/.local/bin. Headless: no
+# Chromium (SearXNG covers web search) and no computer-use driver.
+HERMES_AGENT_ENABLE="false"
+if [ -f "$VARS_FILE" ]; then
+  HERMES_AGENT_ENABLE="$(nix --extra-experimental-features 'nix-command' eval --impure \
+    --expr "((import $DEFAULTS_FILE) // (import $VARS_FILE)).hermesAgentEnable" 2>/dev/null || echo "false")"
+fi
+
+HERMES_INSTALL="curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --skip-browser --skip-computer-use"
+if [ "$HERMES_AGENT_ENABLE" = "true" ]; then
+  if [ -e "$HOME/.local/bin/hermes" ]; then
+    echo "==> Hermes Agent already installed, update it with: hermes update"
+  else
+    echo "==> Installing Hermes Agent: $HERMES_INSTALL"
+    if bash -c "$HERMES_INSTALL"; then
+      echo "   Point it at Ollama with: hermes setup"
+      echo "   (custom endpoint http://127.0.0.1:11434/v1, no API key, context 65536)"
+    else
+      echo "!! Hermes Agent install failed - rerun: $HERMES_INSTALL"
+    fi
+  fi
+  echo
+fi
+
 # --- Desktop configs (desktop hosts only). Idempotent.
 DOTFILES_STAGING="$REPO_ROOT/dotfiles"
 

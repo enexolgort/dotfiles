@@ -73,6 +73,7 @@ herdrEnable = true | false;      # optional (default false): herdr desktop app, 
                                  # herdr-core (hc) is installed by post-install.sh on every host, toggle or not
                                  # herdrEnable also copies dotfiles/herdr/config.toml (Catppuccin Mocha theme) to ~/.config/herdr
 claudeEnable = true | false;     # optional (default true): Claude Code, installed by post-install.sh (claude.ai/install.sh) into ~/.local/bin, self-updating (nix-ld on)
+hermesAgentEnable = true | false; # optional (default false): Nous Research Hermes Agent, installed by post-install.sh into ~/.hermes (nix-ld on)
 ```
 `common/backups.nix`'s restic paths are conditional on these too — a host with `jellyfinEnable = false` won't try backing up `/var/lib/jellyfin`, since it wouldn't exist there anyway.
 
@@ -91,7 +92,7 @@ The inference backend comes from the host's `aiBackend` var: `"cpu"` (the defaul
 
 Open WebUI is unfree in nixpkgs, so the binary cache never has it and every rebuild that bumps it compiles it locally. That frontend build needs more RAM than athena has, because the BC-250 shares its 16 GB with the GPU. athena sets `swapfileGB = 16`, which makes `configuration.nix` add `/var/lib/swapfile`; any real host can set it.
 
-The default model is `qwen3.5:9b`, about 8 GiB at 4K context. The BC-250 maps GPU memory from system RAM through TTM, which caps it at about 7.4 GiB unless `ttm.pages_limit` is raised. athena therefore sets `kernelParams = [ "ttm.pages_limit=4194304" ]` (16 GiB), which needs a reboot to take effect. Through `aiEnvironment`, it sets `OLLAMA_IGPU_ENABLE=1` (Ollama otherwise classifies the BC-250 as an integrated GPU and falls back to CPU), keeps a single model loaded and uses a q8_0 KV cache with flash attention. Models plus KV cache much above ~13 GiB don't fit: `qwen3:14b` (~9 GiB) does, while `gpt-oss:20b` is borderline. For GPU load, athena adds `amdgpu_top` through the optional `extraPackages` var (nixpkgs attribute names), since btop needs ROCm to see AMD GPUs.
+The default model is `qwen3.5:9b`, about 6 GiB on the GPU with the 64K context athena sets in `OLLAMA_CONTEXT_LENGTH` (Hermes Agent requires at least 64K). The BC-250 maps GPU memory from system RAM through TTM, which caps it at about 7.4 GiB unless `ttm.pages_limit` is raised. athena therefore sets `kernelParams = [ "ttm.pages_limit=4194304" ]` (16 GiB), which needs a reboot to take effect. Through `aiEnvironment`, it sets `OLLAMA_IGPU_ENABLE=1` (Ollama otherwise classifies the BC-250 as an integrated GPU and falls back to CPU), keeps a single model loaded and uses a q8_0 KV cache with flash attention. Models plus KV cache much above ~13 GiB don't fit: `qwen3:14b` (~9 GiB) does, while `gpt-oss:20b` is borderline. For GPU load, athena adds `amdgpu_top` through the optional `extraPackages` var (nixpkgs attribute names), since btop needs ROCm to see AMD GPUs.
 
 athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://github.com/TesseractCat/bc250-nixos) module (`common/bc250.nix`): nct6687 sensors, the cyan-skillfish GPU governor, zswap, and the CPU core unlock (6c/12t to 8c/16t). The unlock runs in the initrd and reboots once on every cold boot; add `bc250.nocoreunlock` to the kernel command line at the boot menu to skip it for one boot. Stress-test the two extra cores before relying on them.
 
@@ -102,6 +103,8 @@ Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open W
 Every `aiEnable` host also runs SearXNG on `:8888` (`common/searx.nix`), a self-hosted metasearch engine with its JSON API on, for web search from Open WebUI and n8n agents. Its secret key is generated on first boot into `/var/lib/searx/secret.env`. Open WebUI gets `WEB_SEARCH_ENGINE=searxng` and `SEARXNG_QUERY_URL`, but those env vars only seed its stored config: on an existing install, turn web search on once under Admin → Settings → Web Search. In n8n, point the SearXNG tool (or an HTTP Request) at `http://127.0.0.1:8888`; n8n uses host networking.
 
 athena's `projectRepos` has [openwebui-usage](http://mnemosyne:3000/enexolgort/openwebui-usage), a dashboard on `:3007` that graphs token usage over time from Open WebUI's database (Ollama itself keeps no history). `install.sh` clones it into `/data/projects` and starts it with Docker Compose; it mounts Open WebUI's data directory read-only. The *AI usage* tile on Homepage shows its last-24-hour totals.
+
+athena sets `hermesAgentEnable = true`: `post-install.sh` runs [Hermes Agent](https://github.com/NousResearch/hermes-agent)'s installer non-interactively, without its Chromium browser or computer-use driver. Configure it once with `hermes setup`: custom endpoint `http://127.0.0.1:11434/v1`, no API key, context length `65536` (it rejects models under 64K, and Ollama's `/api/show` reports the model's maximum, not the configured context). `hermes gateway setup` connects it to Telegram, Discord and other chat apps. It runs commands as your user on athena.
 
 ## Desktop (`desktopEnable`) specifically
 Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.

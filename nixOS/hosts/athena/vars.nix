@@ -27,10 +27,11 @@
   nvidiaEnable = false;
   gamingEnable = false;
   bc250Enable = true;
+  hermesAgentEnable = true;
 
   # AMD BC-250 (gfx1013): ROCm doesn't support it, Mesa's RADV Vulkan does.
   aiBackend = "vulkan";
-  # Pulled on rebuild. ~8 GiB at 4K context, ~23 tok/s on a stock BC-250.
+  # Pulled on rebuild. ~6 GiB on the GPU, ~38 tok/s on the BC-250.
   aiModels = [ "qwen3.5:9b" ];
   openWebuiCatppuccin = true;
   # One model at a time: RAM is shared with n8n and Open WebUI.
@@ -40,7 +41,8 @@
     OLLAMA_MAX_LOADED_MODELS = "1";
     OLLAMA_FLASH_ATTENTION = "1";
     OLLAMA_KV_CACHE_TYPE = "q8_0";
-    OLLAMA_CONTEXT_LENGTH = "32768";
+    # Hermes Agent rejects models with under 64K context.
+    OLLAMA_CONTEXT_LENGTH = "65536";
   };
 
   backupEnable = false;
