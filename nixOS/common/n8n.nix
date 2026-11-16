@@ -11,8 +11,15 @@ let
   # /usr/local/lib/node_modules, which Node reaches by walking up from
   # n8n's task runner.
   npmPackages = vars.n8nNpmPackages or [];
+  # Community node packages ("name@version"), loaded through
+  # N8N_CUSTOM_EXTENSIONS rather than the UI installer, so they're part of
+  # the image instead of state in /var/lib/n8n. --legacy-peer-deps: their
+  # n8n-workflow peer dependency is n8n's own, and installing it pulls
+  # isolated-vm, which needs a compiler toolchain the image lacks.
+  communityNodes = vars.n8nCommunityNodes or [];
+  communityNodesDir = "/opt/n8n-community-nodes";
   catppuccin = vars.n8nCatppuccin or false;
-  customImage = npmPackages != [] || catppuccin;
+  customImage = npmPackages != [] || communityNodes != [] || catppuccin;
 
   # n8n has no theme setting; the stylesheet is linked into the editor UI's
   # index.html after n8n's own CSS so its variable overrides win.
@@ -23,6 +30,7 @@ let
     FROM ${upstreamImage}
     USER root
     ${lib.optionalString (npmPackages != []) "RUN npm install -g --omit=dev ${lib.escapeShellArgs npmPackages}"}
+    ${lib.optionalString (communityNodes != []) "RUN npm install --prefix ${communityNodesDir} --omit=dev --no-save --legacy-peer-deps ${lib.escapeShellArgs communityNodes}"}
     ${lib.optionalString catppuccin ''
     COPY catppuccin-mocha.css /tmp/catppuccin-mocha.css
     RUN set -e; \
@@ -52,8 +60,10 @@ lib.mkIf vars.n8nEnable {
       # Built-ins the Code node may require(). child_process and vm are
       # left out on purpose: they'd allow arbitrary shell execution.
       NODE_FUNCTION_ALLOW_BUILTIN = "net,crypto,fs,path,util,querystring,url,os,stream,zlib,dns,http,https,buffer,assert";
-    } // lib.optionalAttrs customImage {
+    } // lib.optionalAttrs (npmPackages != []) {
       NODE_FUNCTION_ALLOW_EXTERNAL = lib.concatStringsSep "," npmPackages;
+    } // lib.optionalAttrs (communityNodes != []) {
+      N8N_CUSTOM_EXTENSIONS = "${communityNodesDir}/node_modules";
     };
   };
 

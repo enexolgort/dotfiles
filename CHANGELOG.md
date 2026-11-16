@@ -15,6 +15,16 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 
 ## Unreleased
 
+_Nothing yet._
+
+## [0.11.0] — 2026-11-16
+
+### Added
+- n8n: optional `n8nCommunityNodes` var installs pinned community node
+  packages into the custom image and loads them through
+  `N8N_CUSTOM_EXTENSIONS`. athena gets `n8n-nodes-forgejo@0.2.0` (Forgejo
+  node and credential).
+
 ### Fixed
 - mnemosyne: yt-dlp-API on hermes can push over SFTP; its key
   (`yt-dlp-api@hermes`) is now in `sftpPublicKeys`.
@@ -260,6 +270,6 @@ First version.
 2. Commit, then tag and push:
 
 ```bash
-git tag -a v0.11.0 -m "v0.11.0"
+git tag -a v0.12.0 -m "v0.12.0"
 git push && git push --tags
 ```

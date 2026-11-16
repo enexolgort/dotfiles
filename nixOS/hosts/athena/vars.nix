@@ -21,6 +21,7 @@
   n8nEnable = true;
   n8nNpmPackages = [ "papaparse" "fast-xml-parser" "cheerio" "turndown" "rss-parser" ];
   n8nCatppuccin = true;
+  n8nCommunityNodes = [ "n8n-nodes-forgejo@0.2.0" ];
   homepageEnable = false;
   dockhandEnable = false;
   desktopEnable = false;
