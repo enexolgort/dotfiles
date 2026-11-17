@@ -22,15 +22,16 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 - **Forgejo Actions CI** on mnemosyne: `forgejoRunnerEnable` toggle
   (`common/forgejo-runner.nix`) runs a `forgejo-runner` with the
   `native:host` label, so jobs use the host's Nix. Its registration token
-  is created by hand (doc/hosts.md). Forgejo's Actions are enabled
-  explicitly.
+  is created on first deploy by the `forgejo-runner-token` service
+  (`forgejo-cli actions generate-runner-token`) and kept outside the repo
+  and the Nix store. Forgejo's Actions are enabled explicitly.
 - treefmt lints: deadnix (lambda arguments kept) and statix, alongside
   alejandra.
 
 ### Changed
 - **Breaking:** CI moved from `.github/workflows` to
   `.forgejo/workflows/ci.yml`; it no longer installs Nix per job. It needs
-  the runner token set up once on mnemosyne.
+  mnemosyne rebuilt with the runner.
 - Every `.nix` file formatted by `nix fmt` (layout only, plus statix
   rewrites such as `inherit (vars) initialPassword`). Host derivations are
   unchanged.

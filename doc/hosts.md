@@ -104,19 +104,18 @@ n8n on athena runs a locally built `n8n-custom:latest` image instead of the upst
 
 The repo's CI is `.forgejo/workflows/ci.yml`: on every push and pull request it runs the formatting and lint check (alejandra, deadnix and statix from `nixOS/treefmt.nix`), builds every `targetType = "wsl"` host, and runs shellcheck on `scripts/`. mnemosyne runs the jobs with `forgejoRunnerEnable = true` (`common/forgejo-runner.nix`): a `forgejo-runner` registered with the `native:host` label, so jobs run directly on mnemosyne with its Nix daemon and store. The module also sets Forgejo's `[actions] ENABLED = true`.
 
-The runner registers with a token that stays out of the repo. Once, on mnemosyne:
+The runner registers with a token that stays out of the repo and the Nix store. Before the runner first starts, the `forgejo-runner-token` service creates a global token with `forgejo forgejo-cli actions generate-runner-token` and writes it to `/var/lib/forgejo-runner/token.env`; a different path can be set with `forgejoRunnerTokenFile`. The service runs as the forgejo user with Forgejo's own credentials, and only when that file is missing, so an existing token is never replaced. After registering, the runner keeps its credentials in `/var/lib/gitea-runner/homelab/.runner`.
 
-1. In Forgejo, go to Site Administration → Actions → Runners → Create new runner, and copy the registration token.
-2. Save it and restart the runner:
-   ```bash
-   sudo install -d -m 0700 /var/lib/forgejo-runner
-   echo 'TOKEN=<registration token>' | sudo tee /var/lib/forgejo-runner/token.env >/dev/null
-   sudo chmod 0600 /var/lib/forgejo-runner/token.env
-   sudo systemctl restart gitea-runner-homelab
-   ```
-3. If the repo has no *Actions* tab, turn Actions on under the repo's Settings → Units.
+Setting it up is the usual deploy on mnemosyne:
 
-The runner should then show as idle under Site Administration → Actions → Runners, and each push shows its run in the repo's *Actions* tab. A different token path can be set with `forgejoRunnerTokenFile`.
+```bash
+cd ~/dotFiles && git pull
+./scripts/install.sh mnemosyne
+sudo nixos-rebuild switch --flake /etc/nixos#mnemosyne
+systemctl status forgejo-runner-token gitea-runner-homelab
+```
+
+The runner should then show as idle under Site Administration → Actions → Runners, and each push shows its run in the repo's *Actions* tab. If the repo has no *Actions* tab, turn Actions on under the repo's Settings → Units. To register again from scratch, delete the runner in that list, then run `sudo rm -r /var/lib/forgejo-runner/token.env /var/lib/gitea-runner/homelab` and `sudo systemctl restart gitea-runner-homelab`.
 
 Open WebUI on athena sets `openWebuiCatppuccin = true` (`common/ai.nix`). Open WebUI links `/static/custom.css` on every page but wipes its static directory on each start, so the `open-webui-theme` service writes `common/open-webui-catppuccin-mocha.css` there once the server answers `/health`, and reruns whenever Open WebUI restarts. Like the n8n theme, it only restyles the Dark theme (Settings → General → Theme).
 
