@@ -48,7 +48,11 @@ in
         name = vars.hostname;
         url = "http://127.0.0.1:3000";
         inherit tokenFile;
-        labels = ["native:host"];
+        # "docker" is for repos whose jobs expect a container (e.g. bacon-buddy).
+        labels = ["native:host" "docker:docker://node:20-bookworm"];
+        # Host network: job containers then resolve the tailnet name in Forgejo's
+        # ROOT_URL and reach the runner's cache server.
+        settings.container.network = "host";
         hostPackages = with pkgs; [
           bash
           coreutils

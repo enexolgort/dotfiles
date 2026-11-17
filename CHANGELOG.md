@@ -25,6 +25,8 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
   is created on first deploy by the `forgejo-runner-token` service
   (`forgejo-cli actions generate-runner-token`) and kept outside the repo
   and the Nix store. Forgejo's Actions are enabled explicitly.
+  A second `docker` label (`node:20-bookworm`, host networking) runs
+  container jobs for other repos such as bacon-buddy.
 - treefmt lints: deadnix (lambda arguments kept) and statix, alongside
   alejandra.
 
