@@ -17,6 +17,7 @@
   nvidiaEnable = false;
   gamingEnable = false;
   herdrEnable = true;
+  usbipAutoAttach = ["2-1"]; # T-Beam Supreme (303a:1001)
 
   backupEnable = false;
 

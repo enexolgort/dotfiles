@@ -33,6 +33,12 @@ Skip this if you're only deploying to the real machine — see [deploy-real-mach
 
 Your **existing** WSL distro (the Ubuntu-or-whatever one you were using before, with the plain `nix` package manager) is unaffected and still fine to keep around for general editing/git work — `NixOS` shows up as a separate distro alongside it in `wsl -l -v`.
 
+## USB devices from Windows (usbip)
+
+A WSL host can attach USB devices plugged into Windows, such as proteus's T-Beam Supreme, by listing their usbipd bus IDs in `usbipAutoAttach` (`vars.nix`; proteus: `["2-1"]`). This turns on NixOS-WSL's `wsl.usbip` and adds the user to `dialout` so serial ports (`/dev/ttyACM*`, `/dev/ttyUSB*`) open without sudo.
+
+On Windows, once: install [usbipd-win](https://github.com/dorssel/usbipd-win) (`winget install usbipd`), find the bus ID with `usbipd list`, and share it from an admin PowerShell with `usbipd bind --busid 2-1`. The bus ID follows the physical port, so plugging the device into another port changes it. Log out and back in after the first rebuild to pick up `dialout`.
+
 ## Known gotcha: nixos-wsl-utils build failure
 If `nixos-rebuild` fails trying to build `nixos-wsl-utils` with a Cargo/Rust `edition2024` error, the root cause is that **our own `nixpkgs` pin is too old** — `nixos-wsl`'s NixOS module builds that utility using *our* nixpkgs (regardless of whether `nixos-wsl`'s own flake input follows ours or has a separate pin; that only affects nixos-wsl's own flake-level evaluation, not what pkgs its NixOS module resolves to). `nixos-24.11` only ever received security backports, never a newer Cargo, so this specific build was never going to succeed on it.
 

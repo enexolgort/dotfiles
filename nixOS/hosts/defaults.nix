@@ -33,6 +33,7 @@
   hermesAgentEnable = false; # Nous Research Hermes Agent via its installer (post-install.sh)
   forgejoRunnerEnable = false; # Forgejo Actions runner for this repo's CI; needs gitServerEnable
   bc250Enable = false; # AMD BC-250 board support (common/bc250.nix), real hosts only
+  usbipAutoAttach = []; # WSL only: usbipd bus IDs to attach from Windows (wsl-configuration.nix)
 
   # --- Per-host essentials (every host's own vars.nix MUST set these) ----
   # hostname          = "...";

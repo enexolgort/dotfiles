@@ -19,5 +19,13 @@
     startMenuLaunchers = true;
     # GPU-accelerated Vulkan through WSLg, for the herdr desktop app.
     useWindowsDriver = vars.herdrEnable;
+    # USB devices from Windows, by usbipd bus ID; needs usbipd-win on Windows.
+    usbip = lib.mkIf (vars.usbipAutoAttach != []) {
+      enable = true;
+      autoAttach = vars.usbipAutoAttach;
+    };
   };
+
+  # Serial devices (/dev/ttyUSB*, /dev/ttyACM*) are group dialout.
+  users.users.${vars.username}.extraGroups = lib.mkIf (vars.usbipAutoAttach != []) ["dialout"];
 }

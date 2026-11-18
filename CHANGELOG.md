@@ -30,6 +30,10 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 - treefmt lints: deadnix (lambda arguments kept) and statix, alongside
   alejandra.
 
+- WSL: optional `usbipAutoAttach` var attaches USB devices from Windows
+  through usbipd and adds the user to `dialout`. proteus attaches its
+  T-Beam Supreme (`2-1`).
+
 ### Changed
 - **Breaking:** CI moved from `.github/workflows` to
   `.forgejo/workflows/ci.yml`; it no longer installs Nix per job. It needs
