@@ -149,6 +149,7 @@ janus is a hybrid laptop (iGPU + RTX 5070). `common/nvidia.nix` loads the NVIDIA
 
 - Run any app on the NVIDIA GPU with `nvidia-offload <app>`, e.g. `nvidia-offload blender`.
 - `common/gaming.nix` enables Steam with Valve's Proton built in, adds GE-Proton (`proton-ge-bin`), and enables `gamemode`. On a PRIME host, Steam starts with the offload variables set, so its games render on the NVIDIA GPU without per-game launch options. Pick GE-Proton per game under Properties → Compatibility.
+- janus also installs the Modrinth App (Minecraft launcher) and Godot through `extraPackages`. Since they aren't launched by Steam, run them with `nvidia-offload ModrinthApp` / `nvidia-offload godot` to use the NVIDIA GPU.
 
 Waybar also gained Hyprland workspaces, battery (hidden on machines without one) and a system tray — without the tray nm-applet/blueman-applet had nowhere to appear. The GPU module is defined but left off the bar (its script needs `nvtop`, not installed).
 

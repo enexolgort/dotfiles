@@ -19,6 +19,8 @@
   gamingEnable = true;
   herdrEnable = true;
 
+  extraPackages = ["modrinth-app" "godot"];
+
   # Placeholders: replace with `lspci | grep -E "VGA|3D"` on janus, in
   # PCI:bus:device:function form (decimal). Use amdgpuBusId for an AMD CPU.
   nvidiaPrime = {

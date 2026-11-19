@@ -16,6 +16,7 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 ## Unreleased
 
 ### Added
+- janus: Modrinth App (Minecraft launcher) and Godot via `extraPackages`.
 - n8n: `n8n/workflows/host-health.json`, a workflow that checks SSH and
   every service on all hosts every 15 minutes and POSTs to a webhook when
   the set of failing checks changes.
