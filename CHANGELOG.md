@@ -16,6 +16,8 @@ at the bottom. Versions before 0.10.0 were reconstructed from the history.
 ## Unreleased
 
 ### Added
+- **echo** host: second Hyprland desktop client (real machine, no NVIDIA
+  or Steam, herdr app). Its `hardware-configuration.nix` is a placeholder.
 - janus: Modrinth App (Minecraft launcher) and Godot via `extraPackages`.
 - n8n: `n8n/workflows/host-health.json`, a workflow that checks SSH and
   every service on all hosts every 15 minutes and POSTs to a webhook when

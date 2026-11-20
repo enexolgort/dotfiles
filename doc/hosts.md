@@ -13,6 +13,7 @@ Current hosts:
 | `athena` | `real` | Ollama + Open WebUI (local AI), SearXNG, n8n (Docker), openwebui-usage (Docker) | — |
 | `janus` | `real` | None — the Hyprland desktop client (`desktopEnable = true`): browser + SSH into the rest over Tailscale | — |
 | `janus-vm` | `real` | Same as `janus`, as a VirtualBox VM (BIOS/GRUB, label-based `hardware-configuration.nix` committed for real) | — |
+| `echo` | `real` | None — second Hyprland desktop client, like `janus` without NVIDIA or Steam (placeholder `hardware-configuration.nix`) | — |
 
 ## Installing/updating a specific host
 ```bash
@@ -98,7 +99,7 @@ athena also sets `bc250Enable = true`, which loads the [bc250-nixos](https://git
 
 n8n on athena runs a locally built `n8n-custom:latest` image instead of the upstream one, because it sets optional vars (`common/n8n.nix`). `n8nNpmPackages` installs npm packages globally in the image and allows them in the Code node through `NODE_FUNCTION_ALLOW_EXTERNAL`. `n8nCommunityNodes` installs pinned community node packages (athena: `n8n-nodes-forgejo@0.2.0`, a Forgejo node and credential) into `/opt/n8n-community-nodes` and loads them through `N8N_CUSTOM_EXTENSIONS`, so they're part of the image rather than installed from n8n's UI; peer dependencies are skipped because n8n provides `n8n-workflow` itself. In the editor the node is listed as *Forgejo*; create a *Forgejo API* credential with a token from Forgejo (Settings → Applications). `n8nCatppuccin = true` links `common/n8n-catppuccin-mocha.css` into the editor; it only restyles n8n's dark theme, so pick *Dark* under Settings → Personal → Theme. The `n8n-image` service rebuilds the image before `docker-n8n` starts, and Docker's cache skips the rebuild when nothing changed. The Execute Command node is on for every n8n host (`NODES_EXCLUDE = "[]"`).
 
-`n8n/workflows/host-health.json` is a fleet health check for n8n. Import it in the editor (Workflows → Import from File) and activate it. Every 15 minutes it probes every host over the tailnet: SSH, plus each service `scripts/test-all-services.sh` covers, along with Forgejo's `/api/healthz`, SearXNG and openwebui-usage. It uses the Code node's `net`/`http` built-ins. proteus, janus and janus-vm are only SSH-checked and marked optional, so if they're off they show up as offline but never raise an alert. To get alerts, set `webhookUrl` in the *Config* node (for example an ntfy topic URL). The message is POSTed as `text/plain` only when the set of failing checks changes, so you get one alert when a check fails and one when it recovers. To add a host or service, edit the `checks` list in the *Check all hosts* node and in the JSON file.
+`n8n/workflows/host-health.json` is a fleet health check for n8n. Import it in the editor (Workflows → Import from File) and activate it. Every 15 minutes it probes every host over the tailnet: SSH, plus each service `scripts/test-all-services.sh` covers, along with Forgejo's `/api/healthz`, SearXNG and openwebui-usage. It uses the Code node's `net`/`http` built-ins. proteus, janus, janus-vm and echo are only SSH-checked and marked optional, so if they're off they show up as offline but never raise an alert. To get alerts, set `webhookUrl` in the *Config* node (for example an ntfy topic URL). The message is POSTed as `text/plain` only when the set of failing checks changes, so you get one alert when a check fails and one when it recovers. To add a host or service, edit the `checks` list in the *Check all hosts* node and in the JSON file.
 
 ### CI (Forgejo Actions on mnemosyne)
 
@@ -126,7 +127,7 @@ athena's `projectRepos` has [openwebui-usage](http://mnemosyne:3000/enexolgort/o
 athena sets `hermesAgentEnable = true`: `post-install.sh` runs [Hermes Agent](https://github.com/NousResearch/hermes-agent)'s installer non-interactively, without its Chromium browser or computer-use driver. Configure it once with `hermes setup`: custom endpoint `http://127.0.0.1:11434/v1`, no API key, context length `65536` (it rejects models under 64K, and Ollama's `/api/show` reports the model's maximum, not the configured context). `hermes gateway setup` connects it to Telegram, Discord and other chat apps. It runs commands as your user on athena.
 
 ## Desktop (`desktopEnable`) specifically
-Only `janus` sets `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
+Only `janus`, `janus-vm` and `echo` set `desktopEnable = true` — this describes what the toggle does on any host that turns it on.
 
 `common/desktop.nix` enables `programs.hyprland` — which, per the official Hyprland-on-NixOS wiki, already handles polkit, the XDG desktop portal, graphics drivers, fonts, dconf, and XWayland on its own. SDDM is the login screen.
 

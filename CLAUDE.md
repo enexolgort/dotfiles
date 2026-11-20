@@ -15,7 +15,7 @@ Multi-host NixOS homelab config (flake) plus tracked desktop dotfiles. One repo 
 Note: the layout tree in `doc/overview.md` is out of date. It shows `doom/` and `hypr/` at the repo root, but they live under `dotfiles/`.
 
 ## Hosts
-`mnemosyne` (real: Jellyfin, Forgejo, SFTP, Homepage), `hermes` (WSL: Transmission, yt-dlp-API), `proteus` (WSL: second main laptop, no services), `athena` (real: Ollama + Open WebUI, n8n), `janus` (real: Hyprland desktop), `janus-vm` (VirtualBox copy of janus).
+`mnemosyne` (real: Jellyfin, Forgejo, SFTP, Homepage), `hermes` (WSL: Transmission, yt-dlp-API), `proteus` (WSL: second main laptop, no services), `athena` (real: Ollama + Open WebUI, n8n), `janus` (real: Hyprland desktop), `janus-vm` (VirtualBox copy of janus), `echo` (real: second Hyprland desktop, no NVIDIA).
 
 ## Commands
 ```bash
